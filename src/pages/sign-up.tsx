@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signUpSchema, ISignUp } from "../common/validation/auth";
+import { signUpSchema, ISignUp } from "../common/validation/authSchemas";
 import { trpc } from "../common/trpc";
 import { useState } from "react";
 
