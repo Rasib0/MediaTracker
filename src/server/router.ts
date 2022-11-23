@@ -7,32 +7,89 @@ import { signUpSchema } from "../common/validation/authSchemas";
 const t = initTRPC.context<IContext>().create();
 
 export const serverRouter = t.router({
-  signup: t.procedure.input(signUpSchema).mutation(async ({ input, ctx }) => {
-    const { username, email, password } = input;
+  signup: t.procedure.input(signUpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { username, email, password } = input;
 
-    const exists = await ctx.prisma.user.findFirst({
-      where: { email },
-    });
-
-    if (exists) {
-      throw new TRPCError({
-        code: "CONFLICT",
-        message: "User already exists.",
+      const exists = await ctx.prisma.user.findFirst({
+        where: { email },
       });
-    }
 
-    const hashedPassword = await hash(password);
+      if (exists) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already exists.",
+        });
+      }
 
-    const result = await ctx.prisma.user.create({
-      data: { username, email, password: hashedPassword },
-    });
+      const hashedPassword = await hash(password);
 
-    return {
-      status: 201,
-      message: "Account created successfully",
-      result: result.email,
-    };
-  }),
+      const result = await ctx.prisma.user.create({
+        data: { username, email, password: hashedPassword },
+      });
+
+      return {
+        status: 201,
+        message: "Account created successfully",
+        result: result.email,
+      };
+    }),
+  //TODO: these mutation don't do anything right now
+  addtoLibrary: t.procedure.input(signUpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { username, email, password } = input;
+
+      const exists = await ctx.prisma.user.findFirst({
+        where: { email },
+      });
+
+      if (exists) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already exists.",
+        });
+      }
+
+      const hashedPassword = await hash(password);
+
+      const result = await ctx.prisma.user.create({
+        data: { username, email, password: hashedPassword },
+      });
+
+      return {
+        status: 201,
+        message: "Account created successfully",
+        result: result.email,
+      };
+    }),
+    //TODO: these mutation don't do anything right now
+    rateFromLibrary: t.procedure.input(signUpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { username, email, password } = input;
+
+      const exists = await ctx.prisma.user.findFirst({
+        where: { email },
+      });
+
+      if (exists) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already exists.",
+        });
+      }
+
+      const hashedPassword = await hash(password);
+
+      const result = await ctx.prisma.user.create({
+        data: { username, email, password: hashedPassword },
+      });
+
+      return {
+        status: 201,
+        message: "Account created successfully",
+        result: result.email,
+      };
+    }),
 });
 
 export type IServerRouter = typeof serverRouter;
