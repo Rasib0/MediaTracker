@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
 import { prisma } from "./prisma";
-import { loginSchema } from "./validation/auth";
+import { loginSchema } from "./validation/authSchemas";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -20,18 +20,15 @@ export const nextAuthOptions: NextAuthOptions = {
       authorize: async (credentials) => {
         try {
           const { email, password } = await loginSchema.parseAsync(credentials);
-
-          const result = await prisma.user.findFirst({
+          const resultUser = await prisma.user.findFirst({
             where: { email },
           });
-
-          if (!result) return null;
-
-          const isValidPassword = await verify(result.password, password);
-
+          if (!resultUser) return null;
+          
+          const isValidPassword = await verify(resultUser.password, password);
           if (!isValidPassword) return null;
+          return { id: resultUser.id, email, username: resultUser.username };
 
-          return { id: result.id, email, username: result.username };
         } catch {
           return null;
         }
