@@ -78,6 +78,10 @@ const SignUp: NextPage = () => {
                     placeholder="Type your email..."
                     className="input input-bordered w-full max-w-xs"
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      setErrorMessage('')
+                    }}
                   />
                 )}
               />
@@ -92,12 +96,17 @@ const SignUp: NextPage = () => {
                     placeholder="Type your password..."
                     className="input input-bordered w-full max-w-xs my-2"
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      setErrorMessage('')
+                    }}
                   />
                 )}
               />
               <p>{errors.password?.message?.replace("String", "password")}</p>
 
-              <p className="errorMessage">{errorMessage}</p>
+              <p className="errorMessage">{errorMessage ? errorMessage + 'Please try again' : '' } </p>
+
               <div className="card-actions items-center justify-between">
                 <Link href="/" className="link">
                   Go to login
