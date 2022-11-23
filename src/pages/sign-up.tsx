@@ -28,7 +28,7 @@ const SignUp: NextPage = () => {
   const onSubmit = useCallback(
     async (data: ISignUp) => {
       try {
-        const result = await mutateAsync(data);
+        const result = await mutateAsync(data); //the sign up mutation that happens on submit
         if (result.status === 201) {
           reset();
           router.push("/");
@@ -81,7 +81,7 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <p>{errors.email?.message}</p>
+              <p>{errors.email?.message}</p> {/* error message from use form*/}
 
               <Controller
                 name="password"
@@ -95,7 +95,7 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <p>{errors.password?.message}</p>
+              <p>{errors.password?.message?.replace("String", "password")}</p>
 
               <p className="errorMessage">{errorMessage}</p>
               <div className="card-actions items-center justify-between">
