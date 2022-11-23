@@ -85,7 +85,7 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <p>{errors.email?.message}</p> {/* error message from use form*/}
+              <div className="errorMessages">{errors.email?.message}</div> {/* error message from use form*/}
 
               <Controller
                 name="password"
@@ -103,9 +103,9 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <p>{errors.password?.message?.replace("String", "password")}</p>
+              <div className="errorMessages">{errors.password?.message?.replace("String", "password")}</div>
 
-              <p className="errorMessage">{errorMessage ? errorMessage + 'Please try again' : '' } </p>
+              <p className="errorMessages">{errorMessage ? errorMessage + 'Please try again' : '' } </p>
 
               <div className="card-actions items-center justify-between">
                 <Link href="/" className="link">
@@ -120,6 +120,15 @@ const SignUp: NextPage = () => {
           </div>
         </form>
       </main>
+      <style jsx>
+        {
+          `
+          .errorMessages {
+            color: red
+          }
+          `
+        }
+      </style>
     </div>
   );
 };
