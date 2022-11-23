@@ -8,11 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signUpSchema, ISignUp } from "../common/validation/auth";
 import { trpc } from "../common/trpc";
+import { useState } from "react";
 
 const SignUp: NextPage = () => {
   const router = useRouter();
-  let errorMessage: string = ""
-  const { handleSubmit, control, reset } = useForm<ISignUp>({
+  const [errorMessage, setErrorMessage] = useState("")
+  const { handleSubmit, control, reset, formState:{ errors } } = useForm<ISignUp>({
     defaultValues: {
       username: "",
       email: "",
@@ -23,6 +24,7 @@ const SignUp: NextPage = () => {
 
   const { mutateAsync } = trpc.signup.useMutation();
 
+  // Tell React to cache your function between re-renders...
   const onSubmit = useCallback(
     async (data: ISignUp) => {
       try {
@@ -31,12 +33,12 @@ const SignUp: NextPage = () => {
           reset();
           router.push("/");
         }
-      } catch (err) {
-        errorMessage = "err"
-        //console.error(err);
+      } catch (err: any) {
+        setErrorMessage(err.message)
+        console.error(err);
       }
     },
-    [mutateAsync, router, reset]
+    [mutateAsync, router, reset] // ...so as long as these dependencies don't change...
   );
 
   return (
@@ -48,7 +50,7 @@ const SignUp: NextPage = () => {
       </Head>
 
       <main>
-        <form
+        <form       //...Form will receive the same props and can skip re-rendering 
           className="flex items-center justify-center h-screen w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -67,8 +69,6 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <p className="error">{error}</p>
-
               <Controller
                 name="email"
                 control={control}
@@ -81,6 +81,7 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
+              <p>{errors.email?.message}</p>
 
               <Controller
                 name="password"
@@ -94,7 +95,9 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
+              <p>{errors.password?.message}</p>
 
+              <p className="errorMessage">{errorMessage}</p>
               <div className="card-actions items-center justify-between">
                 <Link href="/" className="link">
                   Go to login
