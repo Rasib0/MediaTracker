@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 
 // The page that you will see if didn't login 
+// TODO fix the link formating using tailwind css
 const Unauthorized: NextPage = () => {
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -11,7 +12,7 @@ const Unauthorized: NextPage = () => {
             You are not logged in!
           </h1>
           <div className="text-center">
-          <Link href="/"><a className="text-5xl text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
+          <Link href="/"><a className="text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
           </div>
         </div>
       </div>

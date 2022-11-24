@@ -10,7 +10,7 @@ export default function Custom404() {
         404 - Page Not Found
       </h1>
       <div className="text-center">
-        <Link href="/dashboard"><a className="text-5xl text-center font-bold leading-snug text-gray-400">return to home</a></Link>
+        <Link href="/"><a className="font-bold text-gray-400">return to home</a></Link>
       </div>
     </div>
   </div>
