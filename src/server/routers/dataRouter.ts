@@ -15,7 +15,7 @@ export const dataRouter = t.router({
         )
     }),
   
-    searchBooksOFTags: t.procedure
+    searchBooksOfTags: t.procedure
     .input(searchSchema)
     .query(async ({input, ctx}) => {
       const { keywords, tags } = input
@@ -25,7 +25,7 @@ export const dataRouter = t.router({
         )
     }),
   
-    searchBookOfUser: t.procedure //TODO: how to get the the current user from context to search the books of that user
+    searchBookOfTagsOfUser: t.procedure //TODO: how to get the the current user from context to search the books of that user
     .input(searchSchema)
     .query(async ({input, ctx}) => {
       const { keywords, tags } = input
