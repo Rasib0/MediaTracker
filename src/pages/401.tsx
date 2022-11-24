@@ -3,7 +3,6 @@ import Link from "next/link";
 
 // The page that you will see if didn't login 
 const Unauthorized: NextPage = () => {
-
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
@@ -12,7 +11,7 @@ const Unauthorized: NextPage = () => {
             You are not logged in!
           </h1>
           <div className="text-center">
-            <Link href="/"> LOG IN </Link>
+          <Link href="/"><a className="text-5xl text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
           </div>
         </div>
       </div>
