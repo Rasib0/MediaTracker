@@ -2,7 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { hash } from "argon2";
 
 import { IContext } from "./context";
-import { signUpSchema, keywords, searchSchema } from "../common/validation/authSchemas";
+import { signUpSchema, searchSchema } from "../common/validation/authSchemas";
 import { Prisma } from "@prisma/client";
 
 const t = initTRPC.context<IContext>().create();
@@ -67,7 +67,7 @@ export const serverRouter = t.router({
       )
   }),
 
-  searchBookOfUser: t.procedure
+  searchBookOfUser: t.procedure //TODO: how to get the the current user from context to search the books of that user
   .input(searchSchema)
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input
