@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, ILogin } from "../common/validation/authSchemas";
 
 
-// The sign in page
+// The sign in page that shows you the data before the authentication happens
 const Home: NextPage = () => {
 
   const { handleSubmit, control, reset } = useForm<ILogin>({
