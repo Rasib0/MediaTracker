@@ -9,10 +9,14 @@ export const signUpSchema = loginSchema.extend({
   username: z.string(),
 });
 
-export const searchSchema = z.object({
+
+export const  searchBookSchema = z.object({
   keywords: z.string().max(100),
-  tags: z.string().max(20).array(),
 });
+
+export const searchSchema = searchBookSchema.extend({
+  tags: z.string().max(20).array(),
+})
 
 
 export type ILogin = z.infer<typeof loginSchema>;
