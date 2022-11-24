@@ -10,9 +10,11 @@ export const dataRouter = t.router({
     .query(async ({input, ctx}) => {
       const {keywords} = input
   
-      const query = await prisma?.$queryRaw(
-        Prisma.sql`SELECT * FROM User`//WHERE book_url = ${keywords}
-        )
+      const query = await prisma?.book.findMany({
+        where: {
+        }
+
+      })
         console.log(query)
         return {
           query

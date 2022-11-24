@@ -14,7 +14,7 @@ const book: NextPage = () => {
   const { bookurl, ...tags } = router.query
   console.log("The query book url is:", bookurl)
   const q = trpc.searchBooks.useQuery({ keywords: String(bookurl)});
-  
+  console.log(q.data)
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
