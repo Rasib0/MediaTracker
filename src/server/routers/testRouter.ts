@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { hash } from "argon2";
 
-import { IContext } from "./context";
-import { signUpSchema, keywords } from "../common/validation/authSchemas";
+import { IContext } from "../context";
+import { signUpSchema, keywords } from "../../common/validation/authSchemas";
 import { Prisma } from "@prisma/client";
 
 const t = initTRPC.context<IContext>().create();
