@@ -163,7 +163,6 @@ export const serverRouter = t.router({
     book_url: string()
    }
   ))
-
   .mutation(async ({input, ctx}) => { //should be a  mutation
     const { book_url} = input
 
@@ -224,6 +223,10 @@ export const serverRouter = t.router({
 
     }
   }),
+
+
+
+
   checkInLibrary: t.procedure //
   .input(z.object({
     book_url: string()
@@ -242,6 +245,10 @@ export const serverRouter = t.router({
     const Book = await prisma?.book.findFirst({
         where: {
             book_url: book_url
+        },
+        select: {
+          id: true,
+          book_url: true
         }
     })
 
@@ -252,27 +259,33 @@ export const serverRouter = t.router({
         });
   }
 
-  const alreadyExist = await prisma?.userJoinBook.findFirst({
+  const result = await prisma?.userJoinBook.findFirst({
     where: {
       userId: parseInt(ctx.session.user.userId),
-      book: Book
+      bookId: Book.id
+    },
+    select: {
+      userId: true,
+      bookId: true
     }
   })
 
-  if(alreadyExist) {
+  if(result) {
     return {
-      message: "created entry in UserJoinBook table",
-      result: alreadyExist,
-      book: Book
+      message: "entry exists in UserJoinBook table",
+      exists: true,
+      result: result,
     }
   }
   else {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "User's library already has this book",
-    });
+    return {
+      message: "entry doesn't exists in UserJoinBook table",
+      exists: false,
+      result: result,
+    }
   }
   }),
+
 });
 
 export type IServerRouter = typeof serverRouter;
