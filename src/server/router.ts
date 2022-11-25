@@ -4,11 +4,9 @@ import { IContext } from "./context";
 import { signUpSchema, searchSchema, searchBookSchema } from "../common/validation/authSchemas";
 import { Prisma } from "@prisma/client";
 import * as z from "zod";
-import { number, string } from "zod";
-import book from "../pages/book/[bookurl]";
+import { any, number, string } from "zod";
 
 const t = initTRPC.context<IContext>().create();
-
 export const serverRouter = t.router({
 
   // ----------------- SIGN IN PROCEDURES ---------------------
@@ -58,7 +56,7 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { keywords } = input
 
-    const result = await prisma?.$queryRaw(
+    const result = await ctx.prisma.$queryRaw(
       Prisma.sql`SELECT * FROM Book 
                  WHERE book_url like ${keywords}`
       )
@@ -77,7 +75,7 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { book_url } = input
 
-    const result = await prisma?.book.findFirst({
+    const result = await ctx.prisma.book.findFirst({
       where: {
         book_url: book_url
       }
@@ -95,7 +93,7 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input
 
-    const result = await prisma?.$queryRaw(
+    const result = await ctx.prisma.$queryRaw(
       Prisma.sql`SELECT DISTINCT tagId FROM TagJoinBook
                  WHERE tagId in (${ Prisma.join(tags)}) ` //TODO: AND book_url like ${keywords}, need to make this only include the books where all the tags match
       )
@@ -115,7 +113,7 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input
 
-    const result = await prisma?.$queryRaw(
+    const result = await ctx.prisma.$queryRaw(
       Prisma.sql`SELECT bookId FROM TagJoinBook 
                  WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` 
       )
@@ -134,7 +132,7 @@ export const serverRouter = t.router({
    }))
   .query(async ({input, ctx}) => { //TODO: should be a mutation
     const { book_url, rating } = input
-    const Book = await prisma?.book.findFirst({     // check if the book exist in library 
+    const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
         where: {
             book_url: book_url,
         }
@@ -160,9 +158,9 @@ export const serverRouter = t.router({
           });
     }
 /*
-    const result = await prisma?.userJoinBook.update({
+    const result = await ctx.prisma.userJoinBook.update({
       where: {
-        userId: parseInt(ctx.session?.user.userId),
+        userId: Number(ctx.session?.user.userId),
         book: Book.bookId
       },
       data: {
@@ -193,7 +191,7 @@ export const serverRouter = t.router({
         });
     }
   
-    const Book = await prisma?.book.findFirst({
+    const Book = await ctx.prisma.book.findFirst({
         where: {
             book_url: book_url
         }
@@ -206,9 +204,9 @@ export const serverRouter = t.router({
         });
   }
 
-  const alreadyExist = await prisma?.userJoinBook.findFirst({
+  const alreadyExist = await ctx.prisma.userJoinBook.findFirst({
     where: {
-      userId: parseInt(ctx.session.user.userId),
+      userId: Number(ctx.session.user.userId),
       book: Book
     }
   })
@@ -219,7 +217,7 @@ export const serverRouter = t.router({
       message: "User's library already has this book",
     });
   }
-    const result = await prisma?.userJoinBook.create({
+    const result = await ctx.prisma.userJoinBook.create({
       data: {
         user: {
           connect: {
@@ -247,12 +245,12 @@ export const serverRouter = t.router({
 
   checkInLibrary: t.procedure //
   .input(z.object({
-    book_url: string()
+    book_url: string(),
+    data: any()
    }
   ))
   .query(async ({input, ctx}) => { 
-    const { book_url } = input
-
+    const { book_url} = input
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
@@ -260,7 +258,7 @@ export const serverRouter = t.router({
         });
     }
   
-    const Book = await prisma?.book.findFirst({
+    const Book = await ctx.prisma.book.findFirst({
         where: {
             book_url: book_url
         },
@@ -277,9 +275,9 @@ export const serverRouter = t.router({
         });
   }
 
-  const result = await prisma?.userJoinBook.findFirst({
+  const result = await ctx.prisma.userJoinBook.findFirst({
     where: {
-      userId: parseInt(ctx.session.user.userId),
+      userId: Number(ctx.session.user.userId),
       bookId: Book.id
     },
     select: {
@@ -295,15 +293,12 @@ export const serverRouter = t.router({
       result: result,
     }
   }
-  else {
     return {
       message: "entry doesn't exists in UserJoinBook table",
       exists: false,
       result: result,
     }
-  }
   }),
-
 
   removeFromLibrary: t.procedure //
   .input(z.object({
@@ -320,7 +315,7 @@ export const serverRouter = t.router({
         });
     }
   
-    const Book = await prisma?.book.findFirst({
+    const Book = await ctx.prisma.book.findFirst({
         where: {
             book_url: book_url
         },
@@ -338,10 +333,10 @@ export const serverRouter = t.router({
   }
 
   try{
-    const result = await prisma?.userJoinBook.delete({
+    const result = await ctx.prisma.userJoinBook.delete({
       where: {
         userId_bookId: {
-          userId: parseInt(ctx.session.user.userId),
+          userId: Number(ctx.session.user.userId),
           bookId: Book.id
         }
       },

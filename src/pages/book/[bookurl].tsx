@@ -11,16 +11,14 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 const book: NextPage = () => {
   const { data } = useSession();
-  
-  //getting params from router in book_url
   const { bookurl, ...tags } = useRouter().query
   const book_url = String(bookurl)
 
   //setting the state of the button according to user's 
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
-
   
-  const doesExist = trpc.checkInLibrary.useQuery({book_url}, {onSuccess: async (newData) => {
+  // Just by having a cache that isn't being used you get a performance boost...
+  const doesExist = trpc.checkInLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
     } else {
@@ -30,7 +28,7 @@ const book: NextPage = () => {
 
   //  const bookData = queryBook.data?.result
 
-  const queryBook = trpc.findBookData.useQuery({book_url});
+  //const queryBook = trpc.findBookData.useQuery({book_url});
 
 
   //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
@@ -49,7 +47,9 @@ const book: NextPage = () => {
         }});
       }
   };
-
+  if(!data) {
+    return <div>Loading</div>
+  }
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
@@ -64,12 +64,6 @@ const book: NextPage = () => {
           {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
 
           {(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}
-
-          <div className="my-4 bg-gray-700 rounded-lg p-4">
-            <pre>
-              <code>{JSON.stringify(data, null, 2)}</code>
-            </pre>
-          </div>
           <div className="text-center">
             <button
               className="btn btn-secondary"
