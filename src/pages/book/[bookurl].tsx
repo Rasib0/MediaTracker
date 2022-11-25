@@ -11,10 +11,17 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const book: NextPage = () => {
   const { data } = useSession();
   const router = useRouter()
+
   const { bookurl, ...tags } = router.query
+  console.log(bookurl)
+  console.log(tags)
   console.log("The query book url is:", bookurl)
+
   const q = trpc.searchBooks.useQuery({ keywords: String(bookurl)});
-  console.log(q.data)
+  const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']})
+  //console.log(q.data?.result)
+  console.log(c.data?.result)
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">

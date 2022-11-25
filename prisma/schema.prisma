@@ -22,12 +22,12 @@ model Book {
   id Int @id @default(autoincrement())
   book_url String @unique
   Users UserJoinBook[]
-  Tags tagsJoinBook[]
+  Tags TagJoinBook[]
 }
 
 model UserJoinBook {
   assignedAt DateTime @default(now())
-  Rating Int
+  Rating Int //TODO: put a constraint to limit this by 5
   Review String?
 
   user User @relation(fields: [userId], references: [id])
@@ -41,10 +41,10 @@ model UserJoinBook {
 model Tag {
   id Int @id @default(autoincrement())
   tagsName String
-  Books tagsJoinBook[]
+  Books TagJoinBook[]
 }
 
-model tagsJoinBook {
+model TagJoinBook {
   user Tag @relation(fields: [tagId], references: [id])
   tagId Int
   book Book @relation(fields: [bookId], references: [id])

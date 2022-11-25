@@ -3,6 +3,8 @@ import { hash } from "argon2";
 import { IContext } from "./context";
 import { signUpSchema, searchSchema, searchBookSchema } from "../common/validation/authSchemas";
 import { Prisma } from "@prisma/client";
+import * as z from "zod";
+import { number, string } from "zod";
 
 const t = initTRPC.context<IContext>().create();
 
@@ -53,26 +55,35 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { keywords } = input
 
-    const query = await prisma?.$queryRaw(
-      Prisma.sql`SELECT * FROM book WHERE book_url like ${keywords}`
+    const result = await prisma?.$queryRaw(
+      Prisma.sql`SELECT * FROM Book 
+                 WHERE book_url like ${keywords}`
       )
+
       return {
-        query
+        status: 200,
+        message: "Search successful",
+        result: result
       }
   }),
 
-  searchBooksOfTags: t.procedure
+  searchBooksOfTags: t.procedure // take a set of tags and keyword as input and return the books corresponding to them
   .input(searchSchema)
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input
 
-    const query = await prisma?.$queryRaw(
-      Prisma.sql`SELECT bookId FROM TagJoinBook WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` //TODO: need to make this only include the books where all the tags match
+    const result = await prisma?.$queryRaw(
+      Prisma.sql`SELECT DISTINCT tagId FROM TagJoinBook
+                 WHERE tagId in (${ Prisma.join(tags)}) ` //TODO: AND book_url like ${keywords}, need to make this only include the books where all the tags match
       )
+        // tags
+        // find books with those those tag
 
     
       return {
-        query
+        status: 200,
+        message: "Search successful",
+        result: result
       }
   }),
 
@@ -81,14 +92,99 @@ export const serverRouter = t.router({
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input
 
-    const query = await prisma?.$queryRaw(
-      Prisma.sql`SELECT bookId FROM TagJoinBook WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` //TODO: need to make this only include the books where all the tags match
+    const result = await prisma?.$queryRaw(
+      Prisma.sql`SELECT bookId FROM TagJoinBook 
+                 WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` //TODO: need to make this only include the books where all the tags match
       )
     return {
-       query
+        status: 200,
+        message: "Search successful",
+        result: result
     }
     
-  })
+  }),
+  
+  addRatingIfLibrary: t.procedure //
+  .input(z.object({
+    book_url: string(),
+    rating: number().min(0).max(5)
+   }))
+  .mutation(async ({input, ctx}) => {
+    const { book_url, rating } = input
+    const Book = await prisma?.book.findFirst({     // check if the book exist in library 
+        where: {
+            book_url: book_url,
+        }
+    })
+    
+    if(!Book) {     // else throw error
+        throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Book not found. Can't rate",
+          });
+    }
+    // find entry in userjoinbook table and rate it with the input that has to be <5 (put this check on the server side)
+    const result = await prisma?.userJoinBook.update({
+        where: {
+            userId: (ctx.session?.user.userId),
+            bookId: ,
+        }
+        data: {
+            rating: rating,
+        }
+
+    })
+
+    return {
+        status: 201,
+        message: "update successful successful",
+        result: result
+    }
+  }),
+
+
+
+  
+  addToLibrary: t.procedure //
+  .input(z.object({
+    book_url: string()
+   }
+  ))
+  .mutation(async ({input, ctx}) => {
+    const { book_url } = input
+    const Book = await prisma?.book.findFirst({
+        where: {
+            book_url: book_url
+        }
+    })
+
+    if(!ctx.session) {
+        throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+    }
+
+    if(!Book) {
+        throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Book not found",
+          });
+    }
+
+    const result = await prisma?.userJoinBook.create({
+        data: { 
+            userId: ctx.session.user.userId, //TODO: test this error
+            bookId: Book.bookId,
+        }
+    })
+    return {
+        status: 201,
+        message: "created entry in User Book table",
+        result: result
+    }
+  }),
+
 
 });
 
