@@ -70,6 +70,26 @@ export const serverRouter = t.router({
       }
   }),
 
+  findBookData: t.procedure
+  .input(z.object({
+    book_url: string()
+  }))
+  .query(async ({input, ctx}) => {
+    const { book_url } = input
+
+    const result = await prisma?.book.findFirst({
+      where: {
+        book_url: book_url
+      }
+    })
+
+      return {
+        status: 200,
+        message: "Search successful",
+        result: result
+      }
+  }),
+
   searchBooksOfTags: t.procedure // take a set of tags and keyword as input and return the books corresponding to them
   .input(searchSchema)
   .query(async ({input, ctx}) => {
@@ -231,7 +251,7 @@ export const serverRouter = t.router({
    }
   ))
   .query(async ({input, ctx}) => { 
-    const { book_url} = input
+    const { book_url } = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({

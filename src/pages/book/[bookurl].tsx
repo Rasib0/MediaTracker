@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { fetchData } from "next-auth/client/_utils";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/router'
 import { useState } from "react";
@@ -12,36 +11,43 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
 const book: NextPage = () => {
   const { data } = useSession();
-  const router = useRouter()
-  const [inLib, setInLib] = useState(false)
-  const { bookurl, ...tags } = router.query
+  
+  //getting params from router in book_url
+  const { bookurl, ...tags } = useRouter().query
   const book_url = String(bookurl)
-  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
 
-  if(queryCheckInLib.data?.exists) {
-    setInLib(queryCheckInLib.data?.exists)
-  }
-
-
-  //Book Info
-  //const q = trpc.searchBooks.useQuery({ keywords: book_url});
-  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
-  //console.log(q.data?.result)   //console.log(c.data)
-
+  //setting the state of the button according to user's 
+  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
   
+  const doesExist = trpc.checkInLibrary.useQuery({book_url}, {onSuccess: (newData) => {
+    if(newData.exists) {
+      setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
+    } else {
+      setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
+    }
+  }})
 
+  //  const bookData = queryBook.data?.result
+
+  const queryBook = trpc.findBookData.useQuery({book_url});
+
+
+  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
+  
   const mutationAddtoLib = trpc.addToLibrary.useMutation()
   const mutationremoveFromLibrary = trpc.removeFromLibrary.useMutation()
 
-  const handleLibraryOnClick = async () => {
-    if(inLib){
-      mutationAddtoLib.mutate({ book_url });
-      setInLib(false)
-    } else {
-      mutationremoveFromLibrary.mutate({ book_url });
-      setInLib(true)
-    }
+  const handleLibraryOnClick = async () => {      
+      if(ButtonState.shouldAdd){
+        mutationAddtoLib.mutate({ book_url }, {onSuccess: (newData) => {
+          setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
+        },});
+      } else {
+        mutationremoveFromLibrary.mutate({ book_url }, {onSuccess: (newData) => {
+          setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
+        }});
+      }
   };
 
   return (
@@ -55,10 +61,9 @@ const book: NextPage = () => {
             You are allowed to visit this page because you have a session,
             otherwise you would be redirected to the login page.
           </p>
-          <button className="btn" onClick={() => handleLibraryOnClick()}> { inLib ? "Add to library" : "Remove from library"}</button>
+          {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
 
-          {mutationAddtoLib.error && <p>Something went wrong! {mutationAddtoLib.error.message}</p>}
-          {mutationremoveFromLibrary.error && <p>Something went wrong! {mutationremoveFromLibrary.error.message}</p>}
+          {(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}
 
           <div className="my-4 bg-gray-700 rounded-lg p-4">
             <pre>
