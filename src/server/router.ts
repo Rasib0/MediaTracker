@@ -163,7 +163,7 @@ export const serverRouter = t.router({
     book_url: string()
    }
   ))
-  .mutation(async ({input, ctx}) => { //should be a  mutation
+  .mutation(async ({input, ctx}) => { 
     const { book_url} = input
 
     if(!ctx.session?.user.email) {
@@ -225,14 +225,12 @@ export const serverRouter = t.router({
   }),
 
 
-
-
   checkInLibrary: t.procedure //
   .input(z.object({
     book_url: string()
    }
   ))
-  .query(async ({input, ctx}) => { //should be a  mutation
+  .query(async ({input, ctx}) => { 
     const { book_url} = input
 
     if(!ctx.session?.user.email) {
@@ -286,6 +284,55 @@ export const serverRouter = t.router({
   }
   }),
 
+
+  removeFromLibrary: t.procedure //
+  .input(z.object({
+    book_url: string()
+   }
+  ))
+  .mutation(async ({input, ctx}) => { //should be a  mutation
+    const { book_url} = input
+
+    if(!ctx.session?.user.email) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+    }
+  
+    const Book = await prisma?.book.findFirst({
+        where: {
+            book_url: book_url
+        },
+        select: {
+          id: true,
+          book_url: true
+        }
+    })
+
+    if(!Book) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Book not found at the url ${book_url}`,
+        });
+  }
+
+  try{
+    const result = await prisma?.userJoinBook.delete({
+      where: {
+        userId_bookId: {
+          userId: parseInt(ctx.session.user.userId),
+          bookId: Book.id
+        }
+      },
+    })
+  } catch {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `User's library doesn't have ${book_url}`,
+    });
+  }
+  }),
 });
 
 export type IServerRouter = typeof serverRouter;

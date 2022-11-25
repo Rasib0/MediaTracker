@@ -13,27 +13,34 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const book: NextPage = () => {
   const { data } = useSession();
   const router = useRouter()
-  const [inLib, setInLib] = useState(true)
+  const [inLib, setInLib] = useState(false)
   const { bookurl, ...tags } = router.query
   const book_url = String(bookurl)
+  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
+
+  if(queryCheckInLib.data?.exists) {
+    setInLib(queryCheckInLib.data?.exists)
+  }
 
 
+  //Book Info
   //const q = trpc.searchBooks.useQuery({ keywords: book_url});
   //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
   //console.log(q.data?.result)   //console.log(c.data)
 
 
-  //const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
-  //console.log(queryCheckInLib.data)
+  
 
   const mutationAddtoLib = trpc.addToLibrary.useMutation()
-  //const mutationremoveFromLibrary = trpc.removeFromLibrary.useMutation()
+  const mutationremoveFromLibrary = trpc.removeFromLibrary.useMutation()
 
   const handleLibraryOnClick = async () => {
     if(inLib){
       mutationAddtoLib.mutate({ book_url });
+      setInLib(false)
     } else {
-      //mutationremoveFromLibrary.mutate({ book_url });
+      mutationremoveFromLibrary.mutate({ book_url });
+      setInLib(true)
     }
   };
 
@@ -48,10 +55,11 @@ const book: NextPage = () => {
             You are allowed to visit this page because you have a session,
             otherwise you would be redirected to the login page.
           </p>
-          <button className="btn" onClick={handleLibraryOnClick}> { inLib ? "Add to library" : "Remove from library"}</button>
+          <button className="btn" onClick={() => handleLibraryOnClick()}> { inLib ? "Add to library" : "Remove from library"}</button>
 
           {mutationAddtoLib.error && <p>Something went wrong! {mutationAddtoLib.error.message}</p>}
-          
+          {mutationremoveFromLibrary.error && <p>Something went wrong! {mutationremoveFromLibrary.error.message}</p>}
+
           <div className="my-4 bg-gray-700 rounded-lg p-4">
             <pre>
               <code>{JSON.stringify(data, null, 2)}</code>
