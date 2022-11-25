@@ -20,7 +20,7 @@ const book: NextPage = () => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
   
-  const doesExist = trpc.checkInLibrary.useQuery({book_url}, {onSuccess: (newData) => {
+  const doesExist = trpc.checkInLibrary.useQuery({book_url}, {onSuccess: async (newData) => {
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
     } else {
@@ -40,11 +40,11 @@ const book: NextPage = () => {
 
   const handleLibraryOnClick = async () => {      
       if(ButtonState.shouldAdd){
-        mutationAddtoLib.mutate({ book_url }, {onSuccess: (newData) => {
+        mutationAddtoLib.mutate({ book_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
         },});
       } else {
-        mutationremoveFromLibrary.mutate({ book_url }, {onSuccess: (newData) => {
+        mutationremoveFromLibrary.mutate({ book_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
         }});
       }
