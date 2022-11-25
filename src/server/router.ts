@@ -95,7 +95,7 @@ export const serverRouter = t.router({
 
     const result = await prisma?.$queryRaw(
       Prisma.sql`SELECT bookId FROM TagJoinBook 
-                 WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` //TODO: need to make this only include the books where all the tags match
+                 WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` 
       )
     return {
         status: 200,
@@ -137,11 +137,11 @@ export const serverRouter = t.router({
             message: "Book not found. Can't rate",
           });
     }
-
+/*
     const result = await prisma?.userJoinBook.update({
       where: {
-        userId: ctx.session?.user.userId,
-        bookId: Book.bookId,
+        userId: parseInt(ctx.session?.user.userId),
+        book: Book.bookId
       },
       data: {
         Rating: rating
@@ -153,37 +153,51 @@ export const serverRouter = t.router({
         message: "update successful successful",
         result: result
     }
+    */
   }),
-
-
   
   addToLibrary: t.procedure //
   .input(z.object({
     book_url: string()
    }
   ))
-  .query(async ({input, ctx}) => { //should be a  mutation
+
+  .mutation(async ({input, ctx}) => { //should be a  mutation
     const { book_url} = input
 
+    if(!ctx.session?.user.email) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+    }
+  
     const Book = await prisma?.book.findFirst({
         where: {
             book_url: book_url
         }
     })
 
-  if(!ctx.session?.user.email) {
-    throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
+    if(!Book) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Book not found",
+        });
   }
 
-    if(!Book) {
-        throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Book not found",
-          });
+  const alreadyExist = await prisma?.userJoinBook.findFirst({
+    where: {
+      userId: parseInt(ctx.session.user.userId),
+      book: Book
     }
+  })
+
+  if(alreadyExist) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "User's library already has this book",
+    });
+  }
 
     const result = await prisma?.userJoinBook.create({
       data: {
@@ -200,16 +214,15 @@ export const serverRouter = t.router({
         Rating: 5,
       }
     })
-
-
+    
     return {
-        status: 201,
-        message: "created entry in User Book table",
+        message: "created entry in UserJoinBook table",
         result: result,
+        Book: Book,
+        useremail: ctx.session?.user.email
+
     }
   }),
-
-
 });
 
 export type IServerRouter = typeof serverRouter;
