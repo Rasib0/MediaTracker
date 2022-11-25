@@ -1,30 +1,18 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from 'next/router'
-import { requireAuth } from "../../common/requireAuth";
-import { colourOptions } from "../../styles/coloroptions";
-import Select from 'react-select'
+
+import { requireAuth } from "../common/requireAuth";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
 
-const search: NextPage = () => {
+// The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
+const Dashboard: NextPage = () => {
   const { data } = useSession();
-  const router = useRouter()
-  const { bookurl } = router.query
-
 
   return (
     <div className="hero min-h-screen bg-base-200">
-    <Select
-      defaultValue={[colourOptions[2], colourOptions[3]]}
-      isMulti
-      name="colors"
-      options={colourOptions}
-      className="basic-multi-select"
-      classNamePrefix="select"
-    />
       <div className="hero-content">
         <div className="max-w-lg">
           <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
@@ -53,4 +41,4 @@ const search: NextPage = () => {
   );
 };
 
-export default search;
+export default Dashboard;

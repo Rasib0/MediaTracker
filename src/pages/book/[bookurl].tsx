@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { fetchData } from "next-auth/client/_utils";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/router'
 import { requireAuth } from "../../common/requireAuth";
@@ -11,10 +12,25 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const book: NextPage = () => {
   const { data } = useSession();
   const router = useRouter()
+
+
+  //const q = trpc.searchBooks.useQuery({ keywords: book_url});
+  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
+
+  //console.log(q.data?.result)
+  //console.log(c.data)
+
   const { bookurl, ...tags } = router.query
-  console.log("The query book url is:", bookurl)
-  const q = trpc.searchBooks.useQuery({ keywords: String(bookurl)});
-  console.log(q.data)
+  const book_url = String(bookurl)
+  const mutationAddtoLib = trpc.addToLibrary.useMutation()
+  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
+  
+  console.log(queryCheckInLib.data?.result)
+  const handleAddToLib = async () => {
+    mutationAddtoLib.mutate({ book_url });
+
+  };
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
@@ -26,6 +42,8 @@ const book: NextPage = () => {
             You are allowed to visit this page because you have a session,
             otherwise you would be redirected to the login page.
           </p>
+          <button className="btn" onClick={handleAddToLib}> Add to library</button>
+          {mutationAddtoLib.error && <p>Something went wrong! {mutationAddtoLib.error.message}</p>}
           <div className="my-4 bg-gray-700 rounded-lg p-4">
             <pre>
               <code>{JSON.stringify(data, null, 2)}</code>

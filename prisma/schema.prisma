@@ -15,20 +15,20 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Books   UserJoinBook[]
+  Books   UserJoinBook[] 
 }
 
 model Book {
   id Int @id @default(autoincrement())
   book_url String @unique
   Users UserJoinBook[]
-  Tags tagsJoinBook[]
+  Tags TagJoinBook[]
 }
 
 model UserJoinBook {
   assignedAt DateTime @default(now())
-  Rating Int
-  Review String?
+  Rating Int @default(5)//TODO: put a constraint to limit this by 5
+  Review String? @default("")
 
   user User @relation(fields: [userId], references: [id])
   userId Int
@@ -41,10 +41,10 @@ model UserJoinBook {
 model Tag {
   id Int @id @default(autoincrement())
   tagsName String
-  Books tagsJoinBook[]
+  Books TagJoinBook[]
 }
 
-model tagsJoinBook {
+model TagJoinBook {
   user Tag @relation(fields: [tagId], references: [id])
   tagId Int
   book Book @relation(fields: [bookId], references: [id])

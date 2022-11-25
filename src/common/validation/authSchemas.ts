@@ -18,7 +18,6 @@ export const searchSchema = searchBookSchema.extend({
   tags: z.string().max(20).array(),
 })
 
-
 export type ILogin = z.infer<typeof loginSchema>;
 export type ISignUp = z.infer<typeof signUpSchema>;
 
