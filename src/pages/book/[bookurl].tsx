@@ -16,10 +16,12 @@ const book: NextPage = () => {
   console.log("The query book url is:", bookurl)
 
   const q = trpc.searchBooks.useQuery({ keywords: String(bookurl)});
-  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) need to fix the tag query
-  
-  //console.log(q.data?.result)
-  console.log(c.data)
+  const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
+
+  console.log(q.data?.result)
+  //console.log(c.data)
+  const d = trpc.addToLibrary.useQuery({book_url: String(bookurl)})
+  console.log(d.data?.result)
 
   return (
     <div className="hero min-h-screen bg-base-200">

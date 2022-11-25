@@ -110,7 +110,7 @@ export const serverRouter = t.router({
     book_url: string(),
     rating: number().min(0).max(5)
    }))
-  .mutation(async ({input, ctx}) => {
+  .query(async ({input, ctx}) => { //TODO: should be a mutation
     const { book_url, rating } = input
     const Book = await prisma?.book.findFirst({     // check if the book exist in library 
         where: {
@@ -140,7 +140,7 @@ export const serverRouter = t.router({
 
     const result = await prisma?.userJoinBook.update({
       where: {
-        userId: ctx.session.user.userId,
+        userId: ctx.session?.user.userId,
         bookId: Book.bookId,
       },
       data: {
@@ -155,26 +155,6 @@ export const serverRouter = t.router({
     }
   }),
 
-/**
- *   { data: 
-        { 
-
-        }
-
-      }  
-      
-      
-      where: {
-            userId: (ctx.session?.user.userId),
-            bookId: ,
-        }
-        data: {
-            rating: rating,
-        }
- * 
- * 
- * 
- */
 
   
   addToLibrary: t.procedure //
@@ -182,8 +162,9 @@ export const serverRouter = t.router({
     book_url: string()
    }
   ))
-  .mutation(async ({input, ctx}) => {
-    const { book_url } = input
+  .query(async ({input, ctx}) => { //should be a  mutation
+    const { book_url} = input
+
     const Book = await prisma?.book.findFirst({
         where: {
             book_url: book_url
@@ -220,10 +201,11 @@ export const serverRouter = t.router({
       }
     })
 
+
     return {
         status: 201,
         message: "created entry in User Book table",
-        result: result
+        result: result,
     }
   }),
 
