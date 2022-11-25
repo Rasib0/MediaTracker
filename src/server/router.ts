@@ -5,6 +5,7 @@ import { signUpSchema, searchSchema, searchBookSchema } from "../common/validati
 import { Prisma } from "@prisma/client";
 import * as z from "zod";
 import { number, string } from "zod";
+import book from "../pages/book/[bookurl]";
 
 const t = initTRPC.context<IContext>().create();
 
@@ -116,23 +117,35 @@ export const serverRouter = t.router({
             book_url: book_url,
         }
     })
+    if(!ctx.session?.user.userId){
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found. Can't rate",
+      });
+    }
     
+    if(rating > 5) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Bad rating",
+      });
+    }
+
     if(!Book) {     // else throw error
         throw new TRPCError({
             code: "NOT_FOUND",
             message: "Book not found. Can't rate",
           });
     }
-    // find entry in userjoinbook table and rate it with the input that has to be <5 (put this check on the server side)
-    const result = await prisma?.userJoinBook.update({
-        where: {
-            userId: (ctx.session?.user.userId),
-            bookId: ,
-        }
-        data: {
-            rating: rating,
-        }
 
+    const result = await prisma?.userJoinBook.update({
+      where: {
+        userId: ctx.session.user.userId,
+        bookId: Book.bookId,
+      },
+      data: {
+        Rating: rating
+      }
     })
 
     return {
@@ -142,7 +155,26 @@ export const serverRouter = t.router({
     }
   }),
 
+/**
+ *   { data: 
+        { 
 
+        }
+
+      }  
+      
+      
+      where: {
+            userId: (ctx.session?.user.userId),
+            bookId: ,
+        }
+        data: {
+            rating: rating,
+        }
+ * 
+ * 
+ * 
+ */
 
   
   addToLibrary: t.procedure //
@@ -158,12 +190,12 @@ export const serverRouter = t.router({
         }
     })
 
-    if(!ctx.session) {
-        throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "User not found",
-          });
-    }
+  if(!ctx.session?.user.email) {
+    throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+  }
 
     if(!Book) {
         throw new TRPCError({
@@ -173,11 +205,21 @@ export const serverRouter = t.router({
     }
 
     const result = await prisma?.userJoinBook.create({
-        data: { 
-            userId: ctx.session.user.userId, //TODO: test this error
-            bookId: Book.bookId,
-        }
+      data: {
+        user: {
+          connect: {
+            email: ctx.session.user.email
+          }
+        },
+        book: {
+          connect: {
+            book_url: book_url
+          }
+        },
+        Rating: 5,
+      }
     })
+
     return {
         status: 201,
         message: "created entry in User Book table",

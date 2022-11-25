@@ -1,32 +1,22 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from 'next/router'
-import { requireAuth } from "../../common/requireAuth";
-import { trpc } from "../../common/trpc";
+
+import { requireAuth } from "../common/requireAuth";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
 
-const book: NextPage = () => {
+// The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
+const Dashboard: NextPage = () => {
   const { data } = useSession();
-  const router = useRouter()
-
-  const { bookurl, ...tags } = router.query
-  console.log("The query book url is:", bookurl)
-
-  const q = trpc.searchBooks.useQuery({ keywords: String(bookurl)});
-  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) need to fix the tag query
-  
-  //console.log(q.data?.result)
-  console.log(c.data)
 
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
         <div className="max-w-lg">
           <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-            This is the single book page.
+            You are logged in!
           </h1>
           <p className="my-4 text-center leading-loose">
             You are allowed to visit this page because you have a session,
@@ -51,4 +41,4 @@ const book: NextPage = () => {
   );
 };
 
-export default book;
+export default Dashboard;

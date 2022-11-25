@@ -27,8 +27,8 @@ model Book {
 
 model UserJoinBook {
   assignedAt DateTime @default(now())
-  Rating Int //TODO: put a constraint to limit this by 5
-  Review String?
+  Rating Int @default(5)//TODO: put a constraint to limit this by 5
+  Review String? @default("")
 
   user User @relation(fields: [userId], references: [id])
   userId Int
