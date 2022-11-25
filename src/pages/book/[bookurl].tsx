@@ -23,7 +23,9 @@ const book: NextPage = () => {
   const { bookurl, ...tags } = router.query
   const book_url = String(bookurl)
   const mutationAddtoLib = trpc.addToLibrary.useMutation()
-
+  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
+  
+  console.log(queryCheckInLib.data?.result)
   const handleAddToLib = async () => {
     mutationAddtoLib.mutate({ book_url });
 
