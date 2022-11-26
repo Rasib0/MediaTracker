@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-
-import { requireAuth } from "../common/requireAuth";
+import { useState } from "react";
+import { requireAuth } from "../../common/requireAuth";
+import { trpc } from "../../common/trpc";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -10,6 +11,12 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 // The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
 const Dashboard: NextPage = () => {
   const { data } = useSession();
+  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
+
+  
+  const booksarray = trpc.AllBookInLibrarSortedRecent.useQuery({data}, {onSuccess: async (newData) => { 
+  }})
+
 
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -24,7 +31,7 @@ const Dashboard: NextPage = () => {
           </p>
           <div className="my-4 bg-gray-700 rounded-lg p-4">
             <pre>
-              <code>{JSON.stringify(data, null, 2)}</code>
+              <code>{JSON.stringify(booksarray, null, 2)}</code>
             </pre>
           </div>
           <div className="text-center">

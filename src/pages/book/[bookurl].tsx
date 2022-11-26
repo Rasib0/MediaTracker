@@ -36,6 +36,7 @@ const book: NextPage = () => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
   
   // Just by having a cache that isn't being used you get a performance boost...
+
   const doesExist = trpc.checkInLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})

@@ -297,6 +297,46 @@ export const serverRouter = t.router({
     }
   }),
 
+  AllBookInLibrarSortedRecent: t.procedure //TODO: add a keyword search
+  .input(z.object({
+   //dbook_url: string(),
+   data: any()
+   }))
+  .query(async ({input, ctx}) => { 
+    const {} = input
+    if(!ctx.session?.user.email) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+    }
+
+  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+    where: {
+      userId: Number(ctx.session.user.userId),
+    },
+    select: {
+        bookId: true,
+        Rating: true,
+        book:{ 
+          select: {
+            image_url: true,
+            book_url: true,
+            name: true
+          },
+        }
+    }
+  })
+
+    return {
+      message: "Listed all books in user library in recently added",
+      result: booksInLibrary,
+    }
+  }),
+
+
+
+
   removeFromLibrary: t.procedure //
   .input(z.object({
     book_url: string()
