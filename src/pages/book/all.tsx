@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
@@ -16,8 +14,7 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
-  
-  const booksarray = trpc.AllBookInLibrarySortedRecent.useQuery({data}, {onSuccess: async (newData) => { 
+  const booksarray = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: ""}, {onSuccess: async (newData) => { 
   }})
 
  
@@ -27,20 +24,17 @@ const Dashboard: NextPage = () => {
             <div className="hero-content">
               <div className="max-w-lg">
                 <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-                  Library Page 
+                  All Book Page 
                 </h1>
                 <p className="my-4 text-center leading-loose">
-                  Here is your library where you can see your book collection!
+                  Here is Where you can see all the books
                 </p>
                 {booksarray.data?.result.map((input) => {
                     return (
                       <div>
-                        <a href={'/book/' + input.book.book_url}>
+                        <a href={'/book/' + input.book_url}>
                           <div>
-                            Name: {input.book.name}
-                          </div>
-                          <div>
-                            Synopsis: 
+                            Name: {input.name}
                           </div>
                           <div>
                           </div>

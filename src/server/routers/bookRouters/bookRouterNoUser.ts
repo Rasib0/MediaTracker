@@ -17,11 +17,10 @@ export const bookRouterNoUser = t.router({
   fetchAllBookDataByKeywordDesc: t.procedure
   .input(z.object({
     keyword: string(),
-    username: string().nullable(),
   }))
   
   .query(async ({input, ctx}) => {
-    const { keyword, username} = input
+    const { keyword} = input
     
     const result = await ctx.prisma.book.findMany({
       orderBy: [
