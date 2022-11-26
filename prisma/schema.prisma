@@ -23,6 +23,7 @@ model Book {
   name String
   image_url String? @default("No image found")
   synopsis String? @default("No synopsis")
+  author String?
   book_url String @unique
   Users UserJoinBook[]
   Tags TagJoinBook[]

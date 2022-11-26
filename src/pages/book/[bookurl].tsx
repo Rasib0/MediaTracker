@@ -15,8 +15,9 @@ export const getServerSideProps = requireAuth(async (ctx) => {
     },
     select: {
       id: true,
-      book_url: true,
       synopsis: true,
+      author: true,
+      image_url: true,
       name: true,
     }
   })
@@ -30,12 +31,14 @@ export const getServerSideProps = requireAuth(async (ctx) => {
   }
   
   
-return { props: {synopsis: Book.synopsis, name: Book.name} }; //TODO: Add reviews here
+return { props: {synopsis: Book.synopsis, title: Book.name, author: Book.author, image_url: Book.image_url} }; //TODO: Add reviews here
 });
 
 type bookProps = {
     synopsis: string;
-    name: string;
+    title: string;
+    image_url: string;
+    author: string;
 };
 
 const book: NextPage<bookProps> = (props: bookProps) => {
@@ -85,8 +88,9 @@ const book: NextPage<bookProps> = (props: bookProps) => {
             </p>
             {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
             <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}</div>
-            <div className="title">Title: {props.name}</div>
-            <div className="author">Author: </div>
+            <div className="title">Title: {props.title}</div>
+            <div className="author">Author: {props.title} </div>
+            <div className="Image">Image url: {props.image_url} </div>
             <div className="synopsis">Synopsis: {props.synopsis}</div>
 
           </div>
