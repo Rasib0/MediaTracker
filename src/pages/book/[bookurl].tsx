@@ -4,9 +4,27 @@ import { useRouter } from 'next/router'
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
-
+import { prisma } from "../../common/prisma";
 export const getServerSideProps = requireAuth(async (ctx) => {
-  return { props: {} };
+  // check if the the url parameter are a book in the database
+  const Book = await prisma.book.findFirst({
+    where: {
+        book_url: String(ctx.params?.bookurl)
+    },
+    select: {
+      id: true,
+      book_url: true
+    }
+  })
+  if(!Book) {
+    return {
+      redirect: {
+        destination: "/404", // login path
+        permanent: false,
+      },
+    };
+  }  
+return { props: {} };
 });
 
 const book: NextPage = () => {
@@ -37,6 +55,7 @@ const book: NextPage = () => {
   const mutationremoveFromLibrary = trpc.removeFromLibrary.useMutation()
 
   const handleLibraryOnClick = async () => {      
+      setButtonState({text: ButtonState.text, disabled: true, shouldAdd: ButtonState.shouldAdd})
       if(ButtonState.shouldAdd){
         mutationAddtoLib.mutate({ book_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
@@ -47,9 +66,6 @@ const book: NextPage = () => {
         }});
       }
   };
-  if(!data) {
-    return <div>Loading</div>
-  }
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
