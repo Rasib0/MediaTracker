@@ -236,9 +236,6 @@ export const serverRouter = t.router({
     return {
         message: "created entry in UserJoinBook table",
         result: result,
-        Book: Book,
-        useremail: ctx.session?.user.email
-
     }
   }),
 

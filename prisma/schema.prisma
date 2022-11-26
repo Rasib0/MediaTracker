@@ -20,6 +20,9 @@ model User {
 
 model Book {
   id Int @id @default(autoincrement())
+  name String
+  image_url String? @default("No image found")
+  synopsis String? @default("No synopsis")
   book_url String @unique
   Users UserJoinBook[]
   Tags TagJoinBook[]
