@@ -19,7 +19,6 @@ const Header = (props: Props) => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Link href="/" passHref legacyBehavior><Nav.Link>Home</Nav.Link></Link>
             <Link href="/library" passHref legacyBehavior><Nav.Link>Library</Nav.Link></Link>
             <Link href="/book/all" passHref legacyBehavior><Nav.Link>Books</Nav.Link></Link>
             <Link href="/book/all" passHref legacyBehavior><Nav.Link>Podcasts</Nav.Link></Link>
