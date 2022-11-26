@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../common/requireAuth";
 import { trpc } from "../common/trpc";
@@ -35,16 +36,17 @@ const Dashboard: NextPage = () => {
                 {booksarray.data?.result.map((input) => {
                     return (
                       <div>
-                        <a href={'/book/' + input.book.book_url}>
+                        <div color='red' onClick= {() => {router.push('/book/'+ input.book.book_url)}}>
                           <div>
                             Name: {input.book.name}
                           </div>
                           <div>
                             Synopsis: 
                           </div>
+                          <br></br>
                           <div>
                           </div>
-                        </a>
+                        </div>
                       </div>
             
                     )
@@ -57,7 +59,7 @@ const Dashboard: NextPage = () => {
                 <div className="text-center">
                   <button
                     className="btn btn-secondary"
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() => signOut({ callbackUrl: "/log-in" })}
                   >
                     Logout
                   </button>

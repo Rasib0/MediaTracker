@@ -11,7 +11,7 @@ export default function Custom500() {
                 500 - Server-side error occurred
             </h1>
             <div className="text-center">
-              <Link href="/dashboard"><a className="text-center font-bold leading-snug text-gray-400">return to home</a></Link>
+              <Link href="/"><a className="text-center font-bold leading-snug text-gray-400">return to home</a></Link>
             </div>
           </div>
         </div>

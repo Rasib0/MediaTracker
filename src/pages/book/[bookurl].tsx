@@ -92,7 +92,6 @@ const book: NextPage<bookProps> = (props: bookProps) => {
             <div className="author">Author: {props.title} </div>
             <div className="Image">Image url: {props.image_url} </div>
             <div className="synopsis">Synopsis: {props.synopsis}</div>
-
           </div>
         </div>
       </div>

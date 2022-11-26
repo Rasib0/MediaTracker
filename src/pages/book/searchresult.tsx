@@ -42,7 +42,7 @@ const search: NextPage = () => {
           <div className="text-center">
             <button
               className="btn btn-secondary"
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => signOut({ callbackUrl: "/log-in" })}
             >
               Logout
             </button>

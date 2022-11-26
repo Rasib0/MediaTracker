@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
+import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
@@ -12,7 +13,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 // The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
 const Dashboard: NextPage = () => {
   const { data } = useSession();
-  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
+  //const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
   const booksarray = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: ""}, {onSuccess: async (newData) => { 
   }})
@@ -32,17 +33,14 @@ const Dashboard: NextPage = () => {
                 {booksarray.data?.result.map((input) => {
                     return (
                       <div>
-                        <a href={'/book/' + input.book_url}>
+                        <div onClick={() => router.push('/book/' + input.book_url)}>
                           <div>
                             Name: {input.name}
                           </div>
-                          <div>
-                          </div>
-                        </a>
+
+                        </div>
                       </div>
-            
-                    )
-                })}
+                    )})}
                 <div className="my-4 bg-gray-700 rounded-lg p-4">
                   <pre>
                     <code>{JSON.stringify(booksarray.data?.result, null, 2)}</code>
@@ -51,8 +49,7 @@ const Dashboard: NextPage = () => {
                 <div className="text-center">
                   <button
                     className="btn btn-secondary"
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                  >
+                    onClick={() => signOut({ callbackUrl: "/log-in" })}>
                     Logout
                   </button>
                 </div>

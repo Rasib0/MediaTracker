@@ -6,7 +6,6 @@ import Layout from "../components.tsx/Layout";
 // TODO fix the link formating using tailwind css
 const Unauthorized: NextPage = () => {
   return (
-    <Layout>
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
         <div className="max-w-lg">
@@ -14,12 +13,11 @@ const Unauthorized: NextPage = () => {
             You are not logged in!
           </h1>
           <div className="text-center">
-          <Link href="/"><a className="text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
+          <Link href="/log-in"><a className="text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
           </div>
         </div>
       </div>
     </div>
-    </Layout>
   );
 };
 
