@@ -26,7 +26,7 @@ const Header = (props: Props) => {
             <Link href="/book/dune" passHref legacyBehavior><Nav.Link>TV shows</Nav.Link></Link>
           </Nav>
           <Nav className = "ml-auto">
-            <Link href="/" passHref legacyBehavior><Nav.Link>Profile</Nav.Link></Link>
+            <Link href="/profile" passHref legacyBehavior><Nav.Link>Profile</Nav.Link></Link>
             <Nav.Link  onClick={() => signOut({ callbackUrl: "/log-in" })}>Log out</Nav.Link>
             <NavDropdown title="Settings" id="collasible-nav-dropdown">
             <Link href="/" passHref legacyBehavior><NavDropdown.Item>Action Later</NavDropdown.Item></Link>

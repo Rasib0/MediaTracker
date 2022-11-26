@@ -31,6 +31,12 @@ const Dashboard: NextPage = () => {
           </div>
 
           <div className="text-center">
+            <button
+              className="btn btn-secondary"
+              onClick={() => console.log("button was pushed")}
+            >
+              Later
+            </button>
           </div>
       </div>
     </div>

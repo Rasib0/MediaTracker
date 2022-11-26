@@ -10,6 +10,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
 
+
 // The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
 const Dashboard: NextPage = () => {
   const { data } = useSession();
