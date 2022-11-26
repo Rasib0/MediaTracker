@@ -17,7 +17,7 @@ const Dashboard: NextPage = () => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
   
-  const booksarray = trpc.AllBookInLibrarSortedRecent.useQuery({data}, {onSuccess: async (newData) => { 
+  const booksarray = trpc.AllBookInLibrarySortedRecent.useQuery({data}, {onSuccess: async (newData) => { 
   }})
 
  
