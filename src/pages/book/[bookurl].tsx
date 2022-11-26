@@ -5,6 +5,7 @@ import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../common/prisma";
+import Layout from "../../components.tsx/Layout";
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
   const Book = await prisma.book.findFirst({
@@ -68,29 +69,31 @@ const book: NextPage = () => {
       }
   };
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content">
-        <div className="max-w-lg">
-          <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-            This is the single book page.
-          </h1>
-          <p className="my-4 text-center leading-loose">
-            You are allowed to visit this page because you have a session,
-            otherwise you would be redirected to the login page.
-          </p>
-          {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+    <Layout>
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content">
+          <div className="max-w-lg">
+            <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
+              This is the single book page.
+            </h1>
+            <p className="my-4 text-center leading-loose">
+              You are allowed to visit this page because you have a session,
+              otherwise you would be redirected to the login page.
+            </p>
+            {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
 
-          {(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}
-          <div className="text-center">
-            <button
-              className="btn btn-secondary"
-              onClick={() => signOut({ callbackUrl: "/" })}>
-              Logout
-            </button>
+            {(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}
+            <div className="text-center">
+              <button
+                className="btn btn-secondary"
+                onClick={() => signOut({ callbackUrl: "/" })}>
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

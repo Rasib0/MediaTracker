@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import Layout from "../components.tsx/Layout";
 
 // The page that you will see if didn't login 
 // TODO fix the link formating using tailwind css
 const Unauthorized: NextPage = () => {
   return (
+    <Layout>
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content">
         <div className="max-w-lg">
@@ -17,6 +19,7 @@ const Unauthorized: NextPage = () => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 

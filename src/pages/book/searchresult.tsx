@@ -15,7 +15,7 @@ const search: NextPage = () => {
   const { bookurl } = router.query
 
 
-  return (
+  return ( //TODO: remove tailwind css and add your own
     <div className="hero min-h-screen bg-base-200">
     <Select
       defaultValue={[colourOptions[2], colourOptions[3]]}

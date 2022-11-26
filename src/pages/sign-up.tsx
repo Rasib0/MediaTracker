@@ -41,7 +41,7 @@ const SignUp: NextPage = () => {
     [mutateAsync, router, reset] // ...so as long as these dependencies don't change...
   );
 
-  return (
+  return ( //TODO: remove Tailwind css and add your own
     <div>
       <Head>
         <title>Next App - Register</title>
