@@ -1,30 +1,11 @@
 import {t} from '../../trpc'
 import { TRPCError } from "@trpc/server";
-import { Prisma } from "@prisma/client";
 import * as z from "zod";
 import { any, number, string } from "zod";
-import {searchSchema} from "../../../common/validation/authSchemas";
 
 export const bookRouterUser = t.router({
-
-  searchBookOfUser: t.procedure //TODO: how to get the the current user from context to search the books of that user
-  .input(searchSchema)
-  .query(async ({input, ctx}) => {
-    const { keywords, tags } = input
-
-    const result = await ctx.prisma.$queryRaw(
-      Prisma.sql`SELECT bookId FROM TagJoinBook 
-                 WHERE tagId in (${ Prisma.join(tags)}) AND book_url like ${keywords}` 
-      )
-    return {
-        status: 200,
-        message: "Search successful",
-        result: result
-    }
-    
-  }),
   
-  addRatingIfLibrary: t.procedure //
+  addRating: t.procedure //
   .input(z.object({
     book_url: string(),
     rating: number().min(0).max(5)
@@ -56,24 +37,32 @@ export const bookRouterUser = t.router({
             message: "Book not found. Can't rate",
           });
     }
-/*
-    const result = await ctx.prisma.userJoinBook.update({
-      where: {
-        userId: Number(ctx.session?.user.userId),
-        book: Book.bookId
-      },
-      data: {
-        Rating: rating
-      }
-    })
+    try{
+      const result = await ctx.prisma.userJoinBook.update({
+        where: {
+          userId_bookId: {
+              userId: Number(ctx.session?.user.userId),
+              bookId: Book.id
+          }
+        },
+        data: {
+          Rating: rating
+        }
+      })
+  
+    } catch (error) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Can't add rating before adding to library",
+      });
+    }
 
     return {
         status: 201,
         message: "update successful successful",
-        result: result
     }
-    */
   }),
+  
   
   addToLibrary: t.procedure //
   .input(z.object({
@@ -139,7 +128,7 @@ export const bookRouterUser = t.router({
   }),
 
 
-  checkInLibrary: t.procedure //
+  fetchFromLibrary: t.procedure //return the user id and book id
   .input(z.object({
     book_url: string(),
     data: any()
@@ -154,7 +143,7 @@ export const bookRouterUser = t.router({
         });
     }
   
-    const Book = await ctx.prisma.book.findFirst({
+    const Book = await ctx.prisma.book.findFirst({ //this query is to find the id for book
         where: {
             book_url: book_url
         },
@@ -176,10 +165,6 @@ export const bookRouterUser = t.router({
       userId: Number(ctx.session.user.userId),
       bookId: Book.id
     },
-    select: {
-      userId: true,
-      bookId: true
-    }
   })
 
   if(result) {

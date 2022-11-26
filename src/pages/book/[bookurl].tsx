@@ -6,6 +6,7 @@ import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../common/prisma";
 import Layout from "../../components.tsx/Layout";
+
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
   const Book = await prisma.book.findFirst({
@@ -14,44 +15,46 @@ export const getServerSideProps = requireAuth(async (ctx) => {
     },
     select: {
       id: true,
-      book_url: true
+      book_url: true,
+      synopsis: true,
+      name: true,
     }
   })
   if(!Book) {
     return {
       redirect: {
-        destination: "/404", // login path
+        destination: "/404", 
         permanent: false,
       },
     };
-  }  
-return { props: {} };
+  }
+  
+  
+return { props: {synopsis: Book.synopsis, name: Book.name} }; //TODO: Add reviews here
 });
 
-const book: NextPage = () => {
+type bookProps = {
+    synopsis: string;
+    name: string;
+};
+
+const book: NextPage<bookProps> = (props: bookProps) => {
   const { data } = useSession();
   const { bookurl, ...tags } = useRouter().query
   const book_url = String(bookurl)
 
   //setting the state of the button according to user's 
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
-  
-  // Just by having a cache that isn't being used you get a performance boost...
+  const [RatingState, setRatingState] = useState({ rating: 0, disabled: true})
 
-  const doesExist = trpc.checkInLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {
+  // Having a cache that isn't being used you get a performance boost
+  const fetch_result = trpc.fetchFromLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
     } else {
       setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
     }
   }})
-
-  //  const bookData = queryBook.data?.result
-
-  //const queryBook = trpc.findBookData.useQuery({book_url});
-
-
-  //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
   
   const mutationAddtoLib = trpc.addToLibrary.useMutation()
   const mutationremoveFromLibrary = trpc.removeFromLibrary.useMutation()
@@ -81,15 +84,11 @@ const book: NextPage = () => {
               otherwise you would be redirected to the login page.
             </p>
             {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+            <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}</div>
+            <div className="title">Title: {props.name}</div>
+            <div className="author">Author: </div>
+            <div className="synopsis">Synopsis: {props.synopsis}</div>
 
-            {(mutationAddtoLib.error || mutationremoveFromLibrary.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLibrary.error?.message}</p>}
-            <div className="text-center">
-              <button
-                className="btn btn-secondary"
-                onClick={() => signOut({ callbackUrl: "/" })}>
-                Logout
-              </button>
-            </div>
           </div>
         </div>
       </div>
