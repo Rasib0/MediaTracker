@@ -110,6 +110,8 @@ const book: NextPage<bookProps> = (props: bookProps) => {
               otherwise you would be redirected to the login page.
             </p>
             {<button className="btn" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+
+              
             <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
             
             
