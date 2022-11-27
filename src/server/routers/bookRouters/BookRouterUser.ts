@@ -10,7 +10,7 @@ export const bookRouterUser = t.router({
     book_url: string(),
     rating: number().min(0).max(5)
    }))
-  .query(async ({input, ctx}) => { //TODO: should be a mutation
+  .mutation(async ({input, ctx}) => { //TODO: should be a mutation
     const { book_url, rating } = input
     const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
         where: {
@@ -37,7 +37,6 @@ export const bookRouterUser = t.router({
             message: "Book not found. Can't rate",
           });
     }
-    try{
       const result = await ctx.prisma.userJoinBook.update({
         where: {
           userId_bookId: {
@@ -47,19 +46,23 @@ export const bookRouterUser = t.router({
         },
         data: {
           Rating: rating
+        },
+        select: {
+          Rating: true
         }
       })
-  
+  /*
     } catch (error) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Can't add rating before adding to library",
       });
     }
-
+*/
     return {
         status: 201,
         message: "update successful successful",
+        rating: result.Rating
     }
   }),
   
@@ -128,14 +131,14 @@ export const bookRouterUser = t.router({
   }),
 
 
-  fetchFromLibrary: t.procedure //return the user id and book id
+  fetchFromLibrary: t.procedure //return the exits in library variable and the rating
   .input(z.object({
     book_url: string(),
     data: any()
    }
   ))
   .query(async ({input, ctx}) => { 
-    const { book_url} = input
+    const { book_url } = input
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
@@ -143,7 +146,7 @@ export const bookRouterUser = t.router({
         });
     }
   
-    const Book = await ctx.prisma.book.findFirst({ //this query is to find the id for book
+    const Book = await ctx.prisma.book.findFirst({ //find the id for the book
         where: {
             book_url: book_url
         },
