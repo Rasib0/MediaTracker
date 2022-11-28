@@ -18,7 +18,7 @@ const Dashboard: NextPage = () => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
 
   
-  const booksarray = trpc.AllBookInLibrarySortedRecent.useQuery({data}, {onSuccess: async (newData) => { 
+  const booksarray = trpc.AllBookInLibrarySortedRecent.useQuery({ book_url: "", data}, {onSuccess: async (newData) => { 
   }})
 
  
@@ -33,38 +33,26 @@ const Dashboard: NextPage = () => {
                 <p className="my-4 text-center leading-loose">
                   Here is your library where you can see your book collection!
                 </p>
+                <h3>Recently Added</h3>
+                <div className="row">
                 {booksarray.data?.result.map((input) => {
                     return (
-                      <div>
-                        <div color='red' onClick= {() => {router.push('/book/'+ input.book.book_url)}}>
-                          <div>
-                            Name: {input.book.name}
+                          <div className="card mb-3" Style="width: 18rem; height: 25rem">
+                            <div className="col-md-4">
+                              <Image src="" className="img-fluid rounded-start" width={50} height={70} alt="..."></Image>
+                            </div>
+                            <div className="col-md-8">
+                              <div className="card-body">
+                                <h5 className="card-title">{input.book.name}</h5>
+                                <p className="card-text">{input.book.synopsis?.substring(0, 150)}...</p>
+                                <Link href={"/book/" + input.book.book_url} passHref legacyBehavior><a  className="btn btn-primary stretched-link">Read more</a></Link>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            Synopsis: 
-                          </div>
-                          <br></br>
-                          <div>
-                          </div>
-                        </div>
-                      </div>
-            
                     )
                 })}
-                <div className="my-4 bg-gray-700 rounded-lg p-4">
-                  <pre>
-                    <code>{JSON.stringify(booksarray.data?.result, null, 2)}</code>
-                  </pre>
                 </div>
-                <div className="text-center">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => signOut({ callbackUrl: "/log-in" })}
-                  >
-                    Logout
-                  </button>
                 </div>
-              </div>
             </div>
           </div>
     </Layout>

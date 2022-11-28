@@ -186,11 +186,11 @@ export const bookRouterUser = t.router({
 
   AllBookInLibrarySortedRecent: t.procedure //TODO: add a keyword search
   .input(z.object({
-   //dbook_url: string(),
+   book_url: string(),
    data: any()
    }))
   .query(async ({input, ctx}) => { 
-    const {} = input
+    const {book_url} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
@@ -202,6 +202,11 @@ export const bookRouterUser = t.router({
   const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
     where: {
       userId: Number(ctx.session.user.userId),
+      book: {
+        book_url: {
+          contains: book_url
+        }
+      }
     },
     select: {
         bookId: true,

@@ -105,7 +105,7 @@ const book: NextPage<bookProps> = (props: bookProps) => {
               This is the single book page.
             </h1>
             <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
-            <p className="my-4 text-center leading-loose">
+            <p className="text-center leading-loose">
               You are allowed to visit this page because you have a session,
               otherwise you would be redirected to the login page.
             </p>
