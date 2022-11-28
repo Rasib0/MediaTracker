@@ -191,10 +191,11 @@ export const bookRouterUser = t.router({
    }))
   .query(async ({input, ctx}) => { 
     const {} = input
+
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User not found",
+          message: "User's email not found in session. Please relogin",
         });
     }
 
@@ -209,7 +210,9 @@ export const bookRouterUser = t.router({
           select: {
             image_url: true,
             book_url: true,
-            name: true
+            name: true,
+            synopsis: true,
+            
           },
         }
     }
