@@ -4,6 +4,8 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/router'
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
+import { useState } from "react";
+
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -12,23 +14,26 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const book: NextPage = () => {
   const { data } = useSession();
   const router = useRouter()
-
+  const [errorMessage, setErrorMessage] = useState("")
 
   //const q = trpc.searchBooks.useQuery({ keywords: book_url});
   //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) //need to fix the tag query
 
   //console.log(q.data?.result)
   //console.log(c.data)
-
   const { bookurl, ...tags } = router.query
   const book_url = String(bookurl)
-  const mutationAddtoLib = trpc.addToLibrary.useMutation()
-  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url})
-  
+
+  const mutationAddtoLib = trpc.addToLibrary.useMutation() //TODO
+
+  try {} catch {}
+  try {} catch {}
+
+  const queryCheckInLib = trpc.checkInLibrary.useQuery({book_url}) //TODO
   console.log(queryCheckInLib.data?.result)
+
   const handleAddToLib = async () => {
     mutationAddtoLib.mutate({ book_url });
-
   };
 
   return (
