@@ -274,6 +274,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-dev.db
-dev.db-journal
+#dev.db
+#dev.db-journal
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,macos,linux,windows,database,nextjs

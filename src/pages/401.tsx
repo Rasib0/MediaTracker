@@ -4,6 +4,8 @@ import Layout from "../components.tsx/Layout";
 
 // The page that you will see if didn't login 
 // TODO fix the link formating using tailwind css
+
+
 const Unauthorized: NextPage = () => {
   return (
     <div className="hero min-h-screen bg-base-200">
