@@ -34,7 +34,7 @@ const Dashboard: NextPage = () => {
                 {booksarray.data?.result.map((input) => {
                     return (
                       <div>
-                        <div onClick={() => router.push('/book/' + input.book_url)}>
+                        <div className="link-primary cursor-pointer" onClick={() => router.push('/book/' + input.book_url)}>
                           <div>
                             Name: {input.name}
                           </div>
