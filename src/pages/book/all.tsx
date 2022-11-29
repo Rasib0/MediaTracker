@@ -25,23 +25,20 @@ const Dashboard: NextPage = () => {
       <div className="hero min-h-screen bg-base-200">
             <div className="hero-content">
               <div className="max-w-lg">
-                <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-                  All Book Page 
-                </h1>
-                <p className="my-4 text-center leading-loose">
-                  Here is Where you can see all the books
-                </p>
+                <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/")}}><h1>All Books Page</h1>Here is where you can see all our books!</div>
+                <div className="grid">
                 {booksarray.data?.result.map((input) => {
-                    return (
-                      <div>
-                        <div className="link-primary cursor-pointer" onClick={() => router.push('/book/' + input.book_url)}>
-                          <div>
-                            Name: {input.name}
-                          </div>
-
+                  return (
+                    <div>
+                      <div className="link-primary cursor-pointer" onClick={() => router.push('/book/' + input.book_url)}>
+                        <div>
+                          Name: {input.name}
                         </div>
+
                       </div>
-                    )})}
+                    </div>
+                  )})}
+                </div>
                 <div className="my-4 bg-gray-700 rounded-lg p-4">
                   <pre>
                     <code>{JSON.stringify(booksarray.data?.result, null, 2)}</code>

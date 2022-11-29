@@ -57,7 +57,7 @@ const Dashboard: NextPage = () => {
           {`
               .max_width {
                 max-width: 350px;
-                min-width: 350px;
+                min-width: 300px;
                 max-height: 500px;
                 overflow: hidden;
               }
