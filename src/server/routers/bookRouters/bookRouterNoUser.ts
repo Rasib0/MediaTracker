@@ -20,7 +20,7 @@ export const bookRouterNoUser = t.router({
   }))
   
   .query(async ({input, ctx}) => {
-    const { keyword} = input
+    const { keyword } = input
     
     const result = await ctx.prisma.book.findMany({
       orderBy: [

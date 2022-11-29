@@ -14,25 +14,32 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 // The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
 const Dashboard: NextPage = () => {
   const { data } = useSession();
-  //const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
+  const [searchKeyword, setSearchKeyword] = useState("")
 
-  const booksarray = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: ""}, {onSuccess: async (newData) => { 
+  const booksarray = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: searchKeyword}, {onSuccess: async (newData) => { 
   }})
 
  
   return ( //TODO: remove tailwind css and add your own
     <Layout>
-      <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content">
-              <div className="max-w-lg">
-                <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/")}}><h1>All Books Page</h1>Here is where you can see all our books!</div>
+      <div className="">
+            <div className="">
+              <div className="">
+                <div className="p-3 mb-2 bg-primary text-white"><h1>All Books Page</h1>Here is where you can see all our books!</div>
+
+                <div className="form-outline">
+                  <input type="search" id="form1" className="form-control" placeholder="Type query" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
+                </div>
+
+
+                <div className=""></div>
                 <div className="grid">
                 {booksarray.data?.result.map((input) => {
                   return (
                     <div>
                       <div className="link-primary cursor-pointer" onClick={() => router.push('/book/' + input.book_url)}>
-                        <div>
-                          Name: {input.name}
+                        <div className="mt-1 mb-1">
+                          {input.name}
                         </div>
 
                       </div>
