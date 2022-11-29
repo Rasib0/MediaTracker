@@ -183,14 +183,14 @@ export const bookRouterUser = t.router({
       result: result,
     }
   }),
-
-  AllBookInLibrarySortedRecent: t.procedure //TODO: add a keyword search
+  AllBookInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
   .input(z.object({
    book_url: string(),
-   data: any()
+   data: any(),
+   take: number()
    }))
   .query(async ({input, ctx}) => { 
-    const {book_url} = input
+    const {book_url, take} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
@@ -200,6 +200,58 @@ export const bookRouterUser = t.router({
     }
 
   const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+    take: take,
+    where: {
+      userId: Number(ctx.session.user.userId),
+      Rating: 5,
+      book: {
+        book_url: {
+          contains: book_url
+        },
+      }
+    },
+    select: {
+        bookId: true,
+        Rating: true,
+        book:{ 
+          select: {
+            image_url: true,
+            book_url: true,
+            name: true,
+            synopsis: true,
+            
+          },
+        }
+    },
+    orderBy: {
+      assignedAt: 'asc',
+    },
+  })
+
+    return {
+      message: "Listed all books in user library in recently added",
+      result: booksInLibrary,
+    }
+  }),
+
+  AllBookInLibrarySortedRecent: t.procedure //TODO: add a keyword search
+  .input(z.object({
+   book_url: string(),
+   data: any(),
+   take: number()
+   }))
+  .query(async ({input, ctx}) => { 
+    const {book_url, take} = input
+
+    if(!ctx.session?.user.email) {
+      throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User's email not found in session. Please re-login",
+        });
+    }
+
+  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+    take: take,
     where: {
       userId: Number(ctx.session.user.userId),
       book: {
@@ -220,7 +272,10 @@ export const bookRouterUser = t.router({
             
           },
         }
-    }
+    },
+    orderBy: {
+      assignedAt: 'asc',
+    },
   })
 
     return {

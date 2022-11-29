@@ -113,8 +113,6 @@ const book: NextPage<bookProps> = (props: bookProps) => {
 
               
             <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
-            
-            
             <div className="title">Title: {props.title}</div>
             <div className="author">Author: {props.title} </div>
             <div className="Image">Image url: {props.image_url} </div>
