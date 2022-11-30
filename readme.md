@@ -1,3 +1,4 @@
-# next-auth-trpc-prisma
+# A Catelog Website Project
+
 Next Auth with tRPC and Prisma 🎃
 
