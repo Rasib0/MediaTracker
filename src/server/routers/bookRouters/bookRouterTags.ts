@@ -21,11 +21,13 @@ export const bookRouterTag = t.router({
           { 
             name: {
               contains: keywords,
+              mode: 'insensitive', // Default value: default
             },
           },
           { 
             synopsis: {
               contains: keywords,
+              mode: 'insensitive', // Default value: default
             },
           },
 

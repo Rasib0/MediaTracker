@@ -57,7 +57,7 @@ model UserJoinMovie {
   assignedAt DateTime @default(now())
   Rating Int @default(5)//TODO: put a constraint to limit this by 5
   Review String? @default("")
-
+  Likes Int @default(0)
   user User @relation(fields: [userId], references: [id])
   userId Int
   movie Movie @relation(fields: [movieId], references: [id])
@@ -84,7 +84,7 @@ model Tag {
   id Int @id @default(autoincrement())
   tagsName String
   Books TagJoinBook[]
-}
+} 
 
 model TagJoinBook {
   user Tag @relation(fields: [tagId], references: [id])

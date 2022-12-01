@@ -5,6 +5,54 @@ import { any, number, string } from "zod";
 
 export const bookRouterUser = t.router({
   
+
+  addReview: t.procedure //
+  .input(z.object({
+    book_url: string(),
+    review: string().min(0).max(500)
+   }))
+  .mutation(async ({input, ctx}) => { //TODO: should be a mutation
+    const { book_url, review } = input
+    const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
+        where: {
+            book_url: book_url,
+        }
+    })
+    if(!ctx.session?.user.userId){
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found. Can't review",
+      });
+    }
+    
+    if(!Book) {     // else throw error
+        throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Book not found. Can't review",
+          });
+    }
+      const result = await ctx.prisma.userJoinBook.update({
+        where: {
+          userId_bookId: {
+              userId: Number(ctx.session?.user.userId),
+              bookId: Book.id
+          }
+        },
+        data: {
+          Review: review
+        },
+        select: {
+          Review: true
+        }
+      })
+
+    return {
+        status: 201,
+        message: "update successful successful",
+        rating: result.Review
+    }
+  }),
+
   addRating: t.procedure //
   .input(z.object({
     book_url: string(),
@@ -21,14 +69,7 @@ export const bookRouterUser = t.router({
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "User not found. Can't rate",
-      });
-    }
-    
-    if(rating > 5) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Bad rating",
-      });
+      }); 
     }
 
     if(!Book) {     // else throw error
@@ -51,14 +92,7 @@ export const bookRouterUser = t.router({
           Rating: true
         }
       })
-  /*
-    } catch (error) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Can't add rating before adding to library",
-      });
-    }
-*/
+
     return {
         status: 201,
         message: "update successful successful",
@@ -140,6 +174,7 @@ export const bookRouterUser = t.router({
   .query(async ({input, ctx}) => { 
     const { book_url } = input
     if(!ctx.session?.user.email) {
+      
       throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found when fetchFromLibrary",
@@ -185,12 +220,12 @@ export const bookRouterUser = t.router({
   }),
   AllBookInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
   .input(z.object({
-   book_url: string(),
+   keyword: string(),
    data: any(),
    take: number()
    }))
   .query(async ({input, ctx}) => { 
-    const {book_url, take} = input
+    const {keyword, take} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
@@ -205,8 +240,9 @@ export const bookRouterUser = t.router({
       userId: Number(ctx.session.user.userId),
       Rating: 5,
       book: {
-        book_url: {
-          contains: book_url
+        name: {
+          contains: keyword,
+          mode: 'insensitive'
         },
       }
     },
@@ -234,20 +270,21 @@ export const bookRouterUser = t.router({
     }
   }),
 
-  AllBookInLibrarySortedRecent: t.procedure //TODO: add a keyword search
+  AllBookInLibrarySortedRecent: t.procedure //TODO: use the keyword search
   .input(z.object({
-   book_url: string(),
+    keyword: string(),
    data: any(),
    take: number()
    }))
   .query(async ({input, ctx}) => { 
-    const {book_url, take} = input
+    const {keyword, take} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
           message: "User's email not found in session. Please re-login",
         });
+        
     }
 
   const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
@@ -255,8 +292,9 @@ export const bookRouterUser = t.router({
     where: {
       userId: Number(ctx.session.user.userId),
       book: {
-        book_url: {
-          contains: book_url
+        name: {
+          contains: keyword,
+          mode: 'insensitive'
         }
       }
     },

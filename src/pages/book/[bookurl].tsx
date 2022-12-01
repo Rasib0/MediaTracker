@@ -53,7 +53,6 @@ const book: NextPage<bookProps> = (props: bookProps) => {
   const [RatingState, setRatingState] = useState({ rating: NaN, disabled: true})
 
 
-
   //Initial set up for stateful components
 
   const fetch_result = trpc.fetchFromLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost

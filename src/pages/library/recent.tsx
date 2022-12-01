@@ -16,9 +16,9 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 const Dashboard: NextPage = () => {
   const { data } = useSession();
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true })
+//TODO: add search here too.
 
-
-  const AllBookInLibrarySortedRecent = trpc.AllBookInLibrarySortedRecent.useQuery({ book_url: "", take : 15, data }, {
+  const AllBookInLibrarySortedRecent = trpc.AllBookInLibrarySortedRecent.useQuery({ keyword: "", take : 15, data }, {
     onSuccess: async (newData) => {
     }
   })
@@ -64,30 +64,6 @@ const Dashboard: NextPage = () => {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
                 grid-auto-rows: minmax(100px, auto);
-              }
-              .one {
-                grid-column: 1 / 3;
-                grid-row: 1;
-              }
-              .two {
-                grid-column: 2 / 4;
-                grid-row: 1 / 3;
-              }
-              .three {
-                grid-column: 1;
-                grid-row: 2 / 5;
-              }
-              .four {
-                grid-column: 3;
-                grid-row: 3;
-              }
-              .five {
-                grid-column: 2;
-                grid-row: 4;
-              }
-              .six {
-                grid-column: 3;
-                grid-row: 4;
               }
               `}
         </style>
