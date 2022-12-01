@@ -28,7 +28,7 @@ const Dashboard: NextPage = () => {
                 <div className="p-3 mb-2 bg-primary text-white"><h1>All Books Page</h1>Here is where you can see all our books!</div>
 
                 <div className="form-outline">
-                  <input type="search" id="form1" className="form-control" placeholder="Type query" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
+                  <input type="search" id="form1" className="form-control" placeholder="Search books" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
                 </div>
 
                 <div className="row">
