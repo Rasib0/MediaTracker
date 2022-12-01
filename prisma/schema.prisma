@@ -29,6 +29,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Books   UserJoinBook[] 
+  Movies  UserJoinMovie[]
 }
 
 model Book {
@@ -41,6 +42,30 @@ model Book {
   Users UserJoinBook[]
   Tags TagJoinBook[]
 }
+
+model Movie {
+  id Int @id @default(autoincrement())
+  name String
+  image_url String? @default("No image found")
+  synopsis String? @default("No synopsis")
+  director String?
+  movie_url String @unique
+  Users UserJoinMovie[]
+}
+
+model UserJoinMovie {
+  assignedAt DateTime @default(now())
+  Rating Int @default(5)//TODO: put a constraint to limit this by 5
+  Review String? @default("")
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  movie Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+  @@id([userId, movieId])
+}
+
+
 
 model UserJoinBook {
   assignedAt DateTime @default(now())
