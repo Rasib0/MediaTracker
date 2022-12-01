@@ -114,9 +114,9 @@ const book: NextPage<bookProps> = (props: bookProps) => {
                             <div className="author">by {props.author}</div>
                             <p className="card-text">{props.synopsis}</p>
                           </div>
-                          <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
                           {<button className="btn btn-primary" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
                           <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
+                          <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
                         </div>
                       </div>
                   </div>
