@@ -48,6 +48,7 @@ export const bookRouterNoUser = t.router({
         name: true,
         image_url: true,
         book_url: true,
+        synopsis: true,
       }
     })
       return {

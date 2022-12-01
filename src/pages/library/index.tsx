@@ -27,7 +27,7 @@ const Dashboard: NextPage = () => {
     }
   })
 
-  return ( //TODO: remove tailwind css and add your own
+  return (
     <Layout>
       <div className="">
         <div className="">
