@@ -7,6 +7,7 @@ import { trpc } from "../../common/trpc";
 import { prisma } from "../../common/prisma";
 import Layout from "../../components.tsx/Layout";
 import StarRating from "../../components.tsx/StarRating";
+import Image from "next/image";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -113,10 +114,24 @@ const book: NextPage<bookProps> = (props: bookProps) => {
 
               
             <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
-            <div className="title">Title: {props.title}</div>
-            <div className="author">Author: {props.title} </div>
-            <div className="Image">Image url: {props.image_url} </div>
-            <div className="synopsis">Synopsis: {props.synopsis}</div>
+            
+
+            <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
+
+                      <div className="row g-0">
+                        <div className="col mt-2 mb-1">
+                          <Image src={"/images/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+                        </div>
+
+                        <div className="col-md-8">
+                          <div className="card-body">
+                            <h5 className="card-title">{props.title}</h5>
+                            <div className="author">by {props.author}</div>
+                            <p className="card-text">{props.synopsis}</p>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
           </div>
         </div>
       </div>
