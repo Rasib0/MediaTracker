@@ -249,13 +249,14 @@ export const bookRouterUser = t.router({
     select: {
         bookId: true,
         Rating: true,
+        assignedAt: true,
         book:{ 
           select: {
             image_url: true,
             book_url: true,
             name: true,
             synopsis: true,
-            
+            author: true,
           },
         }
     },
@@ -301,13 +302,14 @@ export const bookRouterUser = t.router({
     select: {
         bookId: true,
         Rating: true,
+        assignedAt: true,
         book:{ 
           select: {
             image_url: true,
             book_url: true,
             name: true,
             synopsis: true,
-            
+            author: true,
           },
         }
     },

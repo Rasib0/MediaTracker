@@ -1,12 +1,10 @@
 import type { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import router from "next/router";
+import { useSession} from "next-auth/react";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/Layout";
+import BookOverviewCard from "../../components.tsx/BookOverviewCard";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -18,7 +16,7 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
   const [searchKeyword, setSearchKeyword] = useState("")
 
-  const booksarray = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: searchKeyword}, {onSuccess: async (newData) => { 
+  const fetchAllBookDataByKeywordDesc = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: searchKeyword}, {onSuccess: async (newData) => { 
   }})
 
  
@@ -32,43 +30,10 @@ const Dashboard: NextPage = () => {
                 </div>
 
                 <div className="row">
-                {booksarray.data?.result.map((input, i) => {
-                  return (
-                    <div key={i} className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-                      <div className="row g-0">
-                        <div className="col mt-2 mb-1">
-                          <Image src={"/images/" + input.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
-                          <Link href={"/book/" + input.book_url} passHref legacyBehavior><a className="btn btn-primary stretched-link ml-1">Read more</a></Link>
-                        </div>
-
-                        <div className="col-md-8">
-                          <div className="card-body">
-                            <h5 className="card-title">{input.name}</h5>
-                            <p className="card-text">{input.synopsis?.substring(0, 150)}... read more</p>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  )})}
+                {fetchAllBookDataByKeywordDesc.data?.result.map((book, i) => {
+                  return <BookOverviewCard name={book.name} by={book.author} synopsis={book.synopsis} date={null} image_url={book.image_url} book_url={book.book_url}/>
+                   })}
                 </div>
-                <div className="text-center">
-                </div>
-                <style jsx>
-          {`
-              .max_width {
-                max-width: 350px;
-                min-width: 350px;
-                max-height: 500px;
-                overflow: hidden;
-              }
-              .wrapper {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                grid-auto-rows: minmax(100px, auto);
-              }
-              `}
-        </style>
           </div>
     </Layout>
   );

@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
 import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
+import BookOverviewCard from "../../components.tsx/BookOverviewCard";
 import Layout from "../../components.tsx/Layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -37,66 +36,17 @@ const Dashboard: NextPage = () => {
 
             <div className="row">
               {AllBookInLibrarySortedRecent.data?.result.map((input, i) => {
-                return (
-                    <div key={i} className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-                      <div className="row g-0">
-                        <div className="col mt-2 mb-1">
-                          <Image src={"/images/" + input.book.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
-                          <Link href={"/book/" + input.book.book_url} passHref legacyBehavior><a className="btn btn-primary stretched-link ml-1">Read more</a></Link>
-                        </div>
-
-                        <div className="col-md-8">
-                          <div className="card-body">
-                            <h5 className="card-title">{input.book.name}</h5>
-                            <p className="card-text">{input.book.synopsis?.substring(0, 150)}... read more</p>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                ) 
+                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={null} image_url={input.book.image_url} book_url={input.book.book_url}/>
               })}
             </div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/favorites")}}><h3>Favorites</h3></div>
             <div className="row">
               {AllBookInLibrarySortedRecentFav.data?.result.map((input, i) => {
-                return (
-                    <div key={i} className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-                      <div className="row g-0">
-                        <div className="col mt-2 mb-1">
-                          <Image src={"/images/" + input.book.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
-                          <Link href={"/book/" + input.book.book_url} passHref legacyBehavior><a className="btn btn-primary stretched-link ml-1">Read more</a></Link>
-                        </div>
-
-                        <div className="col-md-8">
-                          <div className="card-body">
-                            <h5 className="card-title">{input.book.name}</h5>
-                            <p className="card-text">{input.book.synopsis?.substring(0, 150)}... read more</p>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                )
+                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={null} image_url={input.book.image_url} book_url={input.book.book_url}/>
               })}
             </div>
-
           </div>
         </div>
-        <style jsx>
-          {`
-              .max_width {
-                max-width: 350px;
-                min-width: 350px;
-                max-height: 500px;
-                overflow: hidden;
-              }
-              .wrapper {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                grid-auto-rows: minmax(100px, auto);
-              }
-              `}
-        </style>
       </div>
     </Layout>
   );
