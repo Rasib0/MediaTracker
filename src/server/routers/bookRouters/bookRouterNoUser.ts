@@ -87,7 +87,7 @@ export const bookRouterNoUser = t.router({
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User not found",
+          message: "User not found when AllBooksSorted",
         });
     }
 
