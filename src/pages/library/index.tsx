@@ -36,13 +36,13 @@ const Dashboard: NextPage = () => {
 
             <div className="row">
               {AllBookInLibrarySortedRecent.data?.result.map((input, i) => {
-                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={null} image_url={input.book.image_url} book_url={input.book.book_url}/>
+                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
               })}
             </div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/favorites")}}><h3>Favorites</h3></div>
             <div className="row">
               {AllBookInLibrarySortedRecentFav.data?.result.map((input, i) => {
-                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={null} image_url={input.book.image_url} book_url={input.book.book_url}/>
+                  return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
               })}
             </div>
           </div>
