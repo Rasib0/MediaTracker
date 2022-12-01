@@ -8,7 +8,7 @@ type Props = {
   disabled: boolean
 }
 
-const StarRating = (props: Props) => {
+const StarRating: React.FC<Props> = (props: Props) => {
   const [hover, setHover] = useState(props.rating)
   return (
     <div>

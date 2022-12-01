@@ -33,11 +33,13 @@ export const bookRouterNoUser = t.router({
           { 
             name: {
               contains: keyword,
+              mode: "insensitive"
             },
           },
           { 
             synopsis: {
               contains: keyword,
+              mode: "insensitive"
             },
           },
 
@@ -49,6 +51,7 @@ export const bookRouterNoUser = t.router({
         image_url: true,
         book_url: true,
         synopsis: true,
+        author: true,
       }
     })
       return {

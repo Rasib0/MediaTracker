@@ -33,12 +33,12 @@ export const getServerSideProps = requireAuth(async (ctx) => {
   }
   
   
-return { props: {synopsis: Book.synopsis, title: Book.name, author: Book.author, image_url: Book.image_url} }; //TODO: Add reviews here
+return { props: {synopsis: Book.synopsis, name: Book.name, author: Book.author, image_url: Book.image_url} }; //TODO: Add reviews here
 });
 
 type bookProps = {
     synopsis: string;
-    title: string;
+    name: string;
     image_url: string;
     author: string;
 };
@@ -108,7 +108,7 @@ const book: NextPage<bookProps> = (props: bookProps) => {
                         </div>
                         <div className="col-md-8">
                           <div className="card-body">
-                            <h5 className="card-title">{props.title}</h5>
+                            <h5 className="card-title">{props.name}</h5>
                             <div className="author">by {props.author}</div>
                             <p className="card-text">{props.synopsis}</p>
                           </div>
