@@ -99,25 +99,10 @@ const book: NextPage<bookProps> = (props: bookProps) => {
 
   return (
     <Layout>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content">
-          <div className="max-w-lg">
-            <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-              This is the single book page.
-            </h1>
-            <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
-            <p className="text-center leading-loose">
-              You are allowed to visit this page because you have a session,
-              otherwise you would be redirected to the login page.
-            </p>
-            {<button className="btn btn-primary" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
-
-              
-            <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
-            
+          <div>
+            <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
 
             <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-
                       <div className="row g-0">
                         <div className="col mt-2 mb-1">
                           <Image src={"/images/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
@@ -129,12 +114,13 @@ const book: NextPage<bookProps> = (props: bookProps) => {
                             <div className="author">by {props.author}</div>
                             <p className="card-text">{props.synopsis}</p>
                           </div>
+                          <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
+                          {<button className="btn btn-primary" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+                          <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
                         </div>
                       </div>
                   </div>
           </div>
-        </div>
-      </div>
     </Layout>
   );
 };
