@@ -1,0 +1,5 @@
+SELECT * FROM "Book" AS b
+INNER JOIN "TagJoinBook" AS bt on b."id" = bt."bookId"
+INNER JOIN "Tag" AS t on bt."tagId" = t."id"
+
+SELECT * FROM "TagJoinBook" AS bt INNER JOIN "Tag" AS t on bt."tagId" = t."id"
