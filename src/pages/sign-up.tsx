@@ -49,26 +49,32 @@ const SignUp: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <div className="d-flex justify-content-center mt-5">
+      <div className="card">
+        
         <form       //...Form will receive the same props and can skip re-rendering 
-          className="flex items-center justify-center h-screen w-full"
+          className="card-body"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="card w-96 bg-base-100 shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title">Create an account!</h2>
-              <Controller
-                name="username"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    type="text"
-                    placeholder="Type your username..."
-                    className="input input-bordered w-full max-w-xs my-2"
-                    {...field}
-                  />
-                )}
-              />
+        <div className="card-body">
+          <h2 className="card-title">Create an account!</h2>
+          <div className="form-outline mb-2">
+            <Controller
+              name="username"
+              control={control}
+              render={({ field }) => (
+                <input
+                  type="text"
+                  placeholder="Type your username..."
+                  className="form-control"
+                  {...field}
+                />
+              )}
+            />
+          </div>
+
+
+          <div className="form-outline mb-2">
               <Controller
                 name="email"
                 control={control}
@@ -76,7 +82,7 @@ const SignUp: NextPage = () => {
                   <input
                     type="email"
                     placeholder="Type your email..."
-                    className="input input-bordered w-full max-w-xs"
+                    className="form-control"
                     {...field}
                     onChange={(e) => {
                       field.onChange(e)
@@ -85,8 +91,11 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
-              <div className="errorMessages">{errors.email?.message}</div> {/* error message from use form*/}
+          </div>
 
+              <div className="errorMessages">{errors.email?.message}</div> {/* error message from use form*/}
+              
+            <div className="form-outline mb-2">
               <Controller
                 name="password"
                 control={control}
@@ -94,7 +103,7 @@ const SignUp: NextPage = () => {
                   <input
                     type="password"
                     placeholder="Type your password..."
-                    className="input input-bordered w-full max-w-xs my-2"
+                    className="form-control"
                     {...field}
                     onChange={(e) => {
                       field.onChange(e)
@@ -103,28 +112,29 @@ const SignUp: NextPage = () => {
                   />
                 )}
               />
+              </div>
+
               <div className="errorMessages">{errors.password?.message?.replace("String", "password")}</div>
 
               <p className="errorMessages">{errorMessage ? errorMessage + 'Please try again' : '' } </p>
 
-              <div className="card-actions items-center justify-between">
-                <Link href="/" className="link">
-                  Go to login
-                </Link>
-
-                <button className="btn btn-primary btn-block mb-4" type="submit">
+              <div className="d-flex justify-content-center">
+                <button className="btn btn-primary btn-block mb-2" type="submit">
                   Sign Up
                 </button>
               </div>
+              <div>Already a member? <Link href="/" className="link">Login</Link></div>
             </div>
-          </div>
         </form>
-      </main>
+        </div>
+      </div>
+
       <style jsx>
         {
           `
           .errorMessages {
-            color: red
+            color: red;
+            font-size: 12px
           }
           `
         }
