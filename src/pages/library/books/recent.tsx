@@ -22,11 +22,11 @@ const Dashboard: NextPage = () => {
   })
 
 
-  return ( //TODO: remove tailwind css and add your own
+  return (
     <Layout>
           <div className="">
-          <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
-            <div className="p-3 mb-2 bg-secondary text-white" onClick={() => {router.push("/library/recent")}}><h3>Recently Added</h3></div>
+          <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/books/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
+            <div className="p-3 mb-2 bg-secondary text-white" onClick={() => {router.push("/library/books/recent")}}><h3>Recently Added</h3></div>
             <div className="form-outline">
                   <input type="search" id="form1" className="form-control" placeholder="Search books" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
               </div>

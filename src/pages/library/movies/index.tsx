@@ -31,15 +31,15 @@ const Dashboard: NextPage = () => {
       <div className="">
         <div className="">
           <div className="">
-          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
-            <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/recent")}}><h3>Recently Added</h3></div>
+          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/movies/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
+            <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/movies/recent")}}><h3>Recently Added</h3></div>
 
             <div className="row">
               {AllMovieInLibrarySortedRecent.data?.result.map((input, i) => {
                   return <OverviewCard name={input.movie.name}  type="movies" rating={input.Rating} by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>
               })}
             </div>
-            <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/favorites")}}><h3>Favorites</h3></div>
+            <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/movies/favorites")}}><h3>Favorites</h3></div>
             <div className="row">
               {AllMovieInLibrarySortedRecentFav.data?.result.map((input, i) => {
                   return <OverviewCard name={input.movie.name} type={"movies"} rating={input.Rating} by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>

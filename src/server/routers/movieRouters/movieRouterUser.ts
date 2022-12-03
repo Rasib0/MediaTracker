@@ -262,7 +262,7 @@ export const movieRouterUser = t.router({
         }
     },
     orderBy: {
-      assignedAt: 'asc',
+      movieId: 'desc',
     },
   })
 
@@ -315,7 +315,7 @@ export const movieRouterUser = t.router({
         }
     },
     orderBy: {
-      assignedAt: 'asc',
+      movieId: 'desc',
     },
   })
 

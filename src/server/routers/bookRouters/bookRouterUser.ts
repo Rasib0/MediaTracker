@@ -261,7 +261,7 @@ export const bookRouterUser = t.router({
         }
     },
     orderBy: {
-      assignedAt: 'asc',
+      bookId: 'desc',
     },
   })
 
@@ -314,7 +314,7 @@ export const bookRouterUser = t.router({
         }
     },
     orderBy: {
-      assignedAt: 'asc',
+      bookId: 'desc',
     },
   })
 
