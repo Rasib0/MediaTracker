@@ -4,7 +4,7 @@ import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
-import BookOverviewCard from "../../components.tsx/BookOverviewCard";
+import OverviewCard from "../../components.tsx/OverviewCard";
 import Layout from "../../components.tsx/Layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -33,7 +33,7 @@ const Dashboard: NextPage = () => {
             </div>
             <div className="row">
                   {AllBookInLibrarySortedRecentFav.data?.result.map((input, i) => {
-                    return <BookOverviewCard name={input.book.name} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
+                    return <OverviewCard name={input.book.name} type="books" rating={input.Rating} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
                   })}
             </div>
 

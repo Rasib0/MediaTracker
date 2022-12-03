@@ -4,7 +4,7 @@ import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/Layout";
-import BookOverviewCard from "../../components.tsx/BookOverviewCard";
+import OverviewCard from "../../components.tsx/OverviewCard";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -31,7 +31,7 @@ const Dashboard: NextPage = () => {
 
                 <div className="row">
                 {fetchAllBookDataByKeywordDesc.data?.result.map((book) => {
-                  return <BookOverviewCard name={book.name} by={book.author} synopsis={book.synopsis} date={null} image_url={book.image_url} book_url={book.book_url}/>
+                  return <OverviewCard name={book.name} type="books" rating={null} by={book.author} synopsis={book.synopsis} date={null} image_url={book.image_url} book_url={book.book_url}/>
                    })}
                 </div>
           </div>
