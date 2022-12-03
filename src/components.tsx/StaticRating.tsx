@@ -11,30 +11,12 @@ const StaticRating: React.FC<Props> = (props: Props) => {
     {[...Array(5)].map((star, i) => {
       const ratingValue = i + 1;
       return (
-        <label key={i}>
-          <input 
-            type="radio" 
-            name="rating" 
-            value={ratingValue} 
-          />
-          <FaStar className="star" 
+          <FaStar key={i} className="star" 
                   color={(ratingValue <= (props.rating) ? "#ffc107": "#e4e5e9")} 
                   size={30}
           />
-        </label>
       )
     })}
-    <style jsx>
-      {`
-      input[type="radio"] {
-        display: none
-      }
-      .star {
-        cursor: pointer;
-        transition: 200ms;
-      }
-      `}
-    </style>
   </div>
   )
 }
