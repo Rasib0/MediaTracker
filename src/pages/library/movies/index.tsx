@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import router from "next/router";
 import { useState } from "react";
-import { requireAuth } from "../../common/requireAuth";
-import { trpc } from "../../common/trpc";
-import OverviewCard from "../../components.tsx/OverviewCard";
-import Layout from "../../components.tsx/Layout";
+import { requireAuth } from "../../../common/requireAuth";
+import { trpc } from "../../../common/trpc";
+import OverviewCard from "../../../components.tsx/OverviewCard";
+import Layout from "../../../components.tsx/Layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -17,11 +17,11 @@ const Dashboard: NextPage = () => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true })
 
 
-  const AllBookInLibrarySortedRecent = trpc.AllBookInLibrarySortedRecent.useQuery({ keyword: "", take: 5, data }, {
+  const AllMovieInLibrarySortedRecent = trpc.AllMovieInLibrarySortedRecent.useQuery({ keyword: "", take: 5, data }, {
     onSuccess: async (newData) => {
     }
   })
-  const AllBookInLibrarySortedRecentFav = trpc.AllBookInLibrarySortedRecentFav.useQuery({ keyword: "", take: 5 , data }, {
+  const AllMovieInLibrarySortedRecentFav = trpc.AllMovieInLibrarySortedRecentFav.useQuery({ keyword: "", take: 5 , data }, {
     onSuccess: async (newData) => {
     }
   })
@@ -35,14 +35,14 @@ const Dashboard: NextPage = () => {
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/recent")}}><h3>Recently Added</h3></div>
 
             <div className="row">
-              {AllBookInLibrarySortedRecent.data?.result.map((input, i) => {
-                  return <OverviewCard name={input.book.name}  type="books" rating={input.Rating} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
+              {AllMovieInLibrarySortedRecent.data?.result.map((input, i) => {
+                  return <OverviewCard name={input.movie.name}  type="movies" rating={input.Rating} by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>
               })}
             </div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/favorites")}}><h3>Favorites</h3></div>
             <div className="row">
-              {AllBookInLibrarySortedRecentFav.data?.result.map((input, i) => {
-                  return <OverviewCard name={input.book.name} type={"books"} rating={input.Rating} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} book_url={input.book.book_url}/>
+              {AllMovieInLibrarySortedRecentFav.data?.result.map((input, i) => {
+                  return <OverviewCard name={input.movie.name} type={"movies"} rating={input.Rating} by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>
               })}
             </div>
           </div>

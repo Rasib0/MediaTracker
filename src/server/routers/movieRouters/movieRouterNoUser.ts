@@ -3,16 +3,15 @@ import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { any, string } from "zod";
 
-export const bookRouterNoUser = t.router({
+export const movieRouterNoUser = t.router({
   
 /*
-
     const result = await ctx.prisma.$queryRaw(
-      Prisma.sql`SELECT * FROM Book 
-                 WHERE book_url like ${keywords}`
+      Prisma.sql`SELECT * FROM movie 
+                 WHERE movie_url like ${keywords}`
       )
   */
-  fetchAllBookDataByKeywordDesc: t.procedure
+  fetchAllMovieDataByKeywordDesc: t.procedure
   .input(z.object({
     keyword: string(),
   }))
@@ -20,7 +19,7 @@ export const bookRouterNoUser = t.router({
   .query(async ({input, ctx}) => {
     const { keyword } = input
     
-    const result = await ctx.prisma.book.findMany({
+    const result = await ctx.prisma.movie.findMany({
       orderBy: [
         {
           name: 'desc',
@@ -47,9 +46,9 @@ export const bookRouterNoUser = t.router({
         id: true,
         name: true,
         image_url: true,
-        book_url: true,
+        movie_url: true,
         synopsis: true,
-        author: true,
+        director: true,
       }
     })
       return {
@@ -59,16 +58,16 @@ export const bookRouterNoUser = t.router({
       }
   }),
 
-  fetchSingleBookDataByUrl: t.procedure
+  fetchSingleMovieDataByUrl: t.procedure
   .input(z.object({
-    book_url: string()
+    movie_url: string()
   }))
   .query(async ({input, ctx}) => {
-    const { book_url } = input
+    const { movie_url } = input
 
-    const result = await ctx.prisma.book.findFirst({
+    const result = await ctx.prisma.movie.findFirst({
       where: {
-        book_url: book_url
+        movie_url: movie_url
       }
     })
       return {
@@ -78,7 +77,7 @@ export const bookRouterNoUser = t.router({
       }
   }),
 
-  AllBooksSorted: t.procedure //TODO: add a keyword search
+  AllMoviesSorted: t.procedure //TODO: add a keyword search
   .input(z.object({
     data: any()
    }))
@@ -88,29 +87,29 @@ export const bookRouterNoUser = t.router({
     if(!ctx.session?.user.email) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User not found when AllBooksSorted",
+          message: "User not found when AllmoviesSorted",
         });
     }
 
-  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+  const MoviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
     where: {
       userId: Number(ctx.session.user.userId),
     },
     select: {
-        bookId: true,
+        movieId: true,
         Rating: true,
-        book:{ 
+        movie:{ 
           select: {
             image_url: true,
-            book_url: true,
+            movie_url: true,
             name: true
           },
         }
     }
   })
     return {
-      message: "Listed all books in user library in recently added",
-      result: booksInLibrary,
+      message: "Listed all movies in user library in recently added",
+      result: MoviesInLibrary,
     }
   }),
 

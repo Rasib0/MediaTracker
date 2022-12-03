@@ -51,6 +51,8 @@ model Movie {
   director String
   movie_url String @unique
   Users UserJoinMovie[]
+  Tags TagJoinMovie[]
+
 }
 
 model UserJoinMovie {
@@ -84,7 +86,9 @@ model Tag {
   id Int @id @default(autoincrement())
   tagsName String
   Books TagJoinBook[]
+  Movies TagJoinMovie[]
 } 
+
 
 model TagJoinBook {
   user Tag @relation(fields: [tagId], references: [id])
@@ -93,4 +97,13 @@ model TagJoinBook {
   bookId Int
 
     @@id([tagId, bookId])
+}
+
+model TagJoinMovie {
+  user Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+  book Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+    @@id([tagId, movieId])
+
 }

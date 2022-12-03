@@ -13,7 +13,7 @@ export type CardProps = {
   date: Date | null;
   type: media;
   rating: number | null;
-  book_url: string;
+  media_url: string;
 };
 
 const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
@@ -24,7 +24,7 @@ const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
       <div className="row g-0">
         <div className="col mt-2 mb-1">
           <Image src={"/images/"+props.type+"/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
-          <Link href={"/book/" + props.book_url} passHref legacyBehavior><a className="stretched-link"> </a></Link>
+          <Link href={"/"+props.type.slice(0, -1)+"/" + props.media_url} passHref legacyBehavior><a className="stretched-link"> </a></Link>
         </div>
         <div className="col-md-8">
           <div className="card-body">

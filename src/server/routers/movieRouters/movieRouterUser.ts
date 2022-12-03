@@ -3,19 +3,19 @@ import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { any, number, string } from "zod";
 
-export const bookRouterUser = t.router({
+export const movieRouterUser = t.router({
   
 
-  addReview: t.procedure //
+  addMovieReview: t.procedure //
   .input(z.object({
-    book_url: string(),
+    movie_url: string(),
     review: string().min(0).max(500)
    }))
   .mutation(async ({input, ctx}) => { //TODO: should be a mutation
-    const { book_url, review } = input
-    const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
+    const { movie_url, review } = input
+    const movie = await ctx.prisma.movie.findFirst({     // check if the movie exist in library 
         where: {
-            book_url: book_url,
+            movie_url: movie_url,
         }
     })
     if(!ctx.session?.user.userId){
@@ -25,17 +25,17 @@ export const bookRouterUser = t.router({
       });
     }
     
-    if(!Book) {     // else throw error
+    if(!movie) {     // else throw error
         throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Book not found. Can't review",
+            message: "movie not found. Can't review",
           });
     }
-      const result = await ctx.prisma.userJoinBook.update({
+      const result = await ctx.prisma.userJoinMovie.update({
         where: {
-          userId_bookId: {
+          userId_movieId: {
               userId: Number(ctx.session?.user.userId),
-              bookId: Book.id
+              movieId: movie.id
           }
         },
         data: {
@@ -53,16 +53,16 @@ export const bookRouterUser = t.router({
     }
   }),
 
-  addRating: t.procedure //
+  addMovieRating: t.procedure //
   .input(z.object({
-    book_url: string(),
+    movie_url: string(),
     rating: number().min(0).max(5)
    }))
   .mutation(async ({input, ctx}) => { //TODO: should be a mutation
-    const { book_url, rating } = input
-    const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
+    const { movie_url, rating } = input
+    const movie = await ctx.prisma.movie.findFirst({     // check if the movie exist in library 
         where: {
-            book_url: book_url,
+            movie_url: movie_url,
         }
     })
     if(!ctx.session?.user.userId){
@@ -72,17 +72,17 @@ export const bookRouterUser = t.router({
       }); 
     }
 
-    if(!Book) {     // else throw error
+    if(!movie) {     // else throw error
         throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Book not found. Can't rate",
+            message: "movie not found. Can't rate",
           });
     }
-      const result = await ctx.prisma.userJoinBook.update({
+      const result = await ctx.prisma.userJoinMovie.update({
         where: {
-          userId_bookId: {
+          userId_movieId: {
               userId: Number(ctx.session?.user.userId),
-              bookId: Book.id
+              movieId: movie.id
           }
         },
         data: {
@@ -101,13 +101,13 @@ export const bookRouterUser = t.router({
   }),
   
   
-  addToLibrary: t.procedure //
+  addMovieToLibrary: t.procedure //
   .input(z.object({
-    book_url: string()
+    movie_url: string()
    }
   ))
   .mutation(async ({input, ctx}) => { 
-    const { book_url} = input
+    const { movie_url} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
@@ -116,42 +116,42 @@ export const bookRouterUser = t.router({
         });
     }
   
-    const Book = await ctx.prisma.book.findFirst({
+    const movie = await ctx.prisma.movie.findFirst({
         where: {
-            book_url: book_url
+            movie_url: movie_url
         }
     })
 
-    if(!Book) {
+    if(!movie) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Book not found",
+          message: "movie not found",
         });
   }
 
-  const alreadyExist = await ctx.prisma.userJoinBook.findFirst({
+  const alreadyExist = await ctx.prisma.userJoinMovie.findFirst({
     where: {
       userId: Number(ctx.session.user.userId),
-      book: Book
+      movie: movie
     }
   })
 
   if(alreadyExist) {
     throw new TRPCError({
       code: "CONFLICT",
-      message: "User's library already has this book",
+      message: "User's library already has this movie",
     });
   }
-    const result = await ctx.prisma.userJoinBook.create({
+    const result = await ctx.prisma.userJoinMovie.create({
       data: {
         user: {
           connect: {
             email: ctx.session.user.email
           }
         },
-        book: {
+        movie: {
           connect: {
-            book_url: book_url
+            movie_url: movie_url
           }
         },
         Rating: 5,
@@ -159,20 +159,20 @@ export const bookRouterUser = t.router({
     })
     
     return {
-        message: "created entry in UserJoinBook table",
+        message: "created entry in userJoinMovie table",
         result: result,
     }
   }),
 
 
-  fetchFromLibrary: t.procedure //return the exits in library variable and the rating
+  fetchMovieFromLibrary: t.procedure //return the exits in library variable and the rating
   .input(z.object({
-    book_url: string(),
+    movie_url: string(),
     data: any()
    }
   ))
   .query(async ({input, ctx}) => { 
-    const { book_url } = input
+    const { movie_url } = input
     if(!ctx.session?.user.email) {
       
       throw new TRPCError({
@@ -181,44 +181,45 @@ export const bookRouterUser = t.router({
         });
     }
   
-    const Book = await ctx.prisma.book.findFirst({ //find the id for the book
+    const movie = await ctx.prisma.movie.findFirst({ //find the id for the movie
         where: {
-            book_url: book_url
+            movie_url: movie_url
         },
         select: {
           id: true,
-          book_url: true
+          movie_url: true
         }
     })
 
-    if(!Book) {
+    if(!movie) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Book not found",
+          message: "movie not found",
         });
   }
 
-  const result = await ctx.prisma.userJoinBook.findFirst({
+  const result = await ctx.prisma.userJoinMovie.findFirst({
     where: {
       userId: Number(ctx.session.user.userId),
-      bookId: Book.id
+      movieId: movie.id
     },
   })
 
   if(result) {
     return {
-      message: "entry exists in UserJoinBook table",
+      message: "entry exists in userJoinMovie table",
       exists: true,
       result: result,
     }
   }
     return {
-      message: "entry doesn't exists in UserJoinBook table",
+      message: "entry doesn't exists in userJoinMovie table",
       exists: false,
       result: result,
     }
   }),
-  AllBookInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
+
+  AllMovieInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
   .input(z.object({
    keyword: string(),
    data: any(),
@@ -234,12 +235,12 @@ export const bookRouterUser = t.router({
         });
     }
 
-  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+  const moviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
     take: take,
     where: {
       userId: Number(ctx.session.user.userId),
       Rating: 5,
-      book: {
+      movie: {
         name: {
           contains: keyword,
           mode: 'insensitive'
@@ -247,16 +248,16 @@ export const bookRouterUser = t.router({
       }
     },
     select: {
-        bookId: true,
+        movieId: true,
         Rating: true,
         assignedAt: true,
-        book:{ 
+        movie:{ 
           select: {
             image_url: true,
-            book_url: true,
+            movie_url: true,
             name: true,
             synopsis: true,
-            author: true,
+            director: true,
           },
         }
     },
@@ -266,12 +267,12 @@ export const bookRouterUser = t.router({
   })
 
     return {
-      message: "Listed all books in user library in recently added",
-      result: booksInLibrary,
+      message: "Listed all movies in user library in recently added",
+      result: moviesInLibrary,
     }
   }),
 
-  AllBookInLibrarySortedRecent: t.procedure //TODO: use the keyword search
+  AllMovieInLibrarySortedRecent: t.procedure //TODO: use the keyword search
   .input(z.object({
     keyword: string(),
    data: any(),
@@ -288,11 +289,11 @@ export const bookRouterUser = t.router({
         
     }
 
-  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
+  const moviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
     take: take,
     where: {
       userId: Number(ctx.session.user.userId),
-      book: {
+      movie: {
         name: {
           contains: keyword,
           mode: 'insensitive'
@@ -300,16 +301,16 @@ export const bookRouterUser = t.router({
       }
     },
     select: {
-        bookId: true,
+        movieId: true,
         Rating: true,
         assignedAt: true,
-        book:{ 
+        movie:{ 
           select: {
             image_url: true,
-            book_url: true,
+            movie_url: true,
             name: true,
             synopsis: true,
-            author: true,
+            director: true,
           },
         }
     },
@@ -319,18 +320,18 @@ export const bookRouterUser = t.router({
   })
 
     return {
-      message: "Listed all books in user library in recently added",
-      result: booksInLibrary,
+      message: "Listed all movies in user library in recently added",
+      result: moviesInLibrary,
     }
   }),
 
-  removeFromLibrary: t.procedure //
+  removeMovieFromLibrary: t.procedure //
   .input(z.object({
-    book_url: string()
+    movie_url: string()
    }
   ))
   .mutation(async ({input, ctx}) => { //should be a  mutation
-    const { book_url} = input
+    const { movie_url} = input
 
     if(!ctx.session?.user.email) {
       throw new TRPCError({
@@ -339,36 +340,36 @@ export const bookRouterUser = t.router({
         });
     }
   
-    const Book = await ctx.prisma.book.findFirst({
+    const movie = await ctx.prisma.movie.findFirst({
         where: {
-            book_url: book_url
+            movie_url: movie_url
         },
         select: {
           id: true,
-          book_url: true
+          movie_url: true
         }
     })
 
-    if(!Book) {
+    if(!movie) {
       throw new TRPCError({
           code: "NOT_FOUND",
-          message: `Book not found at the url ${book_url}`,
+          message: `movie not found at the url ${movie_url}`,
         });
   }
 
   try{
-    const result = await ctx.prisma.userJoinBook.delete({
+    const result = await ctx.prisma.userJoinMovie.delete({
       where: {
-        userId_bookId: {
+        userId_movieId: {
           userId: Number(ctx.session.user.userId),
-          bookId: Book.id
+          movieId: movie.id
         }
       },
     })
   } catch {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: `User's library doesn't have ${book_url}`,
+      message: `User's library doesn't have ${movie_url}`,
     });
   }
   }),

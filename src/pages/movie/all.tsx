@@ -16,22 +16,22 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
   const [searchKeyword, setSearchKeyword] = useState("")
 
-  const fetchAllBookDataByKeywordDesc = trpc.fetchAllBookDataByKeywordDesc.useQuery({keyword: searchKeyword}, {onSuccess: async (newData) => { 
-  }})
+  const fetchAllMovieDataByKeywordDesc = trpc.fetchAllMovieDataByKeywordDesc.useQuery({keyword: searchKeyword}, {onSuccess: async (newData) => { 
+  }})  
 
  
   return ( //TODO: remove tailwind css and add your own
     <Layout>
               <div className="">
-                <div className="p-3 mb-2 bg-primary text-white"><h1>All Books Page</h1>Here is where you can see all our books!</div>
+                <div className="p-3 mb-2 bg-primary text-white"><h1>All Movies Page</h1>Here is where you can see all our movies!</div>
 
                 <div className="form-outline">
                   <input type="search" id="form1" className="form-control" placeholder="Search books" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
                 </div>
 
                 <div className="row">
-                {fetchAllBookDataByKeywordDesc.data?.result.map((book) => {
-                  return <OverviewCard name={book.name} type="books" rating={null} by={book.author} synopsis={book.synopsis} date={null} image_url={book.image_url} media_url={book.book_url}/>
+                {fetchAllMovieDataByKeywordDesc.data?.result.map((movie) => {
+                  return <OverviewCard name={movie.name} type="movies" rating={null} by={movie.director} synopsis={movie.synopsis} date={null} image_url={movie.image_url} media_url={movie.movie_url}/>
                    })}
                 </div>
           </div>
