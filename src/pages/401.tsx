@@ -8,18 +8,17 @@ import Layout from "../components.tsx/Layout";
 
 const Unauthorized: NextPage = () => {
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content">
-        <div className="max-w-lg">
-          <h1 className="text-5xl text-center font-bold leading-snug text-gray-400">
-            You are not logged in!
+      <div>
+          <h1 className="text-center">
+            401
           </h1>
+          <h2 className="text-center">
+            You are not logged in!
+          </h2>
           <div className="text-center">
-          <Link href="/log-in"><a className="text-center font-bold leading-snug text-gray-400">Log in!</a></Link>
+            <Link href="/"><a>return to home</a></Link>
           </div>
-        </div>
       </div>
-    </div>
   );
 };
 

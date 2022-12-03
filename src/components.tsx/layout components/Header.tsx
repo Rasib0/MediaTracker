@@ -18,27 +18,26 @@ const Header = (props: Props) => {
         <Link href="/" passHref legacyBehavior><Navbar.Brand>Media Tracker</Navbar.Brand></Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
+
           <Nav className="me-auto">
-            <Link href="/library" passHref legacyBehavior><Nav.Link>Library</Nav.Link></Link>
+            <NavDropdown title="Library" id="collasible-nav-dropdown">
+              <Link href="/library/books" passHref legacyBehavior><NavDropdown.Item>My Books</NavDropdown.Item></Link>
+              <Link href="/library/movies" passHref legacyBehavior><NavDropdown.Item>My Movies</NavDropdown.Item></Link>
+              <Link href="/" passHref legacyBehavior><NavDropdown.Item disabled>My TV Shows</NavDropdown.Item></Link>
+            <NavDropdown.Divider />
+            <Link href="/" passHref legacyBehavior><NavDropdown.Item>
+              Whole Collection
+            </NavDropdown.Item></Link>
+          </NavDropdown>
             <Link href="/book/all" passHref legacyBehavior><Nav.Link>Books</Nav.Link></Link>
-            <Link href="/book/all" passHref legacyBehavior><Nav.Link>Podcasts</Nav.Link></Link>
-            <Link href="/book/dune" passHref legacyBehavior><Nav.Link>Movies</Nav.Link></Link>
-            <Link href="/book/dune" passHref legacyBehavior><Nav.Link>TV shows</Nav.Link></Link>
+            <Link href="/movie/all" passHref legacyBehavior><Nav.Link>Movies</Nav.Link></Link>
+            <Link href="/tvshow/all" passHref legacyBehavior><Nav.Link disabled>TV shows</Nav.Link></Link>
+            <Link href="/podcast/all" passHref legacyBehavior><Nav.Link disabled>Podcasts</Nav.Link></Link>
           </Nav>
+
           <Nav className = "ml-auto">
             <Link href="/profile" passHref legacyBehavior><Nav.Link>Profile</Nav.Link></Link>
             <Nav.Link  onClick={() => signOut({ callbackUrl: "/log-in" })}>Log out</Nav.Link>
-            <NavDropdown title="Settings" id="collasible-nav-dropdown">
-            <Link href="/" passHref legacyBehavior><NavDropdown.Item>Action Later</NavDropdown.Item></Link>
-            <Link href="/" passHref legacyBehavior><NavDropdown.Item>
-                Something Later
-              </NavDropdown.Item></Link>
-              <Link href="/" passHref legacyBehavior><NavDropdown.Item>Something Later</NavDropdown.Item></Link>
-              <NavDropdown.Divider />
-              <Link href="/" passHref legacyBehavior><NavDropdown.Item>
-                Something Later
-              </NavDropdown.Item></Link>
-            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>
