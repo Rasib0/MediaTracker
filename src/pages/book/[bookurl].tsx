@@ -101,20 +101,21 @@ const book: NextPage<bookProps> = (props: bookProps) => {
           <div>
             <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
 
-            <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-                      <div className="row g-0">
+            <div className="card mb-3 mt-2 col m-1 shadow rounded ">
+                      <div className="row">
                         <div className="col mt-2 mb-1">
                           <Image src={"/images/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
                         </div>
-                        <div className="col-md-8">
+                        <div className="col-md-11">
                           <div className="card-body">
                             <h5 className="card-title">{props.name}</h5>
                             <div className="author">by {props.author}</div>
                             <p className="card-text">{props.synopsis}</p>
                           </div>
-                          {<button className="btn btn-primary" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+                          <div className="mb-3"><StarRating  rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/></div>
+                          {<button className="btn btn-primary mb-3" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+
                           <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
-                          <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/>
                         </div>
                       </div>
                   </div>
