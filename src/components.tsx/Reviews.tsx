@@ -1,53 +1,40 @@
-import React, { useState } from 'react'
-import  { FaStar } from 'react-icons/fa'
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import StaticRating from "./StaticRating";
 
+type media = 'movies' | 'books'
 
-type Props = {
-  onClick: (rating: number) => Promise<void>,
-  rating: number,
-  disabled: boolean
-}
+export type CardProps = {
+  by: string;
+  review: string;
+  date: Date | null;
+  rating: number | null;
+};
 
-const StarRating: React.FC<Props> = (props: Props) => {
-  const [hover, setHover] = useState(props.rating)
+const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
   return (
-    <div>
-      {[...Array(5)].map((star, i) => {
-        const ratingValue = i + 1;
-        return (
-          <label key={i}>
-            <input 
-              type="radio" 
-              name="rating" 
-              value={ratingValue} 
-              disabled = {props.disabled}
-              onClick = {() => {
-                if(!props.disabled) {
-                  props.onClick(ratingValue)
-                }
-                }}/>
-            <FaStar className="star" 
-                    color={(ratingValue <= (hover || props.rating) ? "#ffc107": "#e4e5e9")} 
-                    size={30}
-                    onMouseEnter = { () => props.disabled ?setHover(NaN): setHover(ratingValue)}              
-                    onMouseLeave = { () => setHover(NaN)}
-            />
-          </label>
-        )
-      })}
-      <style jsx>
-        {`
-        input[type="radio"] {
-          display: none
-        }
-        .star {
-          cursor: pointer;
-          transition: 200ms;
-        }
-        `}
+    <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
+      {props.date ? <div className="card-text">Review by <b>{props.by}</b> on {props.date.toString()} </div> :<></>}
+
+      <div className="row g-0">
+        <div className="col-md-8">
+        {props.rating ? <div><StaticRating rating={props.rating}/></div> :<></>}
+          <div className="card-body">
+            {!(props.review === "") ? <p className="card-text">{props.review}</p>: <em>no review</em>}
+          </div>
+        </div>
+      </div>
+        <style jsx>
+          {`
+          .max_width {
+          max-height:500px;
+          overflow: hidden;
+          }
+          `}
       </style>
     </div>
-  )
-}
+  );
+};
 
-export default StarRating
+export default OverviewCard;

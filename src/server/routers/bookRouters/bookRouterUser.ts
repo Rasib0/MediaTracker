@@ -13,6 +13,7 @@ export const bookRouterUser = t.router({
    }))
   .mutation(async ({input, ctx}) => { //TODO: should be a mutation
     const { book_url, review } = input
+    
     const Book = await ctx.prisma.book.findFirst({     // check if the book exist in library 
         where: {
             book_url: book_url,
@@ -49,7 +50,7 @@ export const bookRouterUser = t.router({
     return {
         status: 201,
         message: "update successful successful",
-        rating: result.Review
+        review: result.Review
     }
   }),
 

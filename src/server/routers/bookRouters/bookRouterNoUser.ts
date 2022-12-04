@@ -81,6 +81,7 @@ export const bookRouterNoUser = t.router({
           select: {
             Rating: true,
             Review: true,
+            assignedAt: true,
             user: {
               select: {
                 username: true
