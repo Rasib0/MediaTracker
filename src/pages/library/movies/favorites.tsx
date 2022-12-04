@@ -16,6 +16,9 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
   const [searchKeyword, setSearchKeyword] = useState("")
 
+
+
+  // useQuery already uses useEffect hook
   const AllMovieInLibrarySortedRecentFav = trpc.AllMovieInLibrarySortedRecentFav.useQuery({ keyword: searchKeyword, take : 15, data }, {
     onSuccess: async (newData) => {
     }

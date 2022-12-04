@@ -14,7 +14,6 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 // The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used 
 const Dashboard: NextPage = () => {
   const { data } = useSession();
-  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true })
 
 
   const AllMovieInLibrarySortedRecent = trpc.AllMovieInLibrarySortedRecent.useQuery({ keyword: "", take: 5, data }, {
