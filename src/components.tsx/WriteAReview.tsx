@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 
 
 type Props = {
@@ -8,11 +8,11 @@ type Props = {
 }
 
 const WriteAReview: React.FC<Props> = (props: Props) => {
-  const inputRef = useRef()
+  const inputRef = useRef<HTMLTextAreaElement>(null)
  
-  const onSubmitInner = (e) => {
+  const onSubmitInner = (e: any) => {
     e.preventDefault()
-    const value: string = inputRef?.current?.value
+    const value: string = inputRef?.current?.value ?  inputRef?.current?.value : ""
 
     if(value === "")  return
     props.onSubmit(value)
@@ -20,8 +20,8 @@ const WriteAReview: React.FC<Props> = (props: Props) => {
 
   return (
     <div>
-      <form  onSubmit={onSubmitInner}>
-        <textarea className="form-control mb-3" ref={inputRef} disabled={props.disabled} type="text" rows={3} placeholder='Write your review'/>
+      <form  onSubmit={(e) => onSubmitInner(e)}>
+        <textarea className="form-control mb-3" ref={inputRef} disabled={props.disabled} rows={3} placeholder='Write your review'/>
         <button className="btn btn-secondary" type="submit" disabled={props.disabled}> Publish your Review</button>
       </form>
 
