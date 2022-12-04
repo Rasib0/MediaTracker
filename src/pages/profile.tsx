@@ -29,15 +29,6 @@ const Dashboard: NextPage = () => {
               <code>{JSON.stringify(data, null, 2)}</code>
             </pre>
           </div>
-
-          <div className="text-center">
-            <button
-              className="btn btn-secondary"
-              onClick={() => console.log("button was pushed")}
-            >
-              Later
-            </button>
-          </div>
       </div>
     </div>
   </Layout>
