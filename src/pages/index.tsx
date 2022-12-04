@@ -5,6 +5,12 @@ import { requireAuth } from "../common/requireAuth";
 import Layout from "../components.tsx/Layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
+    return {
+      redirect: {
+        destination: "/library/books", // login path
+        permanent: false,
+      },
+    };
   return { props: {} };
 });
 
@@ -23,14 +29,10 @@ const Dashboard: NextPage = () => {
             You are allowed to visit this page because you have a session,
             otherwise you would be redirected to the login page.
           </p>
-          
           <div>
             <pre>
               <code>{JSON.stringify(data, null, 2)}</code>
             </pre>
-          </div>
-
-          <div className="text-center">
           </div>
       </div>
     </div>

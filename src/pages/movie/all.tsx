@@ -30,8 +30,8 @@ const Dashboard: NextPage = () => {
                 </div>
 
                 <div className="row">
-                {fetchAllMovieDataByKeywordDesc.data?.result.map((movie) => {
-                  return <OverviewCard name={movie.name} type="movies" rating={null} by={movie.director} synopsis={movie.synopsis} date={null} image_url={movie.image_url} media_url={movie.movie_url}/>
+                {fetchAllMovieDataByKeywordDesc.data?.result.map((movie, i) => {
+                  return <OverviewCard key={i} name={movie.name} type="movies" rating={null} by={movie.director} synopsis={movie.synopsis} date={null} image_url={movie.image_url} media_url={movie.movie_url}/>
                    })}
                 </div>
           </div>

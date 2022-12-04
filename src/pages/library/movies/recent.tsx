@@ -32,7 +32,7 @@ const Dashboard: NextPage = () => {
               </div>
             <div className="row">
             {AllMovieInLibrarySortedRecent.data?.result.map((input, i) => {
-                  return <OverviewCard name={input.movie.name} rating={input.Rating} type="movies" by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>
+                  return <OverviewCard key={i} name={input.movie.name} rating={input.Rating} type="movies" by={input.movie.director} synopsis={input.movie.synopsis} date={input.assignedAt} image_url={input.movie.image_url} media_url={input.movie.movie_url}/>
               })}
             </div>
       </div>

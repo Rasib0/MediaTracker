@@ -147,8 +147,8 @@ const book: NextPage<bookProps> = (props: bookProps) => {
                   <WriteAReview review={ReviewState.review} onSubmit={handleReviewOnSubmit} disabled={ReviewState.disabled}/>
 
                   <h3> Reviews </h3>
-                  {reviews_data_formatted?.map((review: { name: string; review: string; date: Date | null; rating: number | null; }) => {
-                    return <Reviews by={review.name} review={review.review} date={review.date} rating={review.rating} />
+                  {reviews_data_formatted?.map((review: { name: string; review: string; date: Date | null; rating: number | null; }, i) => {
+                    return <Reviews key={i} by={review.name} review={review.review} date={review.date} rating={review.rating} />
                   })}
                   </div>
           </div>
