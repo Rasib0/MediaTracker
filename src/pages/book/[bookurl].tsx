@@ -52,9 +52,11 @@ const book: NextPage<bookProps> = (props: bookProps) => {
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
   const [RatingState, setRatingState] = useState({ rating: NaN, disabled: true})
 
+  const [ReviewButtonState, setReviewButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
+  const [ReviewState, setReviewState] = useState({ reviews: ["", ""]})
 
   //Initial set up for stateful components
-
+  const fetch_reviews= trpc.fetchSingleBookDataByUrl.useQuery({book_url})
   const fetch_result = trpc.fetchBookFromLibrary.useQuery({book_url, data}, {onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
@@ -95,6 +97,17 @@ const book: NextPage<bookProps> = (props: bookProps) => {
         }
       })
   }
+/*
+  const handleReviewOnSubmit = async (e) => {
+          e.preventDefault();
+          
+          setRatingState({rating, disabled: true})
+          mutationAddRating.mutate({book_url, rating}, { onSuccess: async (newData) => {
+          setRatingState({rating: newData.rating, disabled: false})
+        }
+      })
+  }
+*/
 
   return (
     <Layout>
@@ -119,7 +132,19 @@ const book: NextPage<bookProps> = (props: bookProps) => {
                         </div>
                       </div>
                   </div>
+                  <div>
+                    
+                  {
+                  //<form onSubmit={handleReviewOnSubmit}>
+                  //<input type="text" className="form-control" placeholder="Write a review"/>
+                  //<button type="submit" className="btn btn-secondary">hi</button>
+                  // reviews mapping to cards
+                  //</form>
+                  }
+                  {JSON.stringify(fetch_reviews.data)}
+                  </div>
           </div>
+
     </Layout>
   );
 };

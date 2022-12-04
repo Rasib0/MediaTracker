@@ -66,52 +66,34 @@ export const bookRouterNoUser = t.router({
   .query(async ({input, ctx}) => {
     const { book_url } = input
 
-    const result = await ctx.prisma.book.findFirst({
+    const book_data = await ctx.prisma.book.findFirst({
       where: {
         book_url: book_url
+      },
+      select: {
+        id: true,
+        name: true,
+        image_url: true,
+        book_url: true,
+        synopsis: true,
+        author: true,
+        Users: {
+          select: {
+            Rating: true,
+            Review: true,
+            user: {
+              select: {
+                username: true
+              }
+            }
+          }
+        }
       }
     })
-      return {
-        status: 200,
-        message: "Search successful",
-        result: result
-      }
-  }),
-
-  AllBooksSorted: t.procedure //TODO: add a keyword search
-  .input(z.object({
-    data: any()
-   }))
-  .query(async ({input, ctx}) => { 
-
-    const {} = input
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when AllBooksSorted",
-        });
-    }
-
-  const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
-    where: {
-      userId: Number(ctx.session.user.userId),
-    },
-    select: {
-        bookId: true,
-        Rating: true,
-        book:{ 
-          select: {
-            image_url: true,
-            book_url: true,
-            name: true
-          },
-        }
-    }
-  })
     return {
-      message: "Listed all books in user library in recently added",
-      result: booksInLibrary,
+      message: "Book found",
+      result: book_data
     }
-  }),
-
+}),
+  
 });
