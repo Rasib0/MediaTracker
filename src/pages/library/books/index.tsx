@@ -31,7 +31,7 @@ const Dashboard: NextPage = () => {
       <div className="">
         <div className="">
           <div className="">
-          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/books/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
+          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/books/")}}><h1>{data?.user.username}&apos;s Library Page</h1>Here is your library where you can see your book collection!</div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/books/recent")}}><h3>Recently Added</h3></div>
 
             <div className="row">

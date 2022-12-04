@@ -30,7 +30,7 @@ const Dashboard: NextPage = () => {
       <div className="">
         <div className="">
           <div className="">
-          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/movies/")}}><h1>{data?.user.username}'s Movie Library Page</h1>Here is your Movie library where you can see your Movie collection!</div>
+          <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/movies/")}}><h1>{data?.user.username}&apos;s Movie Library Page</h1>Here is your Movie library where you can see your Movie collection!</div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/movies/recent")}}><h3>Recently Added</h3></div>
 
             <div className="row">
