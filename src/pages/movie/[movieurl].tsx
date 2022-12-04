@@ -45,7 +45,7 @@ type movieProps = {
     director: string;
 };
 
-const movie: NextPage<movieProps> = (props: movieProps) => {
+const Movie: NextPage<movieProps> = (props: movieProps) => {
   const session = useSession();
   const { movieurl, ...tags } = useRouter().query
   const movie_url = String(movieurl)
@@ -157,4 +157,4 @@ const movie: NextPage<movieProps> = (props: movieProps) => {
   );
 };
 
-export default movie;
+export default Movie;

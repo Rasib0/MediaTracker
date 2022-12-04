@@ -45,7 +45,7 @@ type bookProps = {
     author: string;
 };
 
-const book: NextPage<bookProps> = (props: bookProps) => {
+const Book: NextPage<bookProps> = (props: bookProps) => {
   const session = useSession();
   const { bookurl, ...tags } = useRouter().query
   const book_url = String(bookurl)
@@ -157,4 +157,4 @@ const book: NextPage<bookProps> = (props: bookProps) => {
   );
 };
 
-export default book;
+export default Book;
