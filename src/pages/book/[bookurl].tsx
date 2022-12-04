@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useSession} from "next-auth/react";
 import { useRouter } from 'next/router'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../common/prisma";
@@ -82,6 +82,7 @@ const book: NextPage<bookProps> = (props: bookProps) => {
       setButtonState({text: ButtonState.text, disabled: true, shouldAdd: ButtonState.shouldAdd})
       setRatingState({rating: RatingState.rating, disabled: true})
       setReviewState({review: ReviewState.review, disabled:true})
+      
       if(ButtonState.shouldAdd){
         mutationAddtoLib.mutate({ book_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})

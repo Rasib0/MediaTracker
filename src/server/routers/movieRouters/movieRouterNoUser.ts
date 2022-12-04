@@ -58,6 +58,7 @@ export const movieRouterNoUser = t.router({
       }
   }),
 
+
   fetchSingleMovieDataByUrl: t.procedure
   .input(z.object({
     movie_url: string()
@@ -65,52 +66,34 @@ export const movieRouterNoUser = t.router({
   .query(async ({input, ctx}) => {
     const { movie_url } = input
 
-    const result = await ctx.prisma.movie.findFirst({
+    const movie_data = await ctx.prisma.movie.findFirst({
       where: {
         movie_url: movie_url
+      },
+      select: {
+        id: true,
+        name: true,
+        image_url: true,
+        movie_url: true,
+        synopsis: true,
+        director: true,
+        Users: {
+          select: {
+            Rating: true,
+            Review: true,
+            assignedAt: true,
+            user: {
+              select: {
+                username: true
+              }
+            }
+          }
+        }
       }
     })
-      return {
-        status: 200,
-        message: "Search successful",
-        result: result
-      }
-  }),
-
-  AllMoviesSorted: t.procedure //TODO: add a keyword search
-  .input(z.object({
-    data: any()
-   }))
-  .query(async ({input, ctx}) => { 
-
-    const {} = input
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when AllmoviesSorted",
-        });
-    }
-
-  const MoviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
-    where: {
-      userId: Number(ctx.session.user.userId),
-    },
-    select: {
-        movieId: true,
-        Rating: true,
-        movie:{ 
-          select: {
-            image_url: true,
-            movie_url: true,
-            name: true
-          },
-        }
-    }
-  })
     return {
-      message: "Listed all movies in user library in recently added",
-      result: MoviesInLibrary,
+      message: "Movie found",
+      result: movie_data
     }
-  }),
-
+}),
 });

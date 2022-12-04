@@ -8,6 +8,8 @@ import { prisma } from "../../common/prisma";
 import Layout from "../../components.tsx/Layout";
 import StarRating from "../../components.tsx/StarRating";
 import Image from "next/image";
+import Reviews from "../../components.tsx/Reviews";
+import WriteAReview from "../../components.tsx/WriteAReview";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -44,46 +46,56 @@ type movieProps = {
 };
 
 const movie: NextPage<movieProps> = (props: movieProps) => {
-  const { data } = useSession();
+  const session = useSession();
   const { movieurl, ...tags } = useRouter().query
   const movie_url = String(movieurl)
 
   //setting the state of the button according to user's 
   const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
   const [RatingState, setRatingState] = useState({ rating: NaN, disabled: true})
-
+  const [ReviewState, setReviewState] = useState({ review: "Loading...", disabled: true})
 
   //Initial set up for stateful components
+  const {data, refetch } = trpc.fetchSingleMovieDataByUrl.useQuery({movie_url})
 
-  const fetch_result = trpc.fetchMovieFromLibrary.useQuery({movie_url, data}, {onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost
+  const reviews_data_formatted = data?.result?.Users.map((user: { Rating: any; Review: any; user: { username: any; }; assignedAt: any; }) => { return{ rating: user.Rating, review: user.Review, name: user.user.username, date: user.assignedAt}})
+
+  const fetch_result = trpc.fetchMovieFromLibrary.useQuery({movie_url, data: session.data}, {onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost
     if(newData.exists) {
       setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
       setRatingState({rating: Number(newData.result?.Rating), disabled: false})
+      setReviewState({review: String(newData.result?.Review), disabled: false})
     } else {
       setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
       setRatingState({rating: NaN, disabled: true})
+      setReviewState({review: "Add to Library first.", disabled: true})
     }
   }})
 
   const mutationAddtoLib = trpc.addMovieToLibrary.useMutation()
   const mutationremoveFromLib = trpc.removeMovieFromLibrary.useMutation()
   const mutationAddRating = trpc.addMovieRating.useMutation()
-
+  const mutationAddReview = trpc.addMovieReview.useMutation()
 
   //disables rating 
   const handleLibraryOnClick = async () => {      
       setButtonState({text: ButtonState.text, disabled: true, shouldAdd: ButtonState.shouldAdd})
       setRatingState({rating: RatingState.rating, disabled: true})
-
+      setReviewState({review: ReviewState.review, disabled:true})
+      
       if(ButtonState.shouldAdd){
         mutationAddtoLib.mutate({ movie_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
           setRatingState({rating: RatingState.rating, disabled: false})
+          setReviewState({review: ReviewState.review, disabled: false})
+          refetch()
         },});
       } else {
         mutationremoveFromLib.mutate({ movie_url }, {onSuccess: async (newData) => {
           setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
           setRatingState({rating: NaN, disabled: true})
+          setReviewState({review: ReviewState.review, disabled: true})
+          refetch()
         }});
       }
   };
@@ -92,14 +104,25 @@ const movie: NextPage<movieProps> = (props: movieProps) => {
           setRatingState({rating, disabled: true})
           mutationAddRating.mutate({movie_url, rating}, { onSuccess: async (newData) => {
           setRatingState({rating: newData.rating, disabled: false})
+          refetch()
         }
       })
   }
 
+  const handleReviewOnSubmit = async (review: string) => {
+          setReviewState({review, disabled: true})
+          mutationAddReview.mutate({movie_url, review}, { onSuccess: async (newData) => {
+          setReviewState({review: newData.review, disabled: false})
+          refetch()
+        }
+      })
+  }
+
+
   return (
     <Layout>
           <div>
-            <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
+            <div className="p-3 mb-2 bg-primary text-white"><h1>Single Movies Page</h1>Here is where you can all the information about a single movie and rate them</div>
 
             <div className="card mb-3 mt-2 col m-1 shadow rounded ">
                       <div className="row">
@@ -119,7 +142,17 @@ const movie: NextPage<movieProps> = (props: movieProps) => {
                         </div>
                       </div>
                   </div>
+                  <div>
+                  <h3>Write a review</h3>
+                  <WriteAReview review={ReviewState.review} onSubmit={handleReviewOnSubmit} disabled={ReviewState.disabled}/>
+
+                  <h3> Reviews </h3>
+                  {reviews_data_formatted?.map((review: { name: string; review: string; date: Date | null; rating: number | null; }) => {
+                    return <Reviews by={review.name} review={review.review} date={review.date} rating={review.rating} />
+                  })}
+                  </div>
           </div>
+
     </Layout>
   );
 };

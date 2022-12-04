@@ -25,10 +25,10 @@ const Dashboard: NextPage = () => {
   return ( //TODO: remove tailwind css and add your own
     <Layout>
           <div className="">
-          <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/movies/")}}><h1>{data?.user.username}'s Library Page</h1>Here is your library where you can see your book collection!</div>
+          <div className="p-3 mb-2 bg-primary text-white" onClick={() => {router.push("/library/movies/")}}><h1>{data?.user.username}'s Movies Library Page</h1>Here is your library where you can see your Movie collection!</div>
             <div className="p-3 mb-2 bg-secondary text-white" onClick={() => {router.push("/library/movies/recent")}}><h3>Recently Added</h3></div>
             <div className="form-outline">
-                  <input type="search" id="form1" className="form-control" placeholder="Search books" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
+                  <input type="search" id="form1" className="form-control" placeholder="Search Movie" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
               </div>
             <div className="row">
             {AllMovieInLibrarySortedRecent.data?.result.map((input, i) => {

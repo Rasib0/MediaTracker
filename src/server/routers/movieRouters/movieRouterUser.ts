@@ -49,10 +49,11 @@ export const movieRouterUser = t.router({
     return {
         status: 201,
         message: "update successful successful",
-        rating: result.Review
+        review: result.Review
     }
   }),
 
+  
   addMovieRating: t.procedure //
   .input(z.object({
     movie_url: string(),
@@ -60,9 +61,9 @@ export const movieRouterUser = t.router({
    }))
   .mutation(async ({input, ctx}) => { //TODO: should be a mutation
     const { movie_url, rating } = input
-    const movie = await ctx.prisma.movie.findFirst({     // check if the movie exist in library 
+    const Movie = await ctx.prisma.movie.findFirst({     // check if the movie exist in library 
         where: {
-            movie_url: movie_url,
+          movie_url: movie_url,
         }
     })
     if(!ctx.session?.user.userId){
@@ -72,17 +73,17 @@ export const movieRouterUser = t.router({
       }); 
     }
 
-    if(!movie) {     // else throw error
+    if(!Movie) {     // else throw error
         throw new TRPCError({
             code: "NOT_FOUND",
-            message: "movie not found. Can't rate",
+            message: "Movie not found. Can't rate",
           });
     }
       const result = await ctx.prisma.userJoinMovie.update({
         where: {
           userId_movieId: {
               userId: Number(ctx.session?.user.userId),
-              movieId: movie.id
+              movieId: Movie.id
           }
         },
         data: {
@@ -99,6 +100,7 @@ export const movieRouterUser = t.router({
         rating: result.Rating
     }
   }),
+  
   
   
   addMovieToLibrary: t.procedure //
