@@ -127,7 +127,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             <div className="card mb-3 mt-2 col m-1 shadow rounded ">
                       <div className="row">
                         <div className="col mt-2 mb-1">
-                          <Image src={"/images/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+                          <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
                         </div>
                         <div className="col-md-11">
                           <div className="card-body">
