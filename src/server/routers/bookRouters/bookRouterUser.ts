@@ -1,12 +1,13 @@
-import {t} from '../../trpc'
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { any, number, string } from "zod";
+import { mergeRouters, router, publicProcedure, middleware } from '../../trpc';
 
-export const bookRouterUser = t.router({
+
+export const bookRouterUser = router({
   
 
-  addBookReview: t.procedure //
+  addBookReview: publicProcedure //
   .input(z.object({
     book_url: string(),
     review: string().min(0).max(500)
@@ -19,12 +20,6 @@ export const bookRouterUser = t.router({
             book_url: book_url,
         }
     })
-    if(!ctx.session?.user.userId){
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found. Can't review",
-      });
-    }
     
     if(!Book) {     // else throw error
         throw new TRPCError({
@@ -35,7 +30,7 @@ export const bookRouterUser = t.router({
       const result = await ctx.prisma.userJoinBook.update({
         where: {
           userId_bookId: {
-              userId: Number(ctx.session?.user.userId),
+              userId: Number(ctx.session?.user.userId) || -1,
               bookId: Book.id
           }
         },
@@ -54,7 +49,7 @@ export const bookRouterUser = t.router({
     }
   }),
 
-  addBookRating: t.procedure //
+  addBookRating: publicProcedure //
   .input(z.object({
     book_url: string(),
     rating: number().min(0).max(5)
@@ -66,12 +61,6 @@ export const bookRouterUser = t.router({
             book_url: book_url,
         }
     })
-    if(!ctx.session?.user.userId){
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found. Can't rate",
-      }); 
-    }
 
     if(!Book) {     // else throw error
         throw new TRPCError({
@@ -82,7 +71,7 @@ export const bookRouterUser = t.router({
       const result = await ctx.prisma.userJoinBook.update({
         where: {
           userId_bookId: {
-              userId: Number(ctx.session?.user.userId),
+              userId: Number(ctx.session?.user.userId) || -1,
               bookId: Book.id
           }
         },
@@ -102,7 +91,7 @@ export const bookRouterUser = t.router({
   }),
   
   
-  addToBookLibrary: t.procedure //
+  addToBookLibrary: publicProcedure //
   .input(z.object({
     book_url: string()
    }
@@ -110,13 +99,6 @@ export const bookRouterUser = t.router({
   .mutation(async ({input, ctx}) => { 
     const { book_url} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when addToLibrary",
-        });
-    }
-  
     const Book = await ctx.prisma.book.findFirst({
         where: {
             book_url: book_url
@@ -129,10 +111,10 @@ export const bookRouterUser = t.router({
           message: "Book not found",
         });
   }
-
+  
   const alreadyExist = await ctx.prisma.userJoinBook.findFirst({
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || 0,
       book: Book
     }
   })
@@ -147,7 +129,7 @@ export const bookRouterUser = t.router({
       data: {
         user: {
           connect: {
-            email: ctx.session.user.email
+            email: String(ctx.session?.user.email)
           }
         },
         book: {
@@ -166,7 +148,7 @@ export const bookRouterUser = t.router({
   }),
 
 
-  fetchBookFromLibrary: t.procedure //return the exits in library variable and the rating
+  fetchBookFromLibrary: publicProcedure //return the exits in library variable and the rating
   .input(z.object({
     book_url: string(),
     data: any()
@@ -174,13 +156,6 @@ export const bookRouterUser = t.router({
   ))
   .query(async ({input, ctx}) => { 
     const { book_url } = input
-    if(!ctx.session?.user.email) {
-      
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when fetchFromLibrary",
-        });
-    }
   
     const Book = await ctx.prisma.book.findFirst({ //find the id for the book
         where: {
@@ -201,7 +176,7 @@ export const bookRouterUser = t.router({
 
   const result = await ctx.prisma.userJoinBook.findFirst({
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || 0,
       bookId: Book.id
     },
   })
@@ -219,7 +194,7 @@ export const bookRouterUser = t.router({
       result: result,
     }
   }),
-  AllBookInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
+  AllBookInLibrarySortedRecentFav: publicProcedure //TODO: add a keyword search
   .input(z.object({
    keyword: string(),
    data: any(),
@@ -228,17 +203,10 @@ export const bookRouterUser = t.router({
   .query(async ({input, ctx}) => { 
     const {keyword, take} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User's email not found in session. Please relogin",
-        });
-    }
-
   const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
     take: take,
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       Rating: 5,
       book: {
         name: {
@@ -272,7 +240,7 @@ export const bookRouterUser = t.router({
     }
   }),
 
-  AllBookInLibrarySortedRecent: t.procedure //TODO: use the keyword search
+  AllBookInLibrarySortedRecent: publicProcedure //TODO: use the keyword search
   .input(z.object({
     keyword: string(),
    data: any(),
@@ -281,18 +249,10 @@ export const bookRouterUser = t.router({
   .query(async ({input, ctx}) => { 
     const {keyword, take} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User's email not found in session. Please re-login",
-        });
-        
-    }
-
   const booksInLibrary = await ctx.prisma.userJoinBook.findMany({
     take: take,
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       book: {
         name: {
           contains: keyword,
@@ -325,7 +285,7 @@ export const bookRouterUser = t.router({
     }
   }),
 
-  removeBookFromLibrary: t.procedure //
+  removeBookFromLibrary: publicProcedure //
   .input(z.object({
     book_url: string()
    }
@@ -333,12 +293,6 @@ export const bookRouterUser = t.router({
   .mutation(async ({input, ctx}) => { //should be a  mutation
     const { book_url} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when removeFromLibrary",
-        });
-    }
   
     const Book = await ctx.prisma.book.findFirst({
         where: {
@@ -361,7 +315,7 @@ export const bookRouterUser = t.router({
     const result = await ctx.prisma.userJoinBook.delete({
       where: {
         userId_bookId: {
-          userId: Number(ctx.session.user.userId),
+          userId: Number(ctx.session?.user.userId) || -1,
           bookId: Book.id
         }
       },

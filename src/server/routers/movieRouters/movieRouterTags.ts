@@ -1,11 +1,11 @@
-import {t} from '../../trpc'
-import { any, number, string } from "zod";
 import {searchSchema} from "../../../common/validation/authSchemas";
+import { router, publicProcedure } from '../../trpc';
+
 // TBD
-export const movieRouterTag = t.router({
+export const movieRouterTag = router({
   //const c = trpc.searchmoviesOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) 
 
-  fetchAllmovieDataByTagKeyword: t.procedure // take a set of tags and keyword as input and return the movies corresponding to them
+  fetchAllmovieDataByTagKeyword: publicProcedure // take a set of tags and keyword as input and return the movies corresponding to them
   .input(searchSchema)
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input

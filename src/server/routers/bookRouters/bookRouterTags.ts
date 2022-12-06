@@ -1,10 +1,11 @@
-import {t} from '../../trpc'
 import {searchSchema} from "../../../common/validation/authSchemas";
+import { mergeRouters, router, publicProcedure, middleware } from '../../trpc';
+
 // TBD
-export const bookRouterTag = t.router({
+export const bookRouterTag = router({
   //const c = trpc.searchBooksOfTags.useQuery({ keywords: 'abc', tags: ['fiction', 'fantasy']}) 
 
-  fetchAllBookDataByTagKeyword: t.procedure // take a set of tags and keyword as input and return the books corresponding to them
+  fetchAllBookDataByTagKeyword: publicProcedure // take a set of tags and keyword as input and return the books corresponding to them
   .input(searchSchema)
   .query(async ({input, ctx}) => {
     const { keywords, tags } = input

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
-import { prisma } from "../../common/prisma";
+import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/Layout";
 import StarRating from "../../components.tsx/StarRating";
 import Image from "next/image";

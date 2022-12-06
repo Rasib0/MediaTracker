@@ -1,8 +1,8 @@
-import {t} from '../../trpc'
 import * as z from "zod";
 import { string } from "zod";
+import { mergeRouters, router, publicProcedure, middleware } from '../../trpc';
 
-export const bookRouterNoUser = t.router({
+export const bookRouterNoUser = router({
   
 /*
 
@@ -11,7 +11,7 @@ export const bookRouterNoUser = t.router({
                  WHERE book_url like ${keywords}`
       )
   */
-  fetchAllBookDataByKeywordDesc: t.procedure
+  fetchAllBookDataByKeywordDesc: publicProcedure
   .input(z.object({
     keyword: string(),
   }))
@@ -58,7 +58,7 @@ export const bookRouterNoUser = t.router({
       }
   }),
 
-  fetchSingleBookDataByUrl: t.procedure
+  fetchSingleBookDataByUrl: publicProcedure
   .input(z.object({
     book_url: string()
   }))

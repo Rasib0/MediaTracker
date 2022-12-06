@@ -1,5 +1,5 @@
-import {t} from '../trpc'
 import { movieRouterNoUser } from './movieRouters/movieRouterNoUser';
 import { movieRouterUser } from './movieRouters/movieRouterUser';
+import { mergeRouters } from '../trpc';
 
-export const movieRouter = t.mergeRouters(movieRouterUser, movieRouterNoUser)
+export const movieRouter = mergeRouters(movieRouterUser, movieRouterNoUser)

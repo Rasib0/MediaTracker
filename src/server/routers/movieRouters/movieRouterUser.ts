@@ -1,12 +1,13 @@
-import {t} from '../../trpc'
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { any, number, string } from "zod";
+import { router, publicProcedure } from '../../trpc';
 
-export const movieRouterUser = t.router({
+
+export const movieRouterUser = router({
   
 
-  addMovieReview: t.procedure //
+  addMovieReview: publicProcedure //
   .input(z.object({
     movie_url: string(),
     review: string().min(0).max(500)
@@ -18,12 +19,7 @@ export const movieRouterUser = t.router({
             movie_url: movie_url,
         }
     })
-    if(!ctx.session?.user.userId){
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found. Can't review",
-      });
-    }
+
     
     if(!movie) {     // else throw error
         throw new TRPCError({
@@ -34,7 +30,7 @@ export const movieRouterUser = t.router({
       const result = await ctx.prisma.userJoinMovie.update({
         where: {
           userId_movieId: {
-              userId: Number(ctx.session?.user.userId),
+              userId: Number(ctx.session?.user.userId) || -1,
               movieId: movie.id
           }
         },
@@ -54,7 +50,7 @@ export const movieRouterUser = t.router({
   }),
 
   
-  addMovieRating: t.procedure //
+  addMovieRating: publicProcedure //
   .input(z.object({
     movie_url: string(),
     rating: number().min(0).max(5)
@@ -66,12 +62,6 @@ export const movieRouterUser = t.router({
           movie_url: movie_url,
         }
     })
-    if(!ctx.session?.user.userId){
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found. Can't rate",
-      }); 
-    }
 
     if(!Movie) {     // else throw error
         throw new TRPCError({
@@ -82,7 +72,7 @@ export const movieRouterUser = t.router({
       const result = await ctx.prisma.userJoinMovie.update({
         where: {
           userId_movieId: {
-              userId: Number(ctx.session?.user.userId),
+              userId: Number(ctx.session?.user.userId) || -1,
               movieId: Movie.id
           }
         },
@@ -103,20 +93,13 @@ export const movieRouterUser = t.router({
   
   
   
-  addMovieToLibrary: t.procedure //
+  addMovieToLibrary: publicProcedure //
   .input(z.object({
     movie_url: string()
    }
   ))
   .mutation(async ({input, ctx}) => { 
     const { movie_url} = input
-
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when addToLibrary",
-        });
-    }
   
     const movie = await ctx.prisma.movie.findFirst({
         where: {
@@ -133,7 +116,7 @@ export const movieRouterUser = t.router({
 
   const alreadyExist = await ctx.prisma.userJoinMovie.findFirst({
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       movie: movie
     }
   })
@@ -148,7 +131,7 @@ export const movieRouterUser = t.router({
       data: {
         user: {
           connect: {
-            email: ctx.session.user.email
+            email: String(ctx.session?.user.email)
           }
         },
         movie: {
@@ -167,7 +150,7 @@ export const movieRouterUser = t.router({
   }),
 
 
-  fetchMovieFromLibrary: t.procedure //return the exits in library variable and the rating
+  fetchMovieFromLibrary: publicProcedure //return the exits in library variable and the rating
   .input(z.object({
     movie_url: string(),
     data: any()
@@ -175,13 +158,6 @@ export const movieRouterUser = t.router({
   ))
   .query(async ({input, ctx}) => { 
     const { movie_url } = input
-    if(!ctx.session?.user.email) {
-      
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when fetchFromLibrary",
-        });
-    }
   
     const movie = await ctx.prisma.movie.findFirst({ //find the id for the movie
         where: {
@@ -202,7 +178,7 @@ export const movieRouterUser = t.router({
 
   const result = await ctx.prisma.userJoinMovie.findFirst({
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       movieId: movie.id
     },
   })
@@ -221,7 +197,7 @@ export const movieRouterUser = t.router({
     }
   }),
 
-  AllMovieInLibrarySortedRecentFav: t.procedure //TODO: add a keyword search
+  AllMovieInLibrarySortedRecentFav: publicProcedure //TODO: add a keyword search
   .input(z.object({
    keyword: string(),
    data: any(),
@@ -230,17 +206,10 @@ export const movieRouterUser = t.router({
   .query(async ({input, ctx}) => { 
     const {keyword, take} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User's email not found in session. Please relogin",
-        });
-    }
-
   const moviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
     take: take,
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       Rating: 5,
       movie: {
         name: {
@@ -274,7 +243,7 @@ export const movieRouterUser = t.router({
     }
   }),
 
-  AllMovieInLibrarySortedRecent: t.procedure //TODO: use the keyword search
+  AllMovieInLibrarySortedRecent: publicProcedure //TODO: use the keyword search
   .input(z.object({
     keyword: string(),
    data: any(),
@@ -283,18 +252,10 @@ export const movieRouterUser = t.router({
   .query(async ({input, ctx}) => { 
     const {keyword, take} = input
 
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User's email not found in session. Please re-login",
-        });
-        
-    }
-
   const moviesInLibrary = await ctx.prisma.userJoinMovie.findMany({
     take: take,
     where: {
-      userId: Number(ctx.session.user.userId),
+      userId: Number(ctx.session?.user.userId) || -1,
       movie: {
         name: {
           contains: keyword,
@@ -327,20 +288,13 @@ export const movieRouterUser = t.router({
     }
   }),
 
-  removeMovieFromLibrary: t.procedure //
+  removeMovieFromLibrary: publicProcedure //
   .input(z.object({
     movie_url: string()
    }
   ))
   .mutation(async ({input, ctx}) => { //should be a  mutation
     const { movie_url} = input
-
-    if(!ctx.session?.user.email) {
-      throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found when removeFromLibrary",
-        });
-    }
   
     const movie = await ctx.prisma.movie.findFirst({
         where: {
@@ -363,7 +317,7 @@ export const movieRouterUser = t.router({
     const result = await ctx.prisma.userJoinMovie.delete({
       where: {
         userId_movieId: {
-          userId: Number(ctx.session.user.userId),
+          userId: Number(ctx.session?.user.userId) || - 1,
           movieId: movie.id
         }
       },

@@ -2,12 +2,14 @@ import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { unstable_getServerSession } from "next-auth";
 
-import { prisma } from "../common/prisma";
+import { prisma } from "./prisma";
 import { nextAuthOptions } from "../common/auth";
 
 export const createContext = async (ctx: trpcNext.CreateNextContextOptions) => {
   const { req, res } = ctx;
   const session = await unstable_getServerSession(req, res, nextAuthOptions);
+
+  console.log('createContext for', session?.user?.name ?? 'unknown user');
 
   return {
     req,

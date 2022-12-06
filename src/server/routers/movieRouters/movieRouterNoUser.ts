@@ -1,9 +1,8 @@
-import {t} from '../../trpc'
-import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { any, string } from "zod";
+import { mergeRouters, router, publicProcedure, middleware } from '../../trpc';
 
-export const movieRouterNoUser = t.router({
+export const movieRouterNoUser = router({
   
 /*
     const result = await ctx.prisma.$queryRaw(
@@ -11,7 +10,7 @@ export const movieRouterNoUser = t.router({
                  WHERE movie_url like ${keywords}`
       )
   */
-  fetchAllMovieDataByKeywordDesc: t.procedure
+  fetchAllMovieDataByKeywordDesc: publicProcedure
   .input(z.object({
     keyword: string(),
   }))
@@ -59,7 +58,7 @@ export const movieRouterNoUser = t.router({
   }),
 
 
-  fetchSingleMovieDataByUrl: t.procedure
+  fetchSingleMovieDataByUrl: publicProcedure
   .input(z.object({
     movie_url: string()
   }))

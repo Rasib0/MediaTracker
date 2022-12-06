@@ -1,15 +1,12 @@
-import {t} from '../trpc'
 import { TRPCError } from "@trpc/server";
-import { Prisma } from "@prisma/client";
-import * as z from "zod";
 import { hash } from "argon2";
-import { any, number, string } from "zod";
-import { signUpSchema, searchSchema, searchBookSchema } from "../../common/validation/authSchemas";
+import { signUpSchema } from "../../common/validation/authSchemas";
+import { router, publicProcedure } from '../trpc';
 
-export const onboardingRouter = t.router({
+export const onboardingRouter = router({
 
   // ----------------- SIGN IN PROCEDURES ---------------------
-  signup: t.procedure.input(signUpSchema)
+  signup: publicProcedure.input(signUpSchema)
     .mutation(async ({ input, ctx }) => {
       const { username, email, password } = input;
       // ERROR CHECKS

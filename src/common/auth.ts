@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
-import { prisma } from "./prisma";
+import { prisma } from "../server/prisma";
 import { loginSchema } from "./validation/authSchemas";
 
 export const nextAuthOptions: NextAuthOptions = {
