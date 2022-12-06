@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(4).max(12),
+  password: z.string().min(6, { message: "Must be 6 characters long" }).max(50, {message: "Relax you don't need a password that big"}),
 });
 
 export const signUpSchema = loginSchema.extend({

@@ -65,7 +65,7 @@ const SignUp: NextPage = () => {
               render={({ field }) => (
                 <input
                   type="text"
-                  placeholder="Type your username..."
+                  placeholder="Enter your username..."
                   className="form-control"
                   {...field}
                 />

@@ -56,7 +56,7 @@ const Home: NextPage = () => {
                     render={({ field }) => (
                       <input
                         type="email"
-                        placeholder="Type your email..."
+                        placeholder="Enter your email..."
                         className="form-control"
                         {...field}
                       />
@@ -70,7 +70,7 @@ const Home: NextPage = () => {
                     render={({ field }) => (
                       <input
                         type="password"
-                        placeholder="Type your password..."
+                        placeholder="Enter your password..."
                         className="form-control"
                         {...field}
                       />
