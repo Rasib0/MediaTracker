@@ -126,13 +126,13 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
             <div className="card mb-3 mt-2 col m-1 shadow rounded ">
                       <div className="row">
-                        <div className="col mt-2 mb-1">
+                        <div className="col mt-2 mb-1 min1">
                           <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
                         </div>
-                        <div className="col-md-11">
+                        <div className="col-sm-10">
                           <div className="card-body">
                             <h5 className="card-title">{props.name}</h5>
-                            <div className="author">by {props.author}</div>
+                            <p className="author">by {props.author}</p>
                             <p className="card-text">{props.synopsis}</p>
                           </div>
                           <div className="mb-3"><StarRating  rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/></div>
@@ -152,7 +152,17 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                   })}
                   </div>
           </div>
-
+          <style jsx>
+            {
+              `
+              .min1 {
+                min-width: 200px;
+                min-height: 100px;
+                max-width: 200px;
+              }
+              `
+            }
+          </style>
     </Layout>
   );
 };

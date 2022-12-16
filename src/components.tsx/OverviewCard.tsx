@@ -23,10 +23,10 @@ const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
 
       <div className="row g-0">
         <div className="col mt-2 mb-1">
-          <Image src={"/images/"+props.type+"/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+          <Image src={"/images/"+props.type+"/" + props.image_url + ".jpg"} className="img-fluid rounded" width={250} height={500} alt="..."></Image>
           <Link href={"/"+props.type.slice(0, -1)+"/" + props.media_url} passHref legacyBehavior><a className="stretched-link"> </a></Link>
         </div>
-        <div className="col-md-8">
+        <div className="col-sm-8">
           <div className="card-body">
             <h5 className="card-title">{props.name} </h5>
             <div className="card-text"><em>by  {props.by}</em> </div>
@@ -38,10 +38,9 @@ const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
         <style jsx>
           {`
           .max_width {
-          min-width: 350px;
-          max-width: 400px;
+          min-width: 330px;
+          max-width: 420px;
           max-height:500px;
-          overflow: hidden;
           }
           `}
       </style>
