@@ -18,29 +18,31 @@ export type CardProps = {
 
 const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
   return (
-    <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
+    <div className="card mb-1 mt-1 m-1 font_set shadow rounded ">
       {props.date ? <div className="card-text">Added on {props.date.toString()}</div> :<></>}
-
-      <div className="row g-0">
-        <div className="col mt-2 mb-1">
+      <div className="card_body">
+        <div className="m-1 image_size">
           <Image src={"/images/"+props.type+"/" + props.image_url + ".jpg"} className="img-fluid rounded" width={250} height={500} alt="..."></Image>
           <Link href={"/"+props.type.slice(0, -1)+"/" + props.media_url} passHref legacyBehavior><a className="stretched-link"> </a></Link>
         </div>
-        <div className="col-sm-8">
-          <div className="card-body">
+          <div className="p-3">
             <h5 className="card-title">{props.name} </h5>
             <div className="card-text"><em>by  {props.by}</em> </div>
             <p className="card-text">{props.synopsis.substring(0, 150)}...</p>
             {props.rating ? <div className="card-text"><StaticRating rating={props.rating}/></div> :<></>}
-          </div>
         </div>
       </div>
         <style jsx>
           {`
-          .max_width {
-          min-width: 330px;
-          max-width: 420px;
-          max-height:500px;
+          .card_body {
+            display: flex;
+          }
+          .image_size {
+            min-width: max(30%, 80px);
+            max-width: min(30%, 100px);
+          }
+          .font_set {
+            font-size: clamp(0.6rem, 0.6vw + 0.6rem, 1.2rem);
           }
           `}
       </style>

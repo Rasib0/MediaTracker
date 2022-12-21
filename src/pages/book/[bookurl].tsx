@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router'
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
@@ -10,12 +10,13 @@ import StarRating from "../../components.tsx/StarRating";
 import Image from "next/image";
 import Reviews from "../../components.tsx/Reviews";
 import WriteAReview from "../../components.tsx/WriteAReview";
+import OverviewCard from "../../components.tsx/OverviewCard";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
   const Book = await prisma.book.findFirst({
     where: {
-        book_url: String(ctx.params?.bookurl)
+      book_url: String(ctx.params?.bookurl)
     },
     select: {
       id: true,
@@ -25,24 +26,24 @@ export const getServerSideProps = requireAuth(async (ctx) => {
       name: true,
     }
   })
-  if(!Book) {
+  if (!Book) {
     return {
       redirect: {
-        destination: "/404", 
+        destination: "/404",
         permanent: false,
       },
     };
   }
-  
-  
-return { props: {synopsis: Book.synopsis, name: Book.name, author: Book.author, image_url: Book.image_url} }; //TODO: Add reviews here
+
+
+  return { props: { synopsis: Book.synopsis, name: Book.name, author: Book.author, image_url: Book.image_url } }; //TODO: Add reviews here
 });
 
 type bookProps = {
-    synopsis: string;
-    name: string;
-    image_url: string;
-    author: string;
+  synopsis: string;
+  name: string;
+  image_url: string;
+  author: string;
 };
 
 const Book: NextPage<bookProps> = (props: bookProps) => {
@@ -51,26 +52,28 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   const book_url = String(bookurl)
 
   //setting the state of the button according to user's 
-  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true})
-  const [RatingState, setRatingState] = useState({ rating: NaN, disabled: true})
-  const [ReviewState, setReviewState] = useState({ review: "Loading...", disabled: true})
+  const [ButtonState, setButtonState] = useState({ text: "Loading...", disabled: true, shouldAdd: true })
+  const [RatingState, setRatingState] = useState({ rating: NaN, disabled: true })
+  const [ReviewState, setReviewState] = useState({ review: "Loading...", disabled: true })
 
   //Initial set up for stateful components
-  const {data, refetch } = trpc.fetchSingleBookDataByUrl.useQuery({book_url})
+  const { data, refetch } = trpc.fetchSingleBookDataByUrl.useQuery({ book_url })
 
-  const reviews_data_formatted = data?.result?.Users.map((user: { Rating: any; Review: any; user: { username: any; }; assignedAt: any; }) => { return{ rating: user.Rating, review: user.Review, name: user.user.username, date: user.assignedAt}})
+  const reviews_data_formatted = data?.result?.Users.map((user: { Rating: any; Review: any; user: { username: any; }; assignedAt: any; }) => { return { rating: user.Rating, review: user.Review, name: user.user.username, date: user.assignedAt } })
 
-  const fetch_result = trpc.fetchBookFromLibrary.useQuery({book_url, data: session.data}, {onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost
-    if(newData.exists) {
-      setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
-      setRatingState({rating: Number(newData.result?.Rating), disabled: false})
-      setReviewState({review: String(newData.result?.Review), disabled: false})
-    } else {
-      setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
-      setRatingState({rating: NaN, disabled: true})
-      setReviewState({review: "Add to Library first.", disabled: true})
+  const fetch_result = trpc.fetchBookFromLibrary.useQuery({ book_url, data: session.data }, {
+    onSuccess: async (newData) => {   // Having a cache that isn't being used you get a performance boost
+      if (newData.exists) {
+        setButtonState({ text: "Remove from Library", disabled: false, shouldAdd: false })
+        setRatingState({ rating: Number(newData.result?.Rating), disabled: false })
+        setReviewState({ review: String(newData.result?.Review), disabled: false })
+      } else {
+        setButtonState({ text: "Add to Library", disabled: false, shouldAdd: true })
+        setRatingState({ rating: NaN, disabled: true })
+        setReviewState({ review: "Add to Library first.", disabled: true })
+      }
     }
-  }})
+  })
 
   const mutationAddtoLib = trpc.addToBookLibrary.useMutation()
   const mutationremoveFromLib = trpc.removeBookFromLibrary.useMutation()
@@ -78,91 +81,123 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   const mutationAddReview = trpc.addBookReview.useMutation()
 
   //disables rating 
-  const handleLibraryOnClick = async () => {      
-      setButtonState({text: ButtonState.text, disabled: true, shouldAdd: ButtonState.shouldAdd})
-      setRatingState({rating: RatingState.rating, disabled: true})
-      setReviewState({review: ReviewState.review, disabled:true})
-      
-      if(ButtonState.shouldAdd){
-        mutationAddtoLib.mutate({ book_url }, {onSuccess: async (newData) => {
-          setButtonState({text: "Remove from Library", disabled: false, shouldAdd: false})
-          setRatingState({rating: RatingState.rating, disabled: false})
-          setReviewState({review: ReviewState.review, disabled: false})
+  const handleLibraryOnClick = async () => {
+    setButtonState({ text: ButtonState.text, disabled: true, shouldAdd: ButtonState.shouldAdd })
+    setRatingState({ rating: RatingState.rating, disabled: true })
+    setReviewState({ review: ReviewState.review, disabled: true })
+
+    if (ButtonState.shouldAdd) {
+      mutationAddtoLib.mutate({ book_url }, {
+        onSuccess: async (newData) => {
+          setButtonState({ text: "Remove from Library", disabled: false, shouldAdd: false })
+          setRatingState({ rating: RatingState.rating, disabled: false })
+          setReviewState({ review: ReviewState.review, disabled: false })
           refetch()
-        },});
-      } else {
-        mutationremoveFromLib.mutate({ book_url }, {onSuccess: async (newData) => {
-          setButtonState({text: "Add to Library", disabled: false, shouldAdd: true})
-          setRatingState({rating: NaN, disabled: true})
-          setReviewState({review: ReviewState.review, disabled: true})
+        },
+      });
+    } else {
+      mutationremoveFromLib.mutate({ book_url }, {
+        onSuccess: async (newData) => {
+          setButtonState({ text: "Add to Library", disabled: false, shouldAdd: true })
+          setRatingState({ rating: NaN, disabled: true })
+          setReviewState({ review: ReviewState.review, disabled: true })
           refetch()
-        }});
-      }
+        }
+      });
+    }
   };
 
   const handleRatingOnClick = async (rating: number) => {
-          setRatingState({rating, disabled: true})
-          mutationAddRating.mutate({book_url, rating}, { onSuccess: async (newData) => {
-          setRatingState({rating: newData.rating, disabled: false})
-          refetch()
-        }
-      })
+    setRatingState({ rating, disabled: true })
+    mutationAddRating.mutate({ book_url, rating }, {
+      onSuccess: async (newData) => {
+        setRatingState({ rating: newData.rating, disabled: false })
+        refetch()
+      }
+    })
   }
 
   const handleReviewOnSubmit = async (review: string) => {
-          setReviewState({review, disabled: true})
-          mutationAddReview.mutate({book_url, review}, { onSuccess: async (newData) => {
-          setReviewState({review: newData.review, disabled: false})
-          refetch()
-        }
-      })
+    setReviewState({ review, disabled: true })
+    mutationAddReview.mutate({ book_url, review }, {
+      onSuccess: async (newData) => {
+        setReviewState({ review: newData.review, disabled: false })
+        refetch()
+      }
+    })
   }
 
 
   return (
     <Layout>
-          <div>
-            <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
-
-            <div className="card mb-3 mt-2 col m-1 shadow rounded ">
-                      <div className="row">
-                        <div className="col mt-2 mb-1 min1">
-                          <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
-                        </div>
-                        <div className="col-sm-10">
-                          <div className="card-body">
-                            <h5 className="card-title">{props.name}</h5>
-                            <p className="author">by {props.author}</p>
-                            <p className="card-text">{props.synopsis}</p>
-                          </div>
-                          <div className="mb-3"><StarRating  rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick}/></div>
-                          {<button className="btn btn-primary mb-3" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
-
-                          <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
-                        </div>
-                      </div>
-                  </div>
-                  <div>
+      <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
+      <div className="center-flex">
+      <div className="page-size center-flex">
+          <div className="card mb-5 mt-1 font_set shadow rounded info-section">
+            <div className="card_body">
+              <div className="image_size">
+                <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+              </div>
+              <div className="p-1">
+                <h5 className="card-title">{props.name}</h5>
+                <p className="author">by {props.author}</p>
+                <p className="card-text">{props.synopsis}</p>
+              </div>
+            </div>
+            <div className="mb-3 center-flex">
+              <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick} />
+            {<button className="btn btn-primary m-3 w-50" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
+            </div>
+            <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
+            <div className="center-flex">
+              <div className="review-section-inner">
+                <div className="center-flex">
                   <h3>Write a review</h3>
-                  <WriteAReview review={ReviewState.review} onSubmit={handleReviewOnSubmit} disabled={ReviewState.disabled}/>
-
+                </div>
+                <WriteAReview review={ReviewState.review} onSubmit={handleReviewOnSubmit} disabled={ReviewState.disabled} />
+                <div className="center-flex mt-3">
                   <h3> Reviews </h3>
-                  {reviews_data_formatted?.map((review: { name: string; review: string; date: Date | null; rating: number | null; }, i) => {
-                    return <Reviews key={i} by={review.name} review={review.review} date={review.date} rating={review.rating} />
-                  })}
-                  </div>
+                </div>
+                {reviews_data_formatted?.map((review: { name: string; review: string; date: Date | null; rating: number | null; }, i) => {
+                  return <Reviews key={i} by={review.name} review={review.review} date={review.date} rating={review.rating} />
+                })}
+              </div>
           </div>
-          <style jsx>
-            {
-              `
-              .min1 {
-                min-width: 200px;
-                min-height: 100px;
-                max-width: 200px;
+        </div>
+        </div>
+      </div>
+
+      <style jsx>
+        {
+          `
+              .card_body {
+                display: flex;
               }
-              `
-            }
-          </style>
+              .image_size {
+                min-width: max(30%, 80px);
+                max-width: min(30%, 100px);
+              }
+              .font_set {
+                font-size: clamp(0.6rem, 0.6vw + 0.6rem, 1.2rem);
+              }
+              .info-section {
+                padding: 2em;
+
+              }
+              .center-flex {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+              }
+              .page-size {
+                width: min(100%, 1200px);
+              }
+              .review-section-inner {
+                width: min(100%, 1200px);
+              }
+          `
+        }
+      </style>
     </Layout>
   );
 };

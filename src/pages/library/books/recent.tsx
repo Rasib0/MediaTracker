@@ -30,12 +30,20 @@ const Dashboard: NextPage = () => {
             <div className="form-outline">
                   <input type="search" id="form1" className="form-control" placeholder="Search books" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
               </div>
-            <div className="row">
+            <div className="cards">
             {AllBookInLibrarySortedRecent.data?.result.map((input, i) => {
                   return <OverviewCard key={i} name={input.book.name} rating={input.Rating} type="books" by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} media_url={input.book.book_url}/>
               })}
             </div>
       </div>
+      <style jsx>
+        {`
+        .cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(399px, 100%), 1fr));
+        }
+        `}
+      </style>
     </Layout>
   );
 };

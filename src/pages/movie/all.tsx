@@ -29,12 +29,22 @@ const Dashboard: NextPage = () => {
                   <input type="search" id="form1" className="form-control" placeholder="Search movies" aria-label="Search" onChange={(e) => {setSearchKeyword(e.target.value)}} />
                 </div>
 
-                <div className="row">
+                <div className="cards">
                 {fetchAllMovieDataByKeywordDesc.data?.result.map((movie, i) => {
                   return <OverviewCard key={i} name={movie.name} type="movies" rating={null} by={movie.director} synopsis={movie.synopsis} date={null} image_url={movie.image_url} media_url={movie.movie_url}/>
                    })}
                 </div>
           </div>
+          <style jsx>
+            {
+              `
+              .cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(min(399px, 100%), 1fr));
+              }
+              `
+            }
+          </style>
     </Layout>
   );
 };

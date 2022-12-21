@@ -22,7 +22,9 @@ const WriteAReview: React.FC<Props> = (props: Props) => {
     <div>
       <form  onSubmit={(e) => onSubmitInner(e)}>
         <textarea className="form-control mb-3" ref={inputRef} disabled={props.disabled} rows={3} placeholder='Write your review'/>
-        <button className="btn btn-secondary" type="submit" disabled={props.disabled}> Publish your Review</button>
+        <div className="center-flex">
+        <button className="btn btn-primary" type="submit" disabled={props.disabled}> Publish your Review</button>
+        </div> 
       </form>
 
       <style jsx>
@@ -32,6 +34,11 @@ const WriteAReview: React.FC<Props> = (props: Props) => {
           cursor: pointer;
           transition: 200ms;
         }
+          .center-flex {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
         `}
       </style>
     </div>

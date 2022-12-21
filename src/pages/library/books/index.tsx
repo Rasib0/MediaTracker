@@ -34,13 +34,13 @@ const Dashboard: NextPage = () => {
           <div className="p-3 mb-2 bg-primary text-white cursor-pointer " onClick={() => {router.push("/library/books/")}}><h1>{data?.user.username}&apos;s Library Page</h1>Here is your library where you can see your book collection!</div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer " onClick={() => {router.push("/library/books/recent")}}><h3>Recently Added</h3></div>
 
-            <div className="row">
+            <div className="cards">
               {AllBookInLibrarySortedRecent.data?.result.map((input, i) => {
                   return <OverviewCard key={i} name={input.book.name}  type="books" rating={input.Rating} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} media_url={input.book.book_url}/>
               })}
             </div>
             <div className="p-3 mb-2 bg-secondary text-white cursor-pointer" onClick={() => {router.push("/library/books/favorites")}}><h3>Favorites</h3></div>
-            <div className="row">
+            <div className="cards">
               {AllBookInLibrarySortedRecentFav.data?.result.map((input, i) => {
                   return <OverviewCard key={i} name={input.book.name} type={"books"} rating={input.Rating} by={input.book.author} synopsis={input.book.synopsis} date={input.assignedAt} image_url={input.book.image_url} media_url={input.book.book_url}/>
               })}
@@ -48,6 +48,14 @@ const Dashboard: NextPage = () => {
           </div>
         </div>
       </div>
+      <style jsx>
+        {`
+        .cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(399px, 100%), 1fr));
+        }
+        `}
+      </style>
     </Layout>
   );
 };

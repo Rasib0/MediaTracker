@@ -14,22 +14,15 @@ export type CardProps = {
 
 const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
   return (
-    <div className="card mb-3 mt-2 max_width col m-1 shadow rounded ">
-      {props.date ? <div className="card-text">Review by <b>{props.by}</b> on {props.date.toString()} </div> :<></>}
-
-      <div className="row g-0">
-        <div className="col-md-8">
-        {props.rating ? <div><StaticRating rating={props.rating}/></div> :<></>}
-          <div className="card-body">
-            {!(props.review === "") ? <p className="card-text">{props.review}</p>: <em>no review</em>}
-          </div>
-        </div>
-      </div>
+    <div className="card mb-3 mt-2 max_width m-1 shadow rounded ">
+      {props.date ? <div>Review by <b>{props.by}</b> on {props.date.toString()} </div> :<></>}
+        {props.rating ? <div className="p-3"><StaticRating rating={props.rating}/></div> :<></>}
+        {!(props.review === "") ? <p className="card-text p-2">{props.review}</p>: <em>no review</em>}
         <style jsx>
           {`
           .max_width {
+          min-height: 150px;
           max-height:500px;
-          overflow: hidden;
           }
           `}
       </style>
