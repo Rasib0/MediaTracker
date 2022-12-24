@@ -20,7 +20,7 @@ const MediaDetailCard = (props: Props) => {
     <div className="card_body">
       <div>
         <div className="mb-3 center-flex">
-          <div className="image_size mt-5">
+          <div className="image_size">
             <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
           </div>
           <StarRating rating={RatingState.rating}
