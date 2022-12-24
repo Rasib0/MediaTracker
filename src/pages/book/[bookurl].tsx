@@ -132,23 +132,41 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
     <Layout>
       <div className="p-3 mb-2 bg-primary text-white"><h1>Single Books Page</h1>Here is where you can all the information about a single book and rate them</div>
       <div className="center-flex">
-      <div className="page-size center-flex">
-          <div className="card mb-5 mt-1 font_set shadow rounded info-section">
-            <div className="card_body">
-              <div className="image_size">
-                <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+
+        <div className="page-size center-flex">
+
+          <div className="card mb-5 mt-1 font_set shadow rounded p-3">
+            <div className="center-flex">
+              <h5 className="card-title">{props.name} by {props.author}</h5>
+              <StarRating rating={RatingState.rating}
+                disabled={RatingState.disabled}
+                onClick={handleRatingOnClick} />
+            </div>
+
+            <div className="card_body mt-3">
+              <div>
+                <div className="mb-3 center-flex">
+                  <div className="image_size">
+                    <Image src={"/images/books/" + props.image_url + ".jpg"} className="img-fluid rounded" width={255} height={500} alt="..."></Image>
+                  </div>
+                    {<button className="button-size m-3"
+                      onClick={() => handleLibraryOnClick()}
+                      disabled={ButtonState.disabled}>{ButtonState.text}</button>}
+                  </div>
+                <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error)
+                  && <p>Something went wrong! {mutationAddtoLib.error?.message}
+                    or {mutationremoveFromLib.error?.message}</p>}
+                </div>
               </div>
-              <div className="p-1">
-                <h5 className="card-title">{props.name}</h5>
-                <p className="author">by {props.author}</p>
-                <p className="card-text">{props.synopsis}</p>
+
+              <div className="p-1 w-75">
+                <div className="text-component">
+                  <p className="card-text">{props.synopsis}</p>
+                </div>
               </div>
             </div>
-            <div className="mb-3 center-flex">
-              <StarRating rating={RatingState.rating} disabled={RatingState.disabled} onClick={handleRatingOnClick} />
-            {<button className="btn btn-primary m-3 w-50" onClick={() => handleLibraryOnClick()} disabled={ButtonState.disabled}> {ButtonState.text}</button>}
-            </div>
-            <div className="error-message">{(mutationAddtoLib.error || mutationremoveFromLib.error) && <p>Something went wrong! {mutationAddtoLib.error?.message} or {mutationremoveFromLib.error?.message}</p>}</div>
+          </div>
+          <div className="card mb-5 mt-1 font_set shadow rounded p-3 review-section">
             <div className="center-flex">
               <div className="review-section-inner">
                 <div className="center-flex">
@@ -162,8 +180,8 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                   return <Reviews key={i} by={review.name} review={review.review} date={review.date} rating={review.rating} />
                 })}
               </div>
+            </div>
           </div>
-        </div>
         </div>
       </div>
 
@@ -174,22 +192,27 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                 display: flex;
               }
               .image_size {
-                min-width: max(30%, 80px);
-                max-width: min(30%, 100px);
+                width: min(50%,200px);
               }
               .font_set {
-                font-size: clamp(0.6rem, 0.6vw + 0.6rem, 1.2rem);
+                font-size: clamp(0.8rem, 0.5vw + 0.5rem, 1.0rem);
               }
-              .info-section {
-                padding: 2em;
-
+              .text-component {
+                height: 300px;
+                overflow: scroll;
               }
               .center-flex {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
               }
+              .button-size {
+                width: min(50%,200px);
+              }
               .page-size {
+                width: min(100%, 1200px);
+              }
+              .review-section {
                 width: min(100%, 1200px);
               }
               .review-section-inner {

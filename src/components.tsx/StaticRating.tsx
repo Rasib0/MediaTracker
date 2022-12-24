@@ -13,7 +13,7 @@ const StaticRating: React.FC<Props> = (props: Props) => {
       return (
           <FaStar key={i} className="star" 
                   color={(ratingValue <= (props.rating) ? "#ffc107": "#e4e5e9")} 
-                  size={30}
+                  size={25}
           />
       )
     })}

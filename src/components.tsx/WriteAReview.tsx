@@ -23,7 +23,7 @@ const WriteAReview: React.FC<Props> = (props: Props) => {
       <form  onSubmit={(e) => onSubmitInner(e)}>
         <textarea className="form-control mb-3" ref={inputRef} disabled={props.disabled} rows={3} placeholder='Write your review'/>
         <div className="center-flex">
-        <button className="btn btn-primary" type="submit" disabled={props.disabled}> Publish your Review</button>
+        <button className="" type="submit" disabled={props.disabled}> Publish your Review</button>
         </div> 
       </form>
 

@@ -28,7 +28,7 @@ const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
           <div className="p-3">
             <h5 className="card-title">{props.name} </h5>
             <div className="card-text"><em>by  {props.by}</em> </div>
-            <p className="card-text">{props.synopsis.substring(0, 150)}...</p>
+            <p className="card-text">{props.synopsis.substring(0, 250)}...</p>
             {props.rating ? <div className="card-text"><StaticRating rating={props.rating}/></div> :<></>}
         </div>
       </div>
@@ -42,7 +42,7 @@ const OverviewCard: React.FC<CardProps> = (props: CardProps) => {
             max-width: min(30%, 100px);
           }
           .font_set {
-            font-size: clamp(0.6rem, 0.6vw + 0.6rem, 1.2rem);
+            font-size: clamp(0.7rem, 0.5vw + 0.5rem, 0.8rem);
           }
           `}
       </style>

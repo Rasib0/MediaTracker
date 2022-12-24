@@ -28,7 +28,7 @@ const StarRating: React.FC<Props> = (props: Props) => {
                 }}/>
             <FaStar className="star" 
                     color={(ratingValue <= (hover || props.rating) ? "#ffc107": "#e4e5e9")} 
-                    size={30}
+                    size={25}
                     onMouseEnter = { () => props.disabled ?setHover(NaN): setHover(ratingValue)}              
                     onMouseLeave = { () => setHover(NaN)}
             />
