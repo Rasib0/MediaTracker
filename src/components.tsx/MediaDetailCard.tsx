@@ -1,4 +1,6 @@
 import React from 'react'
+import Image from 'next/image'
+import StarRating from './StarRating'
 
 type media = 'movies' | 'books'
 
@@ -9,13 +11,17 @@ type Props = {
     by: string;
     synopsis: string;
     date: Date | null;
+    author: string;
     type: media;
     rating: number | null;
-    handleLibraryOnClick: any;
 }
 
 const MediaDetailCard = (props: Props) => {
   return (
+    <div>Hello World</div>
+  )
+  /*
+  return ( TBD
     <div className="card mb-5 mt-1 font_set shadow rounded p-3">
     <div className="card_body">
       <div>
@@ -45,6 +51,8 @@ const MediaDetailCard = (props: Props) => {
     </div>
   </div>
   )
+    */
+
 }
 
 export default MediaDetailCard
