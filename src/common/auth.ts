@@ -24,11 +24,10 @@ export const nextAuthOptions: NextAuthOptions = {
             where: { email },
           });
           if (!resultUser) return null;
-          
+
           const isValidPassword = await verify(resultUser.password, password);
           if (!isValidPassword) return null;
           return { id: resultUser.id, email, username: resultUser.username };
-
         } catch {
           return null;
         }
@@ -51,7 +50,7 @@ export const nextAuthOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.username = token.username;
       }
-   
+
       return session;
     },
   },

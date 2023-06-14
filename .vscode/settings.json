@@ -3,5 +3,8 @@
         "authed",
         "superjson",
         "trpc"
-    ]
+    ],
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

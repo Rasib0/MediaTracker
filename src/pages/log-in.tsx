@@ -8,10 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, ILogin } from "../common/validation/authSchemas";
 
-
 // The sign in page that shows you the data before the authentication happens
 const Home: NextPage = () => {
-
   const { handleSubmit, control, reset } = useForm<ILogin>({
     defaultValues: {
       email: "",
@@ -42,26 +40,22 @@ const Home: NextPage = () => {
 
       <div className="d-flex justify-content-center mt-5">
         <div className="card">
-          <form
-            className="card-body"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
             <div className="card-body">
-                <h2 className="card-title">Welcome back!</h2>
-                <div className="form-outline mb-2">
-                  
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        type="email"
-                        placeholder="Enter your email..."
-                        className="form-control"
-                        {...field}
-                      />
-                    )}
-                  />
+              <h2 className="card-title">Welcome back!</h2>
+              <div className="form-outline mb-2">
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="email"
+                      placeholder="Enter your email..."
+                      className="form-control"
+                      {...field}
+                    />
+                  )}
+                />
 
                 <div className="mt-2 mb-4">
                   <Controller
@@ -78,23 +72,31 @@ const Home: NextPage = () => {
                   />
                 </div>
                 <div className="d-flex justify-content-center">
-                  <button className="btn btn-primary btn-block mb-4" type="submit">Login</button>
+                  <button
+                    className="btn btn-primary btn-block mb-4"
+                    type="submit"
+                  >
+                    Login
+                  </button>
                 </div>
-                <div>Not a member? <Link href="/sign-up" className="link">Register</Link> </div>
+                <div>
+                  Not a member?{" "}
+                  <Link href="/sign-up" className="link">
+                    Register
+                  </Link>{" "}
+                </div>
               </div>
             </div>
           </form>
         </div>
       </div>
       <style jsx>
-        {
-          `
+        {`
           container {
-          display: flex;
-          justify-content: center;
-            }
-          `
-        }
+            display: flex;
+            justify-content: center;
+          }
+        `}
       </style>
     </div>
   );
