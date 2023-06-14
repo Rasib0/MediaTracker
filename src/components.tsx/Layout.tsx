@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import Header from "./layout components/Header"
+import Navbar from "./layout/navbar";
 
 type Props = {
   children: ReactNode;
@@ -7,7 +7,7 @@ type Props = {
 
 const Layout: React.FC<Props> = (props) => (
   <div>
-    <Header/>
+    <Navbar />
     <div className="layout">{props.children}</div>
     <style jsx global>{`
       html {
@@ -19,7 +19,8 @@ const Layout: React.FC<Props> = (props) => (
           Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
           "Segoe UI Symbol";
       }
-      input, textarea {
+      input,
+      textarea {
         font-size: 16px;
       }
 
@@ -27,7 +28,7 @@ const Layout: React.FC<Props> = (props) => (
         cursor: pointer;
       }
     `}</style>
-   </div>
+  </div>
 );
 
 export default Layout;
