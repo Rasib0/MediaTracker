@@ -5,11 +5,11 @@ import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../server/prisma";
-import Layout from "../../components.tsx/Layout";
-import StarRating from "../../components.tsx/StarRating";
+import Layout from "../../components.tsx/layout";
+import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Reviews from "../../components.tsx/Reviews";
-import WriteAReview from "../../components.tsx/WriteAReview";
+import Reviews from "../../components.tsx/reviews";
+import ReviewInput from "../../components.tsx/review_input";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -203,14 +203,14 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
   return (
     <Layout>
       <div>
-        <div className="p-3 mb-2 bg-primary text-white">
+        <div className="bg-primary mb-2 p-3 text-white">
           <h1>Single Movies Page</h1>Here is where you can all the information
           about a single movie and rate them
         </div>
 
-        <div className="card mb-3 mt-2 col m-1 shadow rounded ">
+        <div className="card col m-1 mb-3 mt-2 rounded shadow ">
           <div className="row">
-            <div className="col mt-2 mb-1">
+            <div className="col mb-1 mt-2">
               <Image
                 src={"/images/movies/" + props.image_url + ".jpg"}
                 className="img-fluid rounded"
@@ -226,7 +226,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
                 <p className="card-text">{props.synopsis}</p>
               </div>
               <div className="mb-3">
-                <StarRating
+                <RatingInput
                   rating={RatingState.rating}
                   disabled={RatingState.disabled}
                   onClick={handleRatingOnClick}
@@ -256,7 +256,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
         </div>
         <div>
           <h3>Write a review</h3>
-          <WriteAReview
+          <ReviewInput
             review={ReviewState.review}
             onSubmit={handleReviewOnSubmit}
             disabled={ReviewState.disabled}

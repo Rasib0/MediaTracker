@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Layout from "../components.tsx/Layout";
+import Layout from "../components.tsx/layout";
 
 export default function Custom500() {
   return (
@@ -8,7 +8,7 @@ export default function Custom500() {
       <h2 className="text-center">Server-side error occurred</h2>
       <div className="text-center">
         <Link href="/">
-          <a>return to home</a>
+          return to home
         </Link>
       </div>
     </div>

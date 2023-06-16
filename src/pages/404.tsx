@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Layout from "../components.tsx/Layout";
+import Layout from "../components.tsx/layout";
 
 // pages/404.js
 export default function Custom404() {
@@ -9,7 +9,7 @@ export default function Custom404() {
       <h2 className="text-center">Page Not Found</h2>
       <div className="text-center">
         <Link href="/">
-          <a>return to home</a>
+          return to home
         </Link>
       </div>
     </div>

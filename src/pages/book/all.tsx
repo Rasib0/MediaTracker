@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
-import Layout from "../../components.tsx/Layout";
-import OverviewCard from "../../components.tsx/OverviewCard";
+import Layout from "../../components.tsx/layout";
+import OverviewCard from "../../components.tsx/card";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -25,7 +25,7 @@ const Dashboard: NextPage = () => {
     //TODO: remove tailwind css and add your own
     <Layout>
       <div className="">
-        <div className="p-3 mb-2 bg-primary text-white">
+        <div className="bg-primary mb-2 p-3 text-white">
           <h1>All Books Page</h1>Here is where you can see all our books!
         </div>
 

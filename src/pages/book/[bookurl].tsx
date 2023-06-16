@@ -5,12 +5,12 @@ import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../server/prisma";
-import Layout from "../../components.tsx/Layout";
-import StarRating from "../../components.tsx/StarRating";
+import Layout from "../../components.tsx/layout";
+import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Reviews from "../../components.tsx/Reviews";
-import WriteAReview from "../../components.tsx/WriteAReview";
-import OverviewCard from "../../components.tsx/OverviewCard";
+import Reviews from "../../components.tsx/reviews";
+import ReviewInput from "../../components.tsx/review_input";
+import OverviewCard from "../../components.tsx/card";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -203,18 +203,18 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
   return (
     <Layout>
-      <div className="p-3 mb-2 bg-primary text-white">
+      <div className="bg-primary mb-2 p-3 text-white">
         <h1>Single Books Page</h1>Here is where you can all the information
         about a single book and rate them
       </div>
       <div className="center-flex">
         <div className="page-size center-flex">
-          <div className="card mb-5 mt-1 font_set shadow rounded p-3">
+          <div className="card font_set mb-5 mt-1 rounded p-3 shadow">
             <div className="center-flex">
               <h5 className="card-title">
                 {props.name} by {props.author}
               </h5>
-              <StarRating
+              <RatingInput
                 rating={RatingState.rating}
                 disabled={RatingState.disabled}
                 onClick={handleRatingOnClick}
@@ -223,7 +223,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
             <div className="card_body mt-3">
               <div>
-                <div className="mb-3 center-flex">
+                <div className="center-flex mb-3">
                   <div className="image_size">
                     <Image
                       src={"/images/books/" + props.image_url + ".jpg"}
@@ -253,20 +253,20 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                 </div>
               </div>
 
-              <div className="p-1 w-75">
+              <div className="w-75 p-1">
                 <div className="text-component">
                   <p className="card-text">{props.synopsis}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="card mb-5 mt-1 font_set shadow rounded p-3 review-section">
+          <div className="card font_set review-section mb-5 mt-1 rounded p-3 shadow">
             <div className="center-flex">
               <div className="review-section-inner">
                 <div className="center-flex">
                   <h3>Write a review</h3>
                 </div>
-                <WriteAReview
+                <ReviewInput
                   review={ReviewState.review}
                   onSubmit={handleReviewOnSubmit}
                   disabled={ReviewState.disabled}

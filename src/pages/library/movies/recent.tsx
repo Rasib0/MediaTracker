@@ -4,8 +4,8 @@ import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
-import OverviewCard from "../../../components.tsx/OverviewCard";
-import Layout from "../../../components.tsx/Layout";
+import OverviewCard from "../../../components.tsx/card";
+import Layout from "../../../components.tsx/layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -29,7 +29,7 @@ const Dashboard: NextPage = () => {
     <Layout>
       <div className="">
         <div
-          className="p-3 mb-2 bg-primary text-white"
+          className="bg-primary mb-2 p-3 text-white"
           onClick={() => {
             router.push("/library/movies/");
           }}
@@ -38,7 +38,7 @@ const Dashboard: NextPage = () => {
           library where you can see your Movie collection!
         </div>
         <div
-          className="p-3 mb-2 bg-secondary text-white"
+          className="bg-secondary mb-2 p-3 text-white"
           onClick={() => {
             router.push("/library/movies/recent");
           }}

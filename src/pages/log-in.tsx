@@ -57,7 +57,7 @@ const Home: NextPage = () => {
                   )}
                 />
 
-                <div className="mt-2 mb-4">
+                <div className="mb-4 mt-2">
                   <Controller
                     name="password"
                     control={control}

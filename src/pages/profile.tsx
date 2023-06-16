@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 
 import { requireAuth } from "../common/requireAuth";
-import Layout from "../components.tsx/Layout";
+import Layout from "../components.tsx/layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };

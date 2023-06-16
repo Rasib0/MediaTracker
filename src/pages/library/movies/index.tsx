@@ -4,8 +4,8 @@ import router from "next/router";
 import { useState } from "react";
 import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
-import OverviewCard from "../../../components.tsx/OverviewCard";
-import Layout from "../../../components.tsx/Layout";
+import OverviewCard from "../../../components.tsx/card";
+import Layout from "../../../components.tsx/layout";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -36,7 +36,7 @@ const Dashboard: NextPage = () => {
         <div className="">
           <div className="">
             <div
-              className="p-3 mb-2 bg-primary text-white cursor-pointer "
+              className="bg-primary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
                 router.push("/library/movies/");
               }}
@@ -45,7 +45,7 @@ const Dashboard: NextPage = () => {
               your Movie library where you can see your Movie collection!
             </div>
             <div
-              className="p-3 mb-2 bg-secondary text-white cursor-pointer "
+              className="bg-secondary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
                 router.push("/library/movies/recent");
               }}
@@ -71,7 +71,7 @@ const Dashboard: NextPage = () => {
               })}
             </div>
             <div
-              className="p-3 mb-2 bg-secondary text-white cursor-pointer"
+              className="bg-secondary mb-2 cursor-pointer p-3 text-white"
               onClick={() => {
                 router.push("/library/movies/favorites");
               }}
