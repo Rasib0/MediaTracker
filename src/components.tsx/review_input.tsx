@@ -22,7 +22,7 @@ const ReviewInput = (props: Props) => {
     <div>
       <form onSubmit={onSubmitInner}>
         <textarea
-          className="form-control mb-3"
+          className="mb-3"
           ref={inputRef}
           disabled={props.disabled}
           rows={3}
@@ -30,7 +30,7 @@ const ReviewInput = (props: Props) => {
         />
         <div className="flex justify-center">
           <button
-            className="submitButton"
+            className="rounded border border-blue-500 bg-transparent px-4 py-2 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white"
             type="submit"
             disabled={props.disabled}
           >

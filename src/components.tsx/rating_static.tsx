@@ -6,7 +6,7 @@ type Props = {
 // a component that displays a static rating
 const RatingStatic: React.FC<Props> = (props: Props) => {
   return (
-    <div>
+    <span className="flex">
       {[...Array(5)].map((star, i) => {
         const ratingValue = i + 1;
         return (
@@ -17,7 +17,7 @@ const RatingStatic: React.FC<Props> = (props: Props) => {
           />
         );
       })}
-    </div>
+    </span>
   );
 };
 

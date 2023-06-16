@@ -10,6 +10,7 @@ export type CardProps = {
   by: string;
   synopsis: string;
   image_url: string;
+  show_author: boolean;
   date: Date | null;
   type: media;
   rating: number | null;
@@ -19,11 +20,22 @@ export type CardProps = {
 const OverviewCard = (props: CardProps) => {
   return (
     <Link
-      className="mx-2 my-1 rounded shadow-lg"
+      className="mx-2 my-1 rounded shadow-lg  hover:bg-sky-200"
       href={"/" + props.type.slice(0, -1) + "/" + props.media_url}
     >
-      {props.date ? <div>Added on {props.date.toString()}</div> : <></>}
-      <div className="flex hover:bg-sky-200">
+      <div className="flex w-full justify-center bg-slate-600 text-white">
+        <div>{props.name}</div>
+        &nbsp;
+        {!!props.show_author ? <div>by {props.by}</div> : <></>}
+      </div>
+      {props.date ? (
+        <p className="w-full font-thin">Added {props.date.toString()}</p>
+      ) : (
+        <></>
+      )}
+      {props.rating ? <RatingStatic rating={props.rating} /> : <></>}
+
+      <div className="flex">
         <div className="m-1 min-w-[30%] max-w-[30%]">
           <Image
             src={"/images/" + props.type + "/" + props.image_url + ".jpg"}
@@ -34,21 +46,8 @@ const OverviewCard = (props: CardProps) => {
           />
         </div>
 
-        <div className="p-3">
-          <h5>{props.name}</h5>
-
-          <div>
-            <em>by {props.by}</em>
-          </div>
-
+        <div className="p-2">
           <p>{props.synopsis.substring(0, 300)}...</p>
-          {props.rating ? (
-            <div>
-              <RatingStatic rating={props.rating} />
-            </div>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
     </Link>

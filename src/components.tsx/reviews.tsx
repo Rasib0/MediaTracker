@@ -30,7 +30,7 @@ const Card = (props: CardProps) => {
         <></>
       )}
       {!(props.review === "") ? (
-        <p className="card-text p-2">{props.review}</p>
+        <p className="p-2">{props.review}</p>
       ) : (
         <em>no review</em>
       )}

@@ -9,7 +9,7 @@ type Props = {
 const RatingInput: React.FC<Props> = (props: Props) => {
   const [hover, setHover] = useState(props.rating);
   return (
-    <div>
+    <div className="flex">
       {[...Array(5)].map((star, i) => {
         const ratingValue = i + 1;
         return (
@@ -17,6 +17,7 @@ const RatingInput: React.FC<Props> = (props: Props) => {
             <input
               type="radio"
               name="rating"
+              className="hidden"
               value={ratingValue}
               disabled={props.disabled}
               onClick={() => {
