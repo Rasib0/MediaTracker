@@ -3,11 +3,12 @@ import Navbar from "./layout/navbar";
 
 type Props = {
   children: ReactNode;
+  currentPath: string;
 };
 
-const Layout: React.FC<Props> = (props) => (
+const Layout = (props: Props) => (
   <div>
-    <Navbar />
+    <Navbar current_path={props.currentPath} />
     <div>{props.children}</div>
   </div>
 );
