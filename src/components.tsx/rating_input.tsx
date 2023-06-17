@@ -6,7 +6,7 @@ type Props = {
   rating: number;
   disabled: boolean;
 };
-const RatingInput: React.FC<Props> = (props: Props) => {
+const RatingInput = (props: Props) => {
   const [hover, setHover] = useState(props.rating);
   return (
     <div className="flex">

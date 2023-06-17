@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
 
-function Navbar() {
+type Props = {
+  current_path: string;
+};
+//TODO: add active class to current page
+
+const Navbar = (props: Props) => {
   return (
     <nav className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -197,6 +202,6 @@ function Navbar() {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;
