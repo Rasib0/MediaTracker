@@ -3,6 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 
 import { requireAuth } from "../common/requireAuth";
 import Layout from "../components.tsx/layout";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return {
@@ -19,7 +20,7 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
 
   return (
-    <Layout>
+    <Layout currentPage={currentPage.none}>
       <div>
         <div>
           <h1 className="text-center">You are logged in!</h1>

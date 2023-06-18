@@ -6,6 +6,7 @@ import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
 import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -31,7 +32,7 @@ const Dashboard: NextPage = () => {
     );
 
   return (
-    <Layout>
+    <Layout currentPage={currentPage.library}>
       <div className="">
         <div className="">
           <div className="">
@@ -63,6 +64,7 @@ const Dashboard: NextPage = () => {
                     rating={input.Rating}
                     by={input.movie.director}
                     synopsis={input.movie.synopsis}
+                    show_author={false}
                     date={input.assignedAt}
                     image_url={input.movie.image_url}
                     media_url={input.movie.movie_url}
@@ -86,6 +88,7 @@ const Dashboard: NextPage = () => {
                     name={input.movie.name}
                     type={"movies"}
                     rating={input.Rating}
+                    show_author={false}
                     by={input.movie.director}
                     synopsis={input.movie.synopsis}
                     date={input.assignedAt}
