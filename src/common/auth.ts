@@ -1,7 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { verify } from "argon2";
-
 import { prisma } from "../server/prisma";
 import { loginSchema } from "./validation/authSchemas";
 
@@ -27,7 +26,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
           const isValidPassword = await verify(resultUser.password, password);
           if (!isValidPassword) return null;
-          return { id: resultUser.id, email, username: resultUser.username };
+          return { id: resultUser.id.toString(), email, username: resultUser.username };
         } catch {
           return null;
         }

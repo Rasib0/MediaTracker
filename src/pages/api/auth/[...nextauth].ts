@@ -5,6 +5,7 @@ import { verify } from "argon2";
 import { prisma } from "../../../server/prisma";
 import { loginSchema } from "~/common/validation/authSchemas";
 
+
 export const nextAuthOptions: NextAuthOptions = {
     providers: [
         Credentials({
@@ -14,7 +15,7 @@ export const nextAuthOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
 
-            authorize: async (credentials) => {
+            authorize: async (credentials): Promise<any> => {
                 try {
                     const { email, password } = await loginSchema.parseAsync(credentials);
                     const resultUser = await prisma.user.findFirst({
