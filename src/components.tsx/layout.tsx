@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import Navbar from "./layout/navbar";
-import { currentPage } from "../common/types";
+import { type currentPage } from "../common/types";
 
 type Props = {
   children: ReactNode;
