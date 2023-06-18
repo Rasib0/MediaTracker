@@ -33,6 +33,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/eslint": "^8.40.2",
     "@types/node": "18.8.4",
     "@types/prettier": "^2.7.2",
     "@types/react": "18.0.21",
