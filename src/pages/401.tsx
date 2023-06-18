@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../components.tsx/layout";
 
 // The page that you will see if didn't login
 // TODO fix the link formating using tailwind css
