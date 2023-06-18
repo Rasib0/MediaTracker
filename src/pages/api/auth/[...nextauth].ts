@@ -5,6 +5,13 @@ import { verify } from "argon2";
 import { prisma } from "../../../server/prisma";
 import { loginSchema } from "~/common/validation/authSchemas";
 
+
+type User = {
+    id: string;
+    email: string;
+    username: string;
+};
+
 export const nextAuthOptions: NextAuthOptions = {
     providers: [
         Credentials({
@@ -14,7 +21,7 @@ export const nextAuthOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
 
-            authorize: async (credentials): Promise<any> => {
+            authorize: async (credentials): Promise<User | null> => {
                 try {
                     const { email, password } = await loginSchema.parseAsync(credentials);
                     const resultUser = await prisma.user.findFirst({
@@ -24,7 +31,11 @@ export const nextAuthOptions: NextAuthOptions = {
 
                     const isValidPassword = await verify(resultUser.password, password);
                     if (!isValidPassword) return null;
-                    return { id: resultUser.id, email, username: resultUser.username };
+
+                    return {
+                        id: resultUser.id.toString(),
+                        email, username: resultUser.username
+                    };
                 } catch {
                     return null;
                 }
