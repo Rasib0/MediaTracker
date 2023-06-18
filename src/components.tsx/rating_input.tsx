@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
 type Props = {
-  onClick: (rating: number) => Promise<void>;
+  onClick: (rating: number) => void;
   rating: number;
   disabled: boolean;
 };

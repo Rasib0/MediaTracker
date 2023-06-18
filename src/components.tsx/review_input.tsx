@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 
 type Props = {
-  onSubmit: (text: string) => Promise<void>;
+  onSubmit: (text: string) => void;
   review: string;
   disabled: boolean;
 };

@@ -6,8 +6,8 @@ type media = "movies" | "books";
 export type Props = {
   by: string;
   review: string;
-  date: Date | null;
-  rating: number | null;
+  date: string;
+  rating: number;
 };
 
 const Review = (props: Props) => {

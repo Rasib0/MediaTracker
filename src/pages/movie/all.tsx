@@ -7,6 +7,8 @@ import Layout from "../../components.tsx/layout";
 import OverviewCard from "../../components.tsx/card";
 import { currentPage } from "~/common/types";
 
+// TODO: fix getServerSideProps later it shouldn't be required on every page
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
@@ -17,10 +19,7 @@ const Dashboard: NextPage = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const fetchAllMovieDataByKeywordDesc =
-    trpc.fetchAllMovieDataByKeywordDesc.useQuery(
-      { keyword: searchKeyword },
-      { onSuccess: async (newData) => {} }
-    );
+    trpc.fetchAllMovieDataByKeywordDesc.useQuery({ keyword: searchKeyword });
 
   return (
     //TODO: remove tailwind css and add your own

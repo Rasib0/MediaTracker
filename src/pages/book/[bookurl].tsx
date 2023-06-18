@@ -10,7 +10,6 @@ import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
 import Reviews from "../../components.tsx/review";
 import ReviewInput from "../../components.tsx/review_input";
-import OverviewCard from "../../components.tsx/card";
 import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -132,7 +131,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   const mutationAddReview = trpc.addBookReview.useMutation();
 
   //disables rating
-  const handleLibraryOnClick = async () => {
+  const handleLibraryOnClick = () => {
     setButtonState({
       text: ButtonState.text,
       disabled: true,
@@ -145,7 +144,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
       mutationAddToLib.mutate(
         { book_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: (newData) => {
             setButtonState({
               text: "Remove from Library",
               disabled: false,
@@ -153,7 +152,14 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             });
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
-            refetch();
+            //TODO: remove refeches
+            refetch()
+              .then(() => {
+                console.log("Promise awaited");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           },
         }
       );
@@ -298,8 +304,8 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                     review: {
                       name: string;
                       review: string;
-                      date: Date | null;
-                      rating: number | null;
+                      date: string;
+                      rating: number;
                     },
                     i
                   ) => {
