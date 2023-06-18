@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { currentPage } from "../../common/types";
 
 type Props = {
-  current_path: string;
+  currentPage: currentPage;
 };
-//TODO: add active class to current page
 
 const Navbar = (props: Props) => {
   return (
@@ -64,33 +64,71 @@ const Navbar = (props: Props) => {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <Link
-                  href="/book/all"
-                  className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                  aria-current="page"
-                >
-                  Books
-                </Link>
-                <Link
-                  href="/movie/all"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Movies
-                </Link>
-                <Link
-                  //href="/tvshow/all"
-                  href="#"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  TV-Shows
-                </Link>
-                <Link
-                  //href="/podcast/all"
-                  href="#"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Podcasts
-                </Link>
+                {props.currentPage === currentPage.books ? (
+                  <Link
+                    href="/book/all"
+                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                    aria-current="page"
+                  >
+                    Books
+                  </Link>
+                ) : (
+                  <Link
+                    href="/book/all"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Books
+                  </Link>
+                )}
+                {props.currentPage === currentPage.movies ? (
+                  <Link
+                    href="/movie/all"
+                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                  >
+                    Movies
+                  </Link>
+                ) : (
+                  <Link
+                    href="/movie/all"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Movies
+                  </Link>
+                )}
+                {props.currentPage === currentPage.podcasts ? (
+                  <Link
+                    //href="/podcast/all"
+                    href="#"
+                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                  >
+                    Podcasts
+                  </Link>
+                ) : (
+                  <Link
+                    //href="/podcast/all"
+                    href="#"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Podcasts
+                  </Link>
+                )}
+                {props.currentPage === currentPage.tvshows ? (
+                  <Link
+                    //href="/tvshow/all"
+                    href="#"
+                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                  >
+                    TV Shows
+                  </Link>
+                ) : (
+                  <Link
+                    //href="/tvshow/all"
+                    href="#"
+                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    TV Shows
+                  </Link>
+                )}
               </div>
             </div>
           </div>

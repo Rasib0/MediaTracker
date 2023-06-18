@@ -6,6 +6,7 @@ import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
 import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -25,7 +26,7 @@ const Dashboard: NextPage = () => {
     );
 
   return (
-    <Layout>
+    <Layout currentPage={currentPage.library}>
       <div className="">
         <div
           className="bg-primary mb-2 p-3 text-white"
@@ -65,6 +66,7 @@ const Dashboard: NextPage = () => {
                 rating={input.Rating}
                 type="books"
                 by={input.book.author}
+                show_author={false}
                 synopsis={input.book.synopsis}
                 date={input.assignedAt}
                 image_url={input.book.image_url}

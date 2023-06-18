@@ -5,6 +5,7 @@ import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/layout";
 import OverviewCard from "../../components.tsx/card";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -23,7 +24,7 @@ const Dashboard: NextPage = () => {
 
   return (
     //TODO: remove tailwind css and add your own
-    <Layout>
+    <Layout currentPage={currentPage.movies}>
       <div className="">
         <div className="bg-primary mb-2 p-3 text-white">
           <h1>All Movies Page</h1>Here is where you can see all our movies!
@@ -52,6 +53,7 @@ const Dashboard: NextPage = () => {
                 rating={null}
                 by={movie.director}
                 synopsis={movie.synopsis}
+                show_author={false}
                 date={null}
                 image_url={movie.image_url}
                 media_url={movie.movie_url}

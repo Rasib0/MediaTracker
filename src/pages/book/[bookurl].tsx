@@ -8,9 +8,10 @@ import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/layout";
 import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Reviews from "../../components.tsx/reviews";
+import Reviews from "../../components.tsx/review";
 import ReviewInput from "../../components.tsx/review_input";
 import OverviewCard from "../../components.tsx/card";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -202,7 +203,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   };
 
   return (
-    <Layout>
+    <Layout currentPage={currentPage.books}>
       <div className="bg-primary mb-2 p-3 text-white">
         <h1>Single Books Page</h1>Here is where you can all the information
         about a single book and rate them

@@ -7,6 +7,7 @@ import { trpc } from "../../../common/trpc";
 import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
 import TextInput from "../../../components.tsx/text_input";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -32,7 +33,7 @@ const Dashboard: NextPage = () => {
 
   return (
     //TODO: remove tailwind css and add your own
-    <Layout>
+    <Layout currentPage={currentPage.library}>
       <div className="">
         <div className="">
           <div className="">
@@ -73,6 +74,7 @@ const Dashboard: NextPage = () => {
                       key={i}
                       name={input.book.name}
                       type="books"
+                      show_author={false}
                       rating={input.Rating}
                       by={input.book.author}
                       synopsis={input.book.synopsis}

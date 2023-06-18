@@ -5,6 +5,7 @@ import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/layout";
 import OverviewCard from "../../components.tsx/card";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
@@ -23,7 +24,7 @@ const Dashboard: NextPage = () => {
 
   return (
     //TODO: remove tailwind css and add your own
-    <Layout>
+    <Layout currentPage={currentPage.books}>
       <div className="">
         <div className="bg-primary mb-2 p-3 text-white">
           <h1>All Books Page</h1>Here is where you can see all our books!
@@ -53,6 +54,7 @@ const Dashboard: NextPage = () => {
                 by={book.author}
                 synopsis={book.synopsis}
                 date={null}
+                show_author={false}
                 image_url={book.image_url}
                 media_url={book.book_url}
               />

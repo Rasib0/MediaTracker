@@ -11,7 +11,7 @@ export type CardProps = {
   synopsis: string;
   image_url: string;
   show_author: boolean;
-  date: Date | null;
+  date: string | null;
   type: media;
   rating: number | null;
   media_url: string;

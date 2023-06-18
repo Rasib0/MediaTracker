@@ -1,10 +1,6 @@
 {
-    "cSpell.words": [
-        "authed",
-        "superjson",
-        "trpc"
-    ],
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+  "cSpell.words": ["authed", "superjson", "trpc", "tvshows"],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
