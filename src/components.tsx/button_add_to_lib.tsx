@@ -1,9 +1,11 @@
 import React from "react";
 
-type Props = {};
+type Props = {
+  text: string;
+};
 
 const ButtonAddToLib = (props: Props) => {
-  return <div>AddToLibButton</div>;
+  return <div>{props.text}</div>;
 };
 
 export default ButtonAddToLib;

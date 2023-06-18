@@ -1,9 +1,11 @@
 import React from "react";
 
-type Props = {};
+type Props = {
+  errorMessage: string;
+};
 
 const ErrorMessagePopup = (props: Props) => {
-  return <div>errorMessage</div>;
+  return <div>{props.errorMessage}</div>;
 };
 
 export default ErrorMessagePopup;
