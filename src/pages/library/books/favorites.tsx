@@ -9,7 +9,8 @@ import Layout from "../../../components.tsx/layout";
 import TextInput from "../../../components.tsx/text_input";
 import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
@@ -19,16 +20,12 @@ const Dashboard: NextPage = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const AllBookInLibrarySortedRecentFav =
-    trpc.AllBookInLibrarySortedRecentFav.useQuery(
-      {
-        keyword: searchKeyword,
-        take: 15,
-        data,
-      },
-      {
-        onSuccess: async (newData) => {},
-      }
-    );
+    trpc.AllBookInLibrarySortedRecentFav.useQuery({
+      keyword: searchKeyword,
+      take: 15,
+      data,
+    });
+
   const FavoritesArray = AllBookInLibrarySortedRecentFav.data?.result;
 
   return (

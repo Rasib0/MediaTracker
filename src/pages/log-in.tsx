@@ -1,12 +1,11 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import { useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { loginSchema, ILogin } from "../common/validation/authSchemas";
+import { loginSchema, type ILogin } from "../common/validation/authSchemas";
 
 // The sign in page that shows you the data before the authentication happens
 const Home: NextPage = () => {

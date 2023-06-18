@@ -7,16 +7,19 @@ type Props = {
 const RatingStatic: React.FC<Props> = (props: Props) => {
   return (
     <span className="flex">
-      {[...Array(5)].map((star, i) => {
-        const ratingValue = i + 1;
-        return (
-          <FaStar
-            key={i}
-            color={ratingValue <= props.rating ? "#ffc107" : "#e4e5e9"}
-            size={25}
-          />
-        );
-      })}
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        [...Array(5)].map((star, i) => {
+          const ratingValue = i + 1;
+          return (
+            <FaStar
+              key={i}
+              color={ratingValue <= props.rating ? "#ffc107" : "#e4e5e9"}
+              size={25}
+            />
+          );
+        })
+      }
     </span>
   );
 };
