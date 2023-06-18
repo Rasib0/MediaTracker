@@ -80,10 +80,10 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
   const reviews_data_formatted = data?.result?.Users.map(
     (user: {
-      Rating: any;
-      Review: any;
-      user: { username: any };
-      assignedAt: any;
+      Rating: number;
+      Review: string;
+      user: { username: string };
+      assignedAt: string;
     }) => {
       return {
         rating: user.Rating,
@@ -97,7 +97,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   const fetch_result = trpc.fetchBookFromLibrary.useQuery(
     { book_url, data: session.data },
     {
-      onSuccess: async (newData) => {
+      onSuccess: (newData) => {
         // Having a cache that isn't being used you get a performance boost
         if (newData.exists) {
           setButtonState({
@@ -126,8 +126,8 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
     }
   );
 
-  const mutationAddtoLib = trpc.addToBookLibrary.useMutation();
-  const mutationremoveFromLib = trpc.removeBookFromLibrary.useMutation();
+  const mutationAddToLib = trpc.addToBookLibrary.useMutation();
+  const mutationRemoveFromLib = trpc.removeBookFromLibrary.useMutation();
   const mutationAddRating = trpc.addBookRating.useMutation();
   const mutationAddReview = trpc.addBookReview.useMutation();
 
@@ -142,7 +142,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
     setReviewState({ review: ReviewState.review, disabled: true });
 
     if (ButtonState.shouldAdd) {
-      mutationAddtoLib.mutate(
+      mutationAddToLib.mutate(
         { book_url },
         {
           onSuccess: async (newData) => {
@@ -158,10 +158,10 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         }
       );
     } else {
-      mutationremoveFromLib.mutate(
+      mutationRemoveFromLib.mutate(
         { book_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: (newData) => {
             setButtonState({
               text: "Add to Library",
               disabled: false,
@@ -169,34 +169,52 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             });
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
-            refetch();
+            refetch()
+              .then(() => {
+                console.log("Promise awaited");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           },
         }
       );
     }
   };
 
-  const handleRatingOnClick = async (rating: number) => {
+  const handleRatingOnClick = (rating: number) => {
     setRatingState({ rating, disabled: true });
     mutationAddRating.mutate(
       { book_url, rating },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setRatingState({ rating: newData.rating, disabled: false });
-          refetch();
+          refetch()
+            .then(() => {
+              console.log("Promise awaited");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         },
       }
     );
   };
 
-  const handleReviewOnSubmit = async (review: string) => {
+  const handleReviewOnSubmit = (review: string) => {
     setReviewState({ review, disabled: true });
     mutationAddReview.mutate(
       { book_url, review },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setReviewState({ review: newData.review, disabled: false });
-          refetch();
+          refetch()
+            .then(() => {
+              console.log("Promise awaited");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         },
       }
     );
@@ -245,10 +263,10 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                   }
                 </div>
                 <div className="error-message">
-                  {(mutationAddtoLib.error || mutationremoveFromLib.error) && (
+                  {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
                     <p>
-                      Something went wrong! {mutationAddtoLib.error?.message}
-                      or {mutationremoveFromLib.error?.message}
+                      Something went wrong! {mutationAddToLib.error?.message}
+                      or {mutationRemoveFromLib.error?.message}
                     </p>
                   )}
                 </div>
