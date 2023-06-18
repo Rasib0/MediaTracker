@@ -160,10 +160,12 @@ const Navbar = (props: Props) => {
                   aria-haspopup="true"
                 >
                   <span className="sr-only">Open user menu</span>
-                  <img
+                  <Image
                     className="h-8 w-8 rounded-full"
-                    src="https://i.pinimg.com/originals/92/1f/72/921f72eb0b0a345c3ffe1e83283037ab.png"
-                    alt=""
+                    src="/images/avatar.png"
+                    alt="Your avatar"
+                    width={32}
+                    height={32}
                   />
                 </button>
               </div>
