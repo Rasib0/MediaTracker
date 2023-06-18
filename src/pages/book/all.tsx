@@ -43,7 +43,7 @@ const Dashboard: NextPage = () => {
           />
         </div>
 
-        <div className="cards">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
           {fetchAllBookDataByKeywordDesc.data?.result.map((book, i) => {
             return (
               <OverviewCard
@@ -62,17 +62,6 @@ const Dashboard: NextPage = () => {
           })}
         </div>
       </div>
-      <style jsx>
-        {`
-          .cards {
-            display: grid;
-            grid-template-columns: repeat(
-              auto-fill,
-              minmax(min(399px, 100%), 1fr)
-            );
-          }
-        `}
-      </style>
     </Layout>
   );
 };

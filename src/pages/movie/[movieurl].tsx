@@ -79,10 +79,10 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
 
   const reviews_data_formatted = data?.result?.Users.map(
     (user: {
-      Rating: any;
-      Review: any;
-      user: { username: any };
-      assignedAt: any;
+      Rating: number;
+      Review: string;
+      user: { username: string };
+      assignedAt: string;
     }) => {
       return {
         rating: user.Rating,
@@ -96,7 +96,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
   const fetch_result = trpc.fetchMovieFromLibrary.useQuery(
     { movie_url, data: session.data },
     {
-      onSuccess: async (newData) => {
+      onSuccess: (newData) => {
         // Having a cache that isn't being used you get a performance boost
         if (newData.exists) {
           setButtonState({
@@ -131,7 +131,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
   const mutationAddReview = trpc.addMovieReview.useMutation();
 
   //disables rating
-  const handleLibraryOnClick = async () => {
+  const handleLibraryOnClick = () => {
     setButtonState({
       text: ButtonState.text,
       disabled: true,
@@ -144,7 +144,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
       mutationAddtoLib.mutate(
         { movie_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: (newData) => {
             setButtonState({
               text: "Remove from Library",
               disabled: false,
@@ -152,7 +152,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
-            refetch();
+            //refetch();
           },
         }
       );
@@ -160,7 +160,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
       mutationremoveFromLib.mutate(
         { movie_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: (newData) => {
             setButtonState({
               text: "Add to Library",
               disabled: false,
@@ -168,34 +168,34 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
-            refetch();
+            //refetch();
           },
         }
       );
     }
   };
 
-  const handleRatingOnClick = async (rating: number) => {
+  const handleRatingOnClick = (rating: number) => {
     setRatingState({ rating, disabled: true });
     mutationAddRating.mutate(
       { movie_url, rating },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setRatingState({ rating: newData.rating, disabled: false });
-          refetch();
+          //refetch();
         },
       }
     );
   };
 
-  const handleReviewOnSubmit = async (review: string) => {
+  const handleReviewOnSubmit = (review: string) => {
     setReviewState({ review, disabled: true });
     mutationAddReview.mutate(
       { movie_url, review },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setReviewState({ review: newData.review, disabled: false });
-          refetch();
+          //refetch();
         },
       }
     );
@@ -269,8 +269,8 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
               review: {
                 name: string;
                 review: string;
-                date: Date | null;
-                rating: number | null;
+                date: string;
+                rating: number;
               },
               i
             ) => {

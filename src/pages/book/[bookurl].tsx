@@ -232,11 +232,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         <h1>Single Books Page</h1>Here is where you can all the information
         about a single book and rate them
       </div>
-      <div className="center-flex">
         <div className="page-size center-flex">
           <div className="card font_set mb-5 mt-1 rounded p-3 shadow">
-            <div className="center-flex">
-              <h5 className="card-title">
+              <h5>
                 {props.name} by {props.author}
               </h5>
               <RatingInput
@@ -244,7 +242,6 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                 disabled={RatingState.disabled}
                 onClick={handleRatingOnClick}
               />
-            </div>
 
             <div className="card_body mt-3">
               <div>
@@ -321,7 +318,6 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
                   }
                 )}
               </div>
-            </div>
           </div>
         </div>
       </div>
