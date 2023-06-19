@@ -154,9 +154,6 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             setReviewState({ review: ReviewState.review, disabled: false });
             //TODO: remove refeches
             refetch()
-              .then(() => {
-                console.log("Promise awaited");
-              })
               .catch((err) => {
                 console.log(err);
               });
@@ -176,9 +173,6 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
             refetch()
-              .then(() => {
-                console.log("Promise awaited");
-              })
               .catch((err) => {
                 console.log(err);
               });
@@ -196,10 +190,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         onSuccess: (newData) => {
           setRatingState({ rating: newData.rating, disabled: false });
           refetch()
-            .then(() => {
-              console.log("Promise awaited");
-            })
-            .catch((err) => {
+          .catch((err) => {
               console.log(err);
             });
         },
@@ -215,9 +206,6 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         onSuccess: (newData) => {
           setReviewState({ review: newData.review, disabled: false });
           refetch()
-            .then(() => {
-              console.log("Promise awaited");
-            })
             .catch((err) => {
               console.log(err);
             });

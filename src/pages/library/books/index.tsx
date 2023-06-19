@@ -8,7 +8,8 @@ import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
@@ -24,16 +25,10 @@ const Dashboard: NextPage = () => {
   const AllBookInLibrarySortedRecent =
     trpc.AllBookInLibrarySortedRecent.useQuery(
       { keyword: "", take: 5, data },
-      {
-        onSuccess: async (newData) => {},
-      }
     );
   const AllBookInLibrarySortedRecentFav =
     trpc.AllBookInLibrarySortedRecentFav.useQuery(
       { keyword: "", take: 5, data },
-      {
-        onSuccess: async (newData) => {},
-      }
     );
 
   return (
@@ -44,7 +39,9 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-primary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
-                router.push("/library/books/");
+                router.push("/library/books/").catch(
+                  (err) => console.log(err) //TODO: Add error page
+                );
               }}
             >
               <h1>{data?.user.username}&apos;s Library Page</h1>Here is your
@@ -53,7 +50,9 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
-                router.push("/library/books/recent");
+                router.push("/library/books/recent").catch(
+                  (err) => console.log(err) //TODO: Add error page
+                );
               }}
             >
               <h3>Recently Added</h3>
@@ -80,7 +79,9 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 cursor-pointer p-3 text-white"
               onClick={() => {
-                router.push("/library/books/favorites");
+                router.push("/library/books/favorites").catch(
+                  (err) => console.log(err) //TODO: Add error page
+                );
               }}
             >
               <h3>Favorites</h3>

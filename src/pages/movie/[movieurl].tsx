@@ -8,7 +8,7 @@ import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/layout";
 import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Reviews from "../../components.tsx/review";
+import Review from "../../components.tsx/review";
 import ReviewInput from "../../components.tsx/review_input";
 import { currentPage } from "~/common/types";
 
@@ -93,7 +93,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     }
   );
 
-  const fetch_result = trpc.fetchMovieFromLibrary.useQuery(
+  trpc.fetchMovieFromLibrary.useQuery(
     { movie_url, data: session.data },
     {
       onSuccess: (newData) => {
@@ -118,15 +118,15 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             disabled: false,
             shouldAdd: true,
           });
-          setRatingState({ rating: NaN, disabled: true });
-          setReviewState({ review: "Add to Library first.", disabled: true });
+          setRatingState({rating: NaN, disabled: true });
+          setReviewState({review: "Add to Library first.", disabled: true });
         }
       },
     }
   );
 
-  const mutationAddtoLib = trpc.addMovieToLibrary.useMutation();
-  const mutationremoveFromLib = trpc.removeMovieFromLibrary.useMutation();
+  const mutationAddToLib = trpc.addMovieToLibrary.useMutation();
+  const mutationRemoveFromLib = trpc.removeMovieFromLibrary.useMutation();
   const mutationAddRating = trpc.addMovieRating.useMutation();
   const mutationAddReview = trpc.addMovieReview.useMutation();
 
@@ -141,10 +141,10 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     setReviewState({ review: ReviewState.review, disabled: true });
 
     if (ButtonState.shouldAdd) {
-      mutationAddtoLib.mutate(
+      mutationAddToLib.mutate(
         { movie_url },
         {
-          onSuccess: (newData) => {
+          onSuccess: () => {
             setButtonState({
               text: "Remove from Library",
               disabled: false,
@@ -152,15 +152,17 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
-            //refetch();
+            refetch().catch(
+              (err) => console.log("Error in refetching: ", err) //TODO: Handle error
+            );
           },
         }
       );
     } else {
-      mutationremoveFromLib.mutate(
+      mutationRemoveFromLib.mutate(
         { movie_url },
         {
-          onSuccess: (newData) => {
+          onSuccess: () => {
             setButtonState({
               text: "Add to Library",
               disabled: false,
@@ -168,7 +170,9 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
-            //refetch();
+            refetch().catch(
+              (err) => console.log("Error in refetching: ", err) //TODO: Handle error
+            );
           },
         }
       );
@@ -215,7 +219,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
               <Image
                 src={"/images/movies/" + props.image_url + ".jpg"}
                 className="img-fluid rounded"
-                width={255}
+                width={250}
                 height={500}
                 alt="..."
               ></Image>
@@ -245,10 +249,10 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
               }
 
               <div className="error-message">
-                {(mutationAddtoLib.error || mutationremoveFromLib.error) && (
+                {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
                   <p>
-                    Something went wrong! {mutationAddtoLib.error?.message} or{" "}
-                    {mutationremoveFromLib.error?.message}
+                    Something went wrong! {mutationAddToLib.error?.message} or{" "}
+                    {mutationRemoveFromLib.error?.message}
                   </p>
                 )}
               </div>
@@ -263,7 +267,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             disabled={ReviewState.disabled}
           />
 
-          <h3> Reviews </h3>
+          <h3>Reviews</h3>
           {reviews_data_formatted?.map(
             (
               review: {
@@ -275,7 +279,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
               i
             ) => {
               return (
-                <Reviews
+                <Review
                   key={i}
                   by={review.name}
                   review={review.review}
