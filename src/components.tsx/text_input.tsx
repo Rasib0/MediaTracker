@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-  message: String;
+  message: string;
 };
 
 const TextInput = (props: Props) => {

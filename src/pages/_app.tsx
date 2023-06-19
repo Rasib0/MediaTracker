@@ -13,6 +13,7 @@ interface CustomAppProps extends AppProps {
 
 const CustomApp = ({ Component, pageProps }: CustomAppProps) => {
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
