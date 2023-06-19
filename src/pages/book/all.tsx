@@ -7,6 +7,7 @@ import Layout from "../../components.tsx/layout";
 import OverviewCard from "../../components.tsx/card";
 import { currentPage } from "~/common/types";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
@@ -19,7 +20,6 @@ const Dashboard: NextPage = () => {
   const fetchAllBookDataByKeywordDesc =
     trpc.fetchAllBookDataByKeywordDesc.useQuery(
       { keyword: searchKeyword },
-      { onSuccess: async (newData) => {} }
     );
 
   return (
