@@ -8,7 +8,8 @@ import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
@@ -20,9 +21,6 @@ const Dashboard: NextPage = () => {
   const AllBookInLibrarySortedRecent =
     trpc.AllBookInLibrarySortedRecent.useQuery(
       { keyword: searchKeyword, take: 15, data },
-      {
-        onSuccess: async (newData) => {},
-      }
     );
 
   return (
@@ -31,7 +29,7 @@ const Dashboard: NextPage = () => {
         <div
           className="bg-primary mb-2 p-3 text-white"
           onClick={() => {
-            router.push("/library/books/");
+            void router.push("/library/books/");
           }}
         >
           <h1>{data?.user.username}&apos;s Library Page</h1>Here is your library
@@ -40,7 +38,7 @@ const Dashboard: NextPage = () => {
         <div
           className="bg-secondary mb-2 p-3 text-white"
           onClick={() => {
-            router.push("/library/books/recent");
+            void router.push("/library/books/recent");
           }}
         >
           <h3>Recently Added</h3>

@@ -37,7 +37,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-primary mb-2 p-3 text-white"
               onClick={() => {
-                router.push("/library/books/");
+                void router.push("/library/books/");
               }}
             >
               <h1>{data?.user.username}&apos;s Library Page</h1>Here is your
@@ -46,7 +46,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 p-3 text-white"
               onClick={() => {
-                router.push("/library/books/favorites");
+                void router.push("/library/books/favorites");
               }}
             >
               <h3>Favorites</h3>

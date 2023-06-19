@@ -1,14 +1,14 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import router from "next/router";
-import { useState } from "react";
 import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
 import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
@@ -19,16 +19,11 @@ const Dashboard: NextPage = () => {
   const AllMovieInLibrarySortedRecent =
     trpc.AllMovieInLibrarySortedRecent.useQuery(
       { keyword: "", take: 5, data },
-      {
-        onSuccess: async (newData) => {},
-      }
     );
   const AllMovieInLibrarySortedRecentFav =
     trpc.AllMovieInLibrarySortedRecentFav.useQuery(
       { keyword: "", take: 5, data },
-      {
-        onSuccess: async (newData) => {},
-      }
+
     );
 
   return (
@@ -39,7 +34,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-primary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
-                router.push("/library/movies/");
+                void router.push("/library/movies/");
               }}
             >
               <h1>{data?.user.username}&apos;s Movie Library Page</h1>Here is
@@ -48,7 +43,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 cursor-pointer p-3 text-white "
               onClick={() => {
-                router.push("/library/movies/recent");
+                void router.push("/library/movies/recent");
               }}
             >
               <h3>Recently Added</h3>
@@ -75,7 +70,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 cursor-pointer p-3 text-white"
               onClick={() => {
-                router.push("/library/movies/favorites");
+                void router.push("/library/movies/favorites");
               }}
             >
               <h3>Favorites</h3>

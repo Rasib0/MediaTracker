@@ -8,6 +8,7 @@ import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps = requireAuth(async (ctx) => {
   return { props: {} };
 });
@@ -21,9 +22,6 @@ const Dashboard: NextPage = () => {
   const AllMovieInLibrarySortedRecentFav =
     trpc.AllMovieInLibrarySortedRecentFav.useQuery(
       { keyword: searchKeyword, take: 15, data },
-      {
-        onSuccess: async (newData) => {},
-      }
     );
 
   return (
@@ -35,7 +33,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-primary mb-2 p-3 text-white"
               onClick={() => {
-                router.push("/library/movies/");
+                void router.push("/library/movies/");
               }}
             >
               <h1>{data?.user.username}&apos;s Library Page</h1>Here is your
@@ -44,7 +42,7 @@ const Dashboard: NextPage = () => {
             <div
               className="bg-secondary mb-2 p-3 text-white"
               onClick={() => {
-                router.push("/library/movies/favorites");
+                void router.push("/library/movies/favorites");
               }}
             >
               <h3>Favorites</h3>

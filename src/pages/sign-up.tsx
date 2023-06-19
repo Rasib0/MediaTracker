@@ -35,7 +35,7 @@ const SignUp: NextPage = () => {
           reset();
           await router.push('/');
         }
-      } catch (error: unko) {
+      } catch (error: unknown) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
         } else {
@@ -55,7 +55,7 @@ const SignUp: NextPage = () => {
       </Head> */}
       <div className="flex justify-center mt-5">
         <div className="bg-white rounded-md shadow-md p-6">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={(e) => { void handleSubmit(onSubmit)(e)}}>
             <h2 className="text-2xl font-bold mb-4">Create an account!</h2>
             <div className="mb-4">
               <Controller

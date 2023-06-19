@@ -152,6 +152,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
+            
             refetch().catch(
               (err) => console.log("Error in refetching: ", err) //TODO: Handle error
             );

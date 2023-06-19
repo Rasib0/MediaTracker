@@ -5,7 +5,8 @@ import { requireAuth } from "../common/requireAuth";
 import Layout from "../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return {
     redirect: {
       destination: "/library/books", // login path
