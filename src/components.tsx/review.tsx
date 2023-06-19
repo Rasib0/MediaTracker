@@ -12,25 +12,26 @@ export type Props = {
 
 const Review = (props: Props) => {
   return (
-    <div className="m-1 mb-3 mt-2 max-h-[500px] max-w-[150px] rounded bg-white shadow">
+    <div className="m-1 p-4 border rounded-lg shadow-md">
       {props.date ? (
-        <div>
-          Review by <b>{props.by}</b> on {props.date.toString()}
+        <div className="text-sm text-gray-600 mb-2">
+          Review by <b>{props.by}</b> on {props.date}
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
       {props.rating ? (
-        <div className="p-3">
+        <div className="flex items-center mb-2">
           <RatingStatic rating={props.rating} />
+          <span className="ml-2 text-gray-600">{props.rating}/5</span>
+        </div>
+      ) : null}
+      {props.review ? (
+        <div className="p-3 bg-gray-100 rounded-lg">
+          <p className="text-sm text-gray-800">{props.review}</p>
         </div>
       ) : (
-        <></>
-      )}
-      {!(props.review === "") ? (
-        <p className="p-2">{props.review}</p>
-      ) : (
-        <em>no review</em>
+        <div className="p-3 bg-gray-100 rounded-lg">
+          <p className="text-sm text-gray-500">No review available</p>
+        </div>
       )}
     </div>
   );

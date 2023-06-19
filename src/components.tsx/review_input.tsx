@@ -5,14 +5,13 @@ type Props = {
   review: string;
   disabled: boolean;
 };
+
 const ReviewInput = (props: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const onSubmitInner = (e: React.FormEvent) => {
     e.preventDefault();
-    const value: string = inputRef?.current?.value
-      ? inputRef?.current?.value
-      : "";
+    const value: string = inputRef?.current?.value ? inputRef?.current?.value : "";
 
     if (value === "") return;
     props.onSubmit(value);
@@ -22,7 +21,7 @@ const ReviewInput = (props: Props) => {
     <div>
       <form onSubmit={onSubmitInner}>
         <textarea
-          className="mb-3"
+          className="p-3 border rounded-md w-full resize-none focus:outline-none focus:ring focus:border-blue-500"
           ref={inputRef}
           disabled={props.disabled}
           rows={3}
@@ -30,7 +29,7 @@ const ReviewInput = (props: Props) => {
         />
         <div className="flex justify-center">
           <button
-            className="rounded border border-blue-500 bg-transparent px-4 py-2 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white"
+            className="px-4 py-2 text-white bg-blue-500 rounded-md font-semibold hover:bg-blue-600 focus:outline-none"
             type="submit"
             disabled={props.disabled}
           >

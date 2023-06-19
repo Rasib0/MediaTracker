@@ -24,16 +24,17 @@ const Dashboard: NextPage = () => {
   return (
     //TODO: remove tailwind css and add your own
     <Layout currentPage={currentPage.movies}>
-      <div className="">
-        <div className="bg-primary mb-2 p-3 text-white">
-          <h1>All Movies Page</h1>Here is where you can see all our movies!
+      <div>
+        <div className="bg-primary px-3 py-2">
+          <h1 className="mb-2 text-3xl font-bold">All Movies Page</h1>
+          <p>Here is where you can see all our movies!</p>
         </div>
 
-        <div className="form-outline">
+        <div className="m-2">
           <input
             type="search"
             id="form1"
-            className="form-control"
+            className="w-full rounded-md border px-3 py-2"
             placeholder="Search movies"
             aria-label="Search"
             onChange={(e) => {
@@ -42,7 +43,7 @@ const Dashboard: NextPage = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
+        <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {fetchAllMovieDataByKeywordDesc.data?.result.map((movie, i) => {
             return (
               <OverviewCard

@@ -1,11 +1,16 @@
 import { type Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 
 };
-//satisfies Config;
+
+export default config;

@@ -32,7 +32,7 @@ const Dashboard: NextPage = () => {
         <div className="">
           <div className="">
             <div
-              className="bg-primary mb-2 cursor-pointer p-3 text-white "
+              className="bg-primary mb-2 cursor-pointer p-3"
               onClick={() => {
                 void router.push("/library/movies/");
               }}

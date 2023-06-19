@@ -27,7 +27,7 @@ const Dashboard: NextPage = () => {
     <Layout currentPage={currentPage.library}>
       <div className="">
         <div
-          className="bg-primary mb-2 p-3 text-white"
+          className="bg-primary mb-2 p-3"
           onClick={() => {
             void router.push("/library/books/");
           }}

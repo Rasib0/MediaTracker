@@ -2,12 +2,19 @@ import React from "react";
 import Link from "next/link";
 import { currentPage } from "../../common/types";
 import Image from "next/image";
+import { useState } from "react";
 
 type Props = {
   currentPage: currentPage;
 };
 
 const Navbar = (props: Props) => {
+  const [clicked, setClicked] = useState(false);
+
+  const handleAvatarClick = () => {
+    setClicked(!clicked);
+  };
+
   return (
     <nav className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -158,6 +165,7 @@ const Navbar = (props: Props) => {
                   id="user-menu-button"
                   aria-expanded="false"
                   aria-haspopup="true"
+                  onClick={handleAvatarClick}
                 >
                   <span className="sr-only">Open user menu</span>
                   <Image
@@ -169,41 +177,43 @@ const Navbar = (props: Props) => {
                   />
                 </button>
               </div>
-              <div
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="user-menu-button"
-                tabIndex={-1}
-              >
-                <Link
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
+              {clicked && (
+                <div
+                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
                   tabIndex={-1}
-                  id="user-menu-item-0"
                 >
-                  Your Profile
-                </Link>
-                <Link
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="user-menu-item-1"
-                >
-                  Settings
-                </Link>
-                <Link
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="user-menu-item-2"
-                >
-                  Sign out
-                </Link>
-              </div>
+                  <Link
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="user-menu-item-0"
+                  >
+                    Your Profile
+                  </Link>
+                  <Link
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="user-menu-item-1"
+                  >
+                    Settings
+                  </Link>
+                  <Link
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="user-menu-item-2"
+                  >
+                    Sign out
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

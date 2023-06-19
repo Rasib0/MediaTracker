@@ -8,7 +8,7 @@ import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/layout";
 import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Reviews from "../../components.tsx/review";
+import Review from "../../components.tsx/review";
 import ReviewInput from "../../components.tsx/review_input";
 import { currentPage } from "~/common/types";
 
@@ -153,10 +153,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
             //TODO: remove refeches
-            refetch()
-              .catch((err) => {
-                console.log(err);
-              });
+            refetch().catch((err) => {
+              console.log(err);
+            });
           },
         }
       );
@@ -172,10 +171,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             });
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
-            refetch()
-              .catch((err) => {
-                console.log(err);
-              });
+            refetch().catch((err) => {
+              console.log(err);
+            });
           },
         }
       );
@@ -189,10 +187,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
       {
         onSuccess: (newData) => {
           setRatingState({ rating: newData.rating, disabled: false });
-          refetch()
-          .catch((err) => {
-              console.log(err);
-            });
+          refetch().catch((err) => {
+            console.log(err);
+          });
         },
       }
     );
@@ -205,10 +202,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
       {
         onSuccess: (newData) => {
           setReviewState({ review: newData.review, disabled: false });
-          refetch()
-            .catch((err) => {
-              console.log(err);
-            });
+          refetch().catch((err) => {
+            console.log(err);
+          });
         },
       }
     );
@@ -216,136 +212,87 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
   return (
     <Layout currentPage={currentPage.books}>
-      <div className="bg-primary mb-2 p-3 text-white">
-        <h1>Single Books Page</h1>Here is where you can all the information
-        about a single book and rate them
+      <div className="mb-2 bg-blue-500 p-3">
+        <h1 className="text-3xl font-bold">Single Books Page</h1>
+        <p>
+          Here is where you can find all the information about a single book and
+          rate them.
+        </p>
       </div>
-        <div className="page-size center-flex">
-          <div className="card font_set mb-5 mt-1 rounded p-3 shadow">
-              <h5>
-                {props.name} by {props.author}
-              </h5>
-              <RatingInput
-                rating={RatingState.rating}
-                disabled={RatingState.disabled}
-                onClick={handleRatingOnClick}
-              />
-
-            <div className="card_body mt-3">
+      <div className="mx-auto max-w-4xl rounded-lg bg-gray-100 p-4 shadow-xl">
+        <div className="mb-3 flex items-center justify-center">
+          <h5 className="text-2xl font-bold">
+            {props.name} by {props.author}
+          </h5>
+        </div>
+        <div className="flex border py-2">
+          <div className="w-1/3">
+            <div className="flex justify-center">
               <div>
-                <div className="center-flex mb-3">
-                  <div className="image_size">
-                    <Image
-                      src={"/images/books/" + props.image_url + ".jpg"}
-                      className="img-fluid rounded"
-                      width={255}
-                      height={500}
-                      alt="..."
-                    ></Image>
-                  </div>
-                  {
-                    <button
-                      className="button-size m-3"
-                      onClick={() => handleLibraryOnClick()}
-                      disabled={ButtonState.disabled}
-                    >
-                      {ButtonState.text}
-                    </button>
-                  }
+                <div className="relative h-72 w-48 overflow-hidden rounded-lg shadow-xl">
+                  <Image
+                    src={`/images/books/${props.image_url}.jpg`}
+                    className="rounded-lg"
+                    alt="Book cover"
+                    fill={true}
+                  />
                 </div>
-                <div className="error-message">
-                  {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
-                    <p>
-                      Something went wrong! {mutationAddToLib.error?.message}
-                      or {mutationRemoveFromLib.error?.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="w-75 p-1">
-                <div className="text-component">
-                  <p className="card-text">{props.synopsis}</p>
+                <div className="flex justify-center">
+                  <button
+                    className="mt-2 rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 focus:outline-none"
+                    onClick={handleLibraryOnClick}
+                    disabled={ButtonState.disabled}
+                  >
+                    {ButtonState.text}
+                  </button>
                 </div>
               </div>
             </div>
+            <div className="mt-2">
+              {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
+                <p className="text-red-500">
+                  Something went wrong! {mutationAddToLib.error?.message} or{" "}
+                  {mutationRemoveFromLib.error?.message}
+                </p>
+              )}
+            </div>
           </div>
-          <div className="card font_set review-section mb-5 mt-1 rounded p-3 shadow">
-            <div className="center-flex">
-              <div className="review-section-inner">
-                <div className="center-flex">
-                  <h3>Write a review</h3>
-                </div>
-                <ReviewInput
-                  review={ReviewState.review}
-                  onSubmit={handleReviewOnSubmit}
-                  disabled={ReviewState.disabled}
-                />
-                <div className="center-flex mt-3">
-                  <h3> Reviews </h3>
-                </div>
-                {reviews_data_formatted?.map(
-                  (
-                    review: {
-                      name: string;
-                      review: string;
-                      date: string;
-                      rating: number;
-                    },
-                    i
-                  ) => {
-                    return (
-                      <Reviews
-                        key={i}
-                        by={review.name}
-                        review={review.review}
-                        date={review.date}
-                        rating={review.rating}
-                      />
-                    );
-                  }
-                )}
-              </div>
+          <div className="w-2/3 pl-5">
+            <div className="overflow-y-auto">
+              <p className="text-sm text-gray-700">{props.synopsis}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <style jsx>
-        {`
-          .card_body {
-            display: flex;
-          }
-          .image_size {
-            width: min(50%, 200px);
-          }
-          .font_set {
-            font-size: clamp(0.8rem, 0.5vw + 0.5rem, 1rem);
-          }
-          .text-component {
-            height: 300px;
-            overflow: scroll;
-          }
-          .center-flex {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-          .button-size {
-            width: min(50%, 200px);
-          }
-          .page-size {
-            width: min(100%, 1200px);
-          }
-          .review-section {
-            width: min(100%, 1200px);
-          }
-          .review-section-inner {
-            width: min(100%, 1200px);
-          }
-        `}
-      </style>
+        <div className="my-1 rounded-lg border p-3 shadow-xl">
+          <div className="flex items-center">
+            <h5 className="mt-1 text-2xl font-bold">Write a review</h5>
+            <div className="w-4"></div>
+            <RatingInput
+              rating={RatingState.rating}
+              disabled={RatingState.disabled}
+              onClick={handleRatingOnClick}
+            />
+          </div>
+          <ReviewInput
+            review={ReviewState.review}
+            onSubmit={handleReviewOnSubmit}
+            disabled={ReviewState.disabled}
+          />
+
+          <h3 className="mb-2 text-2xl font-bold">Reviews</h3>
+          {reviews_data_formatted?.map((review, i) => (
+            <Review
+              key={i}
+              by={review.name}
+              review={review.review}
+              date={review.date}
+              rating={review.rating}
+            />
+          ))}
+        </div>
+      </div>
     </Layout>
   );
 };
-
 export default Book;
