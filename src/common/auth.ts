@@ -26,8 +26,11 @@ export const nextAuthOptions: NextAuthOptions = {
           if (!resultUser) return null;
 
           const isValidPassword = await verify(resultUser.password, password);
+          
           if (!isValidPassword) return null;
+
           return { id: resultUser.id.toString(), email, username: resultUser.username };
+        
         } catch {
           return null;
         }
@@ -59,7 +62,7 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/",
-    newUser: "/sign-up",
+    newUser: "/signup",
   },
   secret: "super-secret",
 };
