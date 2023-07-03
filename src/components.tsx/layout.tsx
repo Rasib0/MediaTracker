@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react";
-import Navbar from "./layout/navbar";
+import { Navbar } from "./layout/navbar";
 import { type currentPage } from "../common/types";
 
 type Props = {

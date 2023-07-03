@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-type Props = {
+type PropsInput = {
   onClick: (rating: number) => void;
   rating: number;
   disabled: boolean;
 };
-const RatingInput = (props: Props) => {
+
+export const RatingInput = (props: PropsInput) => {
   const [hover, setHover] = useState(props.rating);
   return (
     <div className="flex">
@@ -47,4 +48,26 @@ const RatingInput = (props: Props) => {
   );
 };
 
-export default RatingInput;
+type PropsStatic = {
+  rating: number;
+};
+// a component that displays a static rating
+export const RatingStatic: React.FC<PropsStatic> = (props: PropsStatic) => {
+  return (
+    <span className="flex">
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        [...Array(5)].map((star, i) => {
+          const ratingValue = i + 1;
+          return (
+            <FaStar
+              key={i}
+              color={ratingValue <= props.rating ? "#ffc107" : "#e4e5e9"}
+              size={25}
+            />
+          );
+        })
+      }
+    </span>
+  );
+};

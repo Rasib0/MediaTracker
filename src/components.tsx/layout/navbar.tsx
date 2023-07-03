@@ -9,7 +9,7 @@ type Props = {
   currentPage: currentPage;
 };
 
-const Navbar = (props: Props) => {
+export const Navbar = (props: Props) => {
   const [clicked, setClicked] = useState(false);
 
   const handleAvatarClick = () => {
@@ -251,4 +251,3 @@ const Navbar = (props: Props) => {
   );
 };
 
-export default Navbar;

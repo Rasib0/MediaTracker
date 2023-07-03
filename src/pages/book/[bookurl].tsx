@@ -6,10 +6,9 @@ import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/layout";
-import RatingInput from "../../components.tsx/rating_input";
 import Image from "next/image";
-import Review from "../../components.tsx/review";
-import ReviewInput from "../../components.tsx/review_input";
+import { RatingInput } from "~/components.tsx/rating";
+import { Review, WriteAReviewWizard } from "../../components.tsx/review";
 import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -274,7 +273,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
               onClick={handleRatingOnClick}
             />
           </div>
-          <ReviewInput
+          <WriteAReviewWizard
             review={ReviewState.review}
             onSubmit={handleReviewOnSubmit}
             disabled={ReviewState.disabled}
