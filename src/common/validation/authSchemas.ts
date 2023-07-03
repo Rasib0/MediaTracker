@@ -6,7 +6,7 @@ export const loginSchema = z.object({
     .string()
     .min(6, { message: "password is at least 6 chars long" })
     .max(50, { message: "Too big" }),
-  }
+}
 );
 
 export const signUpSchema = loginSchema.extend({

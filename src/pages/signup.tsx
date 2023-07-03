@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,6 +72,29 @@ const SignUp: NextPage = () => {
             className="space-y-6"
           >
             <div>
+              <label htmlFor="email" className="mb-2 block text-sm">
+                Email
+              </label>
+              <input
+                disabled={isLoading}
+                id="email"
+                type="email"
+                placeholder="Enter an email..."
+                className="w-full rounded-md border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                    message: "Invalid email address",
+                  },
+                })}
+              />
+              {errors.email && (
+                <div className="text-red-500">{errors.email.message}</div>
+              )}
+            </div>
+
+            <div>
               <label htmlFor="username" className="mb-2 block text-sm">
                 Username
               </label>
@@ -95,28 +118,6 @@ const SignUp: NextPage = () => {
               />
               {errors.username && (
                 <div className="text-red-500">{errors.username.message}</div>
-              )}
-            </div>
-            <div>
-              <label htmlFor="email" className="mb-2 block text-sm">
-                Email
-              </label>
-              <input
-                disabled={isLoading}
-                id="email"
-                type="email"
-                placeholder="Enter an email..."
-                className="w-full rounded-md border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                    message: "Invalid email address",
-                  },
-                })}
-              />
-              {errors.email && (
-                <div className="text-red-500">{errors.email.message}</div>
               )}
             </div>
             <div>
