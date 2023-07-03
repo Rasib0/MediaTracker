@@ -59,6 +59,12 @@ const Dashboard: NextPage = () => {
         <div className="flex justify-center p-24">
           <LoadingSpinner />
         </div>
+      ) : !queryData || queryData.result.length === 0 ? (
+        <div className="flex justify-center p-16">
+          <p className="font-mono text-lg dark:text-red-200">
+            {`No books found for the keyword: ${searchInputRequest}`}
+          </p>
+        </div>
       ) : (
         <Grid queryData={queryData} />
       )}
@@ -67,30 +73,21 @@ const Dashboard: NextPage = () => {
 };
 
 type GridProps = {
-  queryData:
-    | {
-        message: string;
-        status: number;
-        result:
-          | {
-              id: number;
-              name: string;
-              image_url: string;
-              synopsis: string;
-              author: string;
-              book_url: string;
-            }[];
-      }
-    | undefined;
+  queryData: {
+    message: string;
+    status: number;
+    result:
+      | {
+          id: number;
+          name: string;
+          image_url: string;
+          synopsis: string;
+          author: string;
+          book_url: string;
+        }[];
+  };
 };
 const Grid = (props: GridProps) => {
-  if (!props.queryData || props.queryData.result.length === 0) {
-    return (
-      <div className="flex justify-center p-24">
-        <p className="text-2xl">No books found</p>
-      </div>
-    );
-  }
   return (
     <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {props.queryData.result?.map((book, i) => {

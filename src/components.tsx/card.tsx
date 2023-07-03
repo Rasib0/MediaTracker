@@ -20,7 +20,7 @@ export type CardProps = {
 const OverviewCard = (props: CardProps) => {
   return (
     <Link
-      className="mx-2 my-4 min-w-fit transform rounded border shadow-lg transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
+      className="m-2 min-w-fit transform rounded border shadow-lg transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
       href={"/" + props.type.slice(0, -1) + "/" + props.media_url}
     >
       <div className="flex justify-center font-semibold">
