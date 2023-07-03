@@ -20,34 +20,30 @@ export type CardProps = {
 const OverviewCard = (props: CardProps) => {
   return (
     <Link
-      className="mx-2 my-1 rounded shadow-lg  hover:bg-sky-200"
+      className="mx-2 my-4 min-w-fit transform rounded border shadow-lg transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
       href={"/" + props.type.slice(0, -1) + "/" + props.media_url}
     >
-      <div className="flex w-full justify-center bg-slate-600 text-white">
+      <div className="flex justify-center font-semibold">
+        <div className="absolute hidden rounded bg-gray-100 p-2">
+          Add to list
+        </div>
         <div>{props.name}</div>
         &nbsp;
-        {!!props.show_author ? <div>by {props.by}</div> : <></>}
+        {props.show_author && <div>by {props.by}</div>}
       </div>
-      {props.date ? (
-        <p className="w-full font-thin">Added {props.date.toString()}</p>
-      ) : (
-        <></>
-      )}
-      {props.rating ? <RatingStatic rating={props.rating} /> : <></>}
+      {props.date && <p className="font-thin">Added {props.date.toString()}</p>}
+      {props.rating && <RatingStatic rating={props.rating} />}
 
-      <div className="flex">
-        <div className="m-1 min-w-[30%] max-w-[30%]">
-          <Image
-            src={"/images/" + props.type + "/" + props.image_url + ".jpg"}
-            className="h-auto w-full rounded"
-            width={250}
-            height={500}
-            alt="..."
-          />
-        </div>
-
-        <div className="p-2">
-          <p>{props.synopsis.substring(0, 300)}...</p>
+      <div className="flex gap-2 border-t p-2">
+        <Image
+          src={"/images/" + props.type + "/" + props.image_url + ".jpg"}
+          className="rounded "
+          width={130}
+          height={200}
+          alt="..."
+        />
+        <div className="max-h-56 overflow-x-hidden overflow-y-scroll overflow-ellipsis p-2">
+          {props.synopsis}
         </div>
       </div>
     </Link>

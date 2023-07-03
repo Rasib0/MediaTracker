@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/layout";
 import OverviewCard from "../../components.tsx/card";
 import { currentPage } from "~/common/types";
+import { LoadingSpinner } from "~/components.tsx/loading";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps = requireAuth(async (ctx) => {
@@ -13,55 +14,102 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 });
 
 const Dashboard: NextPage = () => {
-  const { data } = useSession();
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const { data: sessionData } = useSession();
 
-  const fetchAllBookDataByKeywordDesc =
-    trpc.fetchAllBookDataByKeywordDesc.useQuery({
-      keyword: searchKeyword,
-    });
+  // TODO: fix this, use a single state or another hook or something
+  const [searchInput, setSearchInput] = useState("");
+  const [searchInputRequest, setsearchInputRequest] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setsearchInputRequest(searchInput);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchInput]);
+
+  const {
+    data: queryData,
+    isFetching,
+    isLoading,
+  } = trpc.fetchAllBookDataByKeywordDesc.useQuery({
+    keyword: searchInputRequest,
+  });
 
   return (
     <Layout currentPage={currentPage.books}>
       <div>
-        <div className="bg-primary px-3 py-2">
-          <h1 className="mb-2 text-3xl font-bold">All Books Page</h1>
-          <p>Here is where you can see all our books!</p>
-        </div>
-
-        <div className="m-2">
-          <input
-            type="search"
-            id="form1"
-            className="w-full rounded-md border px-3 py-2"
-            placeholder="Search books"
-            aria-label="Search"
-            onChange={(e) => {
-              setSearchKeyword(e.target.value);
-            }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {fetchAllBookDataByKeywordDesc.data?.result.map((book, i) => {
-            return (
-              <OverviewCard
-                key={i}
-                name={book.name}
-                type="books"
-                rating={null}
-                by={book.author}
-                synopsis={book.synopsis}
-                date={null}
-                show_author={false}
-                image_url={book.image_url}
-                media_url={book.book_url}
-              />
-            );
-          })}
-        </div>
+        <h1 className="m-2 text-3xl font-bold">
+          Every Book in our Collection!
+        </h1>
+        <input
+          type="search"
+          id="search"
+          className="m-2 w-full rounded-md border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+          placeholder="Enter a book name..."
+          aria-label="Search"
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+          }}
+        />
       </div>
+      {isFetching || isLoading ? (
+        <div className="flex justify-center p-24">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <Grid queryData={queryData} />
+      )}
     </Layout>
+  );
+};
+
+type GridProps = {
+  queryData:
+    | {
+        message: string;
+        status: number;
+        result:
+          | {
+              id: number;
+              name: string;
+              image_url: string;
+              synopsis: string;
+              author: string;
+              book_url: string;
+            }[];
+      }
+    | undefined;
+};
+const Grid = (props: GridProps) => {
+  if (!props.queryData || props.queryData.result.length === 0) {
+    return (
+      <div className="flex justify-center p-24">
+        <p className="text-2xl">No books found</p>
+      </div>
+    );
+  }
+  return (
+    <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {props.queryData.result?.map((book, i) => {
+        return (
+          <OverviewCard
+            key={i}
+            name={book.name}
+            type="books"
+            rating={null}
+            by={book.author}
+            synopsis={book.synopsis}
+            date={null}
+            show_author={false}
+            image_url={book.image_url}
+            media_url={book.book_url}
+          />
+        );
+      })}
+    </div>
   );
 };
 
