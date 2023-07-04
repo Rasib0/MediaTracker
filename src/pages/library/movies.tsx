@@ -116,10 +116,7 @@ const FavFeed = (props: FavFeedProps) => {
         <div>Not a single movie found in your favourites 😿</div>
         <div>
           Click{" "}
-          <Link
-            href="/movie/all"
-            className="hover:underline dark:text-violet-400"
-          >
+          <Link href="/movie/all" className="text-violet-400 hover:underline">
             here
           </Link>{" "}
           to view our collection instead.
@@ -192,10 +189,7 @@ const RecentFeed = (props: RecentFeedProps) => {
         <div>No movies found 🤖</div>
         <div>
           Click{" "}
-          <Link
-            href="/movies/all"
-            className="hover:underline dark:text-violet-400"
-          >
+          <Link href="/movies/all" className="text-violet-400 hover:underline">
             here
           </Link>{" "}
           to view our collection instead.
