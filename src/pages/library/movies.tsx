@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import router from "next/router";
-import { requireAuth } from "../../../common/requireAuth";
-import { trpc } from "../../../common/trpc";
-import OverviewCard from "../../../components.tsx/card";
-import Layout from "../../../components.tsx/layout";
+import { requireAuth } from "../../common/requireAuth";
+import { trpc } from "../../common/trpc";
+import Card from "../../components.tsx/card";
+import Layout from "../../components.tsx/layout";
 import { currentPage } from "~/common/types";
 
 // eslint-disable-next-line @typescript-eslint/require-await
@@ -17,14 +17,13 @@ const Dashboard: NextPage = () => {
   const { data } = useSession();
 
   const AllMovieInLibrarySortedRecent =
-    trpc.AllMovieInLibrarySortedRecent.useQuery(
-      { keyword: "", take: 5, data },
-    );
+    trpc.AllMovieInLibrarySortedRecent.useQuery({ keyword: "", take: 5, data });
   const AllMovieInLibrarySortedRecentFav =
-    trpc.AllMovieInLibrarySortedRecentFav.useQuery(
-      { keyword: "", take: 5, data },
-
-    );
+    trpc.AllMovieInLibrarySortedRecentFav.useQuery({
+      keyword: "",
+      take: 5,
+      data,
+    });
 
   return (
     <Layout currentPage={currentPage.library}>
@@ -52,7 +51,7 @@ const Dashboard: NextPage = () => {
             <div className="cards">
               {AllMovieInLibrarySortedRecent.data?.result.map((input, i) => {
                 return (
-                  <OverviewCard
+                  <Card
                     key={i}
                     name={input.movie.name}
                     type="movies"
@@ -78,7 +77,7 @@ const Dashboard: NextPage = () => {
             <div className="cards">
               {AllMovieInLibrarySortedRecentFav.data?.result.map((input, i) => {
                 return (
-                  <OverviewCard
+                  <Card
                     key={i}
                     name={input.movie.name}
                     type={"movies"}

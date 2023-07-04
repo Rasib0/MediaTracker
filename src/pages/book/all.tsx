@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import Layout from "../../components.tsx/layout";
-import OverviewCard from "../../components.tsx/card";
+import Card from "../../components.tsx/card";
 import { currentPage } from "~/common/types";
 import { LoadingSpinner } from "~/components.tsx/loading";
 
@@ -92,7 +92,7 @@ const Grid = (props: GridProps) => {
     <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {props.queryData.result?.map((book, i) => {
         return (
-          <OverviewCard
+          <Card
             key={i}
             name={book.name}
             type="books"

@@ -15,13 +15,13 @@ export type CardProps = {
   synopsis: string;
   image_url: string;
   show_author: boolean;
-  date: Date;
+  date: Date | null;
   type: media;
   rating: number | null;
   media_url: string;
 };
 
-const OverviewCard = (props: CardProps) => {
+const Card = (props: CardProps) => {
   return (
     <Link
       className="m-2 min-w-fit transform rounded border shadow-lg transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
@@ -55,4 +55,4 @@ const OverviewCard = (props: CardProps) => {
   );
 };
 
-export default OverviewCard;
+export default Card;
