@@ -39,7 +39,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
     props: {
       synopsis: Movie.synopsis,
       name: Movie.name,
-      author: Movie.director,
+      director: Movie.director,
       image_url: Movie.image_url,
     },
   }; //TODO: Add reviews here
@@ -49,7 +49,7 @@ type movieProps = {
   synopsis: string;
   name: string;
   image_url: string;
-  author: string;
+  director: string;
 };
 
 const Movie: NextPage<movieProps> = (props: movieProps) => {
@@ -191,18 +191,18 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
         <p>
           Here is where you can find all the information about a single movie
           and rate them.
-        </p>{" "}
+        </p>
       </div>
 
       <div>
         <hr></hr>
         <div className="flex items-center justify-center">
           <h2 className="text-2xl font-bold">
-            {props.name} by {props.author}
+            {props.name} by {props.director}
           </h2>
         </div>
         <div className="flex justify-center overflow-clip">
-          <div className="flex flex-col justify-center gap-1 p-2">
+          <div className="flex flex-col justify-center gap-2 p-2">
             <Image
               src={`/images/movies/${props.image_url}.jpg`}
               className="w-32 rounded-lg  sm:h-72 sm:w-48"
@@ -236,14 +236,18 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
 
         <div className="my-1 rounded-lg border p-3 shadow-xl">
           <div className="flex items-center">
-            <h5 className="mt-1 text-2xl font-bold">Rate:&nbsp;</h5>
+            <h5 className="mt-1 text-2xl font-bold tracking-wide">
+              Rate:&nbsp;
+            </h5>
             <RatingInput
               rating={RatingState}
               disabled={disabled || buttonShouldAdd}
               onClick={handleRatingOnClick}
             />
           </div>
-          <h3 className="mt-1 text-2xl font-semibold">Leave a Review:&nbsp;</h3>
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Leave a Review:&nbsp;
+          </h3>
 
           <WriteAReviewWizard
             review={ReviewState}
@@ -251,7 +255,9 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             disabled={disabled || buttonShouldAdd}
           />
 
-          <h3 className="mb-2 text-2xl font-semibold">Reviews</h3>
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Reviews:
+          </h3>
           <div className="mb-6">
             {mutationAddReview.isLoading ||
             mutationAddRating.isLoading ||

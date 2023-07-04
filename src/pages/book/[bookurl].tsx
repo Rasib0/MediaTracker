@@ -107,7 +107,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
     }
   );
 
-  const mutationAddToLib = trpc.addToBookLibrary.useMutation();
+  const mutationAddToLib = trpc.addBookToLibrary.useMutation();
   const mutationRemoveFromLib = trpc.removeBookFromLibrary.useMutation();
   const mutationAddRating = trpc.addBookRating.useMutation();
   const mutationAddReview = trpc.addBookReview.useMutation();
@@ -236,14 +236,18 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
         <div className="my-1 rounded-lg border p-3 shadow-xl">
           <div className="flex items-center">
-            <h5 className="mt-1 text-2xl font-bold tracking-wide">Rate:&nbsp;</h5>
+            <h5 className="mt-1 text-2xl font-bold tracking-wide">
+              Rate:&nbsp;
+            </h5>
             <RatingInput
               rating={RatingState}
               disabled={disabled || buttonShouldAdd}
               onClick={handleRatingOnClick}
             />
           </div>
-          <h3 className="mt-3 mb-1 text-2xl font-semibold tracking-wide">Leave a Review:&nbsp;</h3>
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Leave a Review:&nbsp;
+          </h3>
 
           <WriteAReviewWizard
             review={ReviewState}
@@ -251,7 +255,9 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             disabled={disabled || buttonShouldAdd}
           />
 
-          <h3 className="mt-3 mb-1 text-2xl font-semibold tracking-wide">Reviews:</h3>
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Reviews:
+          </h3>
           <div className="mb-6">
             {mutationAddReview.isLoading ||
             mutationAddRating.isLoading ||
