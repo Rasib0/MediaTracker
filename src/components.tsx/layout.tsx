@@ -10,7 +10,11 @@ type Props = {
 const Layout = (props: Props) => (
   <div>
     <Navbar currentPage={props.currentPage} />
-    <div>{props.children}</div>
+    <main className=" flex justify-center">
+      <div className="h-full min-h-screen w-full border-x border-slate-700 md:max-w-7xl">
+        {props.children}
+      </div>
+    </main>
   </div>
 );
 
