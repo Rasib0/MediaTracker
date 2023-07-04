@@ -11,7 +11,6 @@ import { RatingInput } from "~/components.tsx/rating";
 import { Review, WriteAReviewWizard } from "../../components.tsx/review";
 import { currentPage } from "~/common/types";
 import { LoadingSpinner } from "~/components.tsx/loading";
-import { set } from "zod";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a movie in the database
