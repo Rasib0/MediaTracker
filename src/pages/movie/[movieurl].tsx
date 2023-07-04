@@ -6,10 +6,9 @@ import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../server/prisma";
 import Layout from "../../components.tsx/layout";
-import RatingInput from "../../components.tsx/rating";
+import { RatingInput } from "../../components.tsx/rating";
 import Image from "next/image";
-import Review from "../../components.tsx/review";
-import WriteAReviewWizard from "../../components.tsx/review_input";
+import { Review, WriteAReviewWizard } from "../../components.tsx/review";
 import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
