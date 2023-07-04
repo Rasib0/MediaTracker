@@ -6,7 +6,6 @@ import { requireAuth } from "../../../common/requireAuth";
 import { trpc } from "../../../common/trpc";
 import OverviewCard from "../../../components.tsx/card";
 import Layout from "../../../components.tsx/layout";
-import TextInput from "../../../components.tsx/text_input";
 import { currentPage } from "~/common/types";
 
 // eslint-disable-next-line @typescript-eslint/require-await
@@ -83,7 +82,9 @@ const Dashboard: NextPage = () => {
                 })}
               </div>
             ) : (
-              <TextInput message="No Books found!" />
+              <div className="mb-2 p-3 text-lg">
+                No favorites found.
+              </div>
             )}
           </div>
         </div>
