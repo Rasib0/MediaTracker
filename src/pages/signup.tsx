@@ -144,7 +144,7 @@ const SignUp: NextPage = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 dark:text-gray-900 disabled:dark:bg-gray-500"
+                  className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 disabled:bg-gray-500 dark:text-gray-900"
                 >
                   Sign up
                 </button>
