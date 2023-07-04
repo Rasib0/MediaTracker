@@ -188,7 +188,7 @@ const RecentFeed = (props: RecentFeedProps) => {
     props.queryDataFav.queryData.result.length === 0
   ) {
     return (
-      <div className="flex justify-center p-24">
+      <div className="flex flex-col items-center p-24">
         <div>No movies found 🤖</div>
         <div>
           Click{" "}
