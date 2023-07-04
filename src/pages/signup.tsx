@@ -102,7 +102,7 @@ const SignUp: NextPage = () => {
                 disabled={isLoading}
                 id="username"
                 type="text"
-                placeholder="Enter a username..."
+                placeholder="Enter an username..."
                 className="w-full rounded-md border px-3 py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                 {...register("username", {
                   required: "Username is required",
