@@ -9,11 +9,23 @@ type Props = {
   currentPage: currentPage;
 };
 
-export const Navbar = (props: Props) => {
-  const [clicked, setClicked] = useState(false);
 
-  const handleAvatarClick = () => {
-    setClicked(!clicked);
+// TODO make menu state stick using useLocalStorage hook
+export const Navbar = (props: Props) => {
+  const [userButtonClicked, setUserButtonClicked] = useState(false);
+  const [libButtonClick, setLibButtonClick] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const handleUserButtonClick = () => {
+    setUserButtonClicked(!userButtonClicked);
+  };
+
+  const handleLibButtonClick = () => {
+    setLibButtonClick(!libButtonClick);
+  };
+
+  const handleMenuMenu = () => {
+    setOpenMenu(!openMenu);
   };
 
   return (
@@ -23,9 +35,10 @@ export const Navbar = (props: Props) => {
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex items-center justify-center rounded-md border p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded="false"
+              onClick={handleMenuMenu}
             >
               <span className="sr-only">Open main menu</span>
               <svg
@@ -58,6 +71,7 @@ export const Navbar = (props: Props) => {
               </svg>
             </button>
           </div>
+          {/* Mobile menu, show/hide based on menu state. */}
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex flex-shrink-0 items-center">
               <Image
@@ -100,44 +114,41 @@ export const Navbar = (props: Props) => {
                     Movies
                   </Link>
                 )}
-                {props.currentPage === currentPage.podcasts ? (
+                {props.currentPage === currentPage.yourbooks ? (
                   <Link
-                    //href="/podcast/all"
-                    href="#"
+                    href="/library/books"
                     className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
                   >
-                    Podcasts
+                    Your Books
                   </Link>
                 ) : (
                   <Link
-                    //href="/podcast/all"
-                    href="#"
+                    href="/library/books"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Podcasts
+                    Your Books
                   </Link>
                 )}
-                {props.currentPage === currentPage.tvshows ? (
+                {props.currentPage === currentPage.yourmovies ? (
                   <Link
-                    //href="/tvshow/all"
-                    href="#"
+                    href="/library/movies"
                     className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
                   >
-                    TV Shows
+                    Your Movies
                   </Link>
                 ) : (
                   <Link
-                    //href="/tvshow/all"
-                    href="#"
+                    href="/library/movies"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    TV Shows
+                    Your Movies
                   </Link>
                 )}
               </div>
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
+          <div className="absolute inset-y-0 right-0 flex items-center border border-red-700 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
               className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -166,7 +177,7 @@ export const Navbar = (props: Props) => {
                   id="user-menu-button"
                   aria-expanded="false"
                   aria-haspopup="true"
-                  onClick={handleAvatarClick}
+                  onClick={handleUserButtonClick}
                 >
                   <span className="sr-only">Open user menu</span>
                   <Image
@@ -178,7 +189,7 @@ export const Navbar = (props: Props) => {
                   />
                 </button>
               </div>
-              {clicked && (
+              {userButtonClicked && (
                 <div
                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                   role="menu"
@@ -187,7 +198,7 @@ export const Navbar = (props: Props) => {
                   tabIndex={-1}
                 >
                   <Link
-                    href="#"
+                    href="/profile"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabIndex={-1}
@@ -196,7 +207,7 @@ export const Navbar = (props: Props) => {
                     Your Profile
                   </Link>
                   <Link
-                    href="#"
+                    href="/settings"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabIndex={-1}
@@ -205,7 +216,7 @@ export const Navbar = (props: Props) => {
                     Settings
                   </Link>
                   <button
-                    className="block px-4 py-2 text-sm text-gray-700"
+                    className="block w-full px-4 py-2 text-sm font-bold text-gray-700 dark:text-red-600 dark:hover:text-red-900"
                     role="menuitem"
                     tabIndex={-1}
                     onClick={() => [signOut()]}
@@ -218,36 +229,75 @@ export const Navbar = (props: Props) => {
           </div>
         </div>
       </div>
-      <div className="sm:hidden" id="mobile-menu">
-        <div className="space-y-1 px-2 pb-3 pt-2">
-          <Link
-            href="/book/all"
-            className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-            aria-current="page"
-          >
-            Books
-          </Link>
-          <Link
-            href="#"
-            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            TV shows
-          </Link>
-          <Link
-            href="/podcast/all"
-            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Podcasts
-          </Link>
-          <Link
-            href="/profile"
-            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Profile
-          </Link>
+
+      {openMenu && (
+        <div className="sm:hidden" id="mobile-menu">
+          <div className="space-y-1 px-2 pb-3 pt-2">
+            {props.currentPage === currentPage.books ? (
+              <Link
+                href="/book/all"
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+                aria-current="page"
+              >
+                Books
+              </Link>
+            ) : (
+              <Link
+                href="/book/all"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                aria-current="page"
+              >
+                Books
+              </Link>
+            )}
+            {props.currentPage === currentPage.movies ? (
+              <Link
+                href="/movie/all"
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+              >
+                Movies
+              </Link>
+            ) : (
+              <Link
+                href="/movie/all"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Movies
+              </Link>
+            )}
+            {props.currentPage === currentPage.yourbooks ? (
+              <Link
+                href="/library/books"
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+              >
+                Your Books
+              </Link>
+            ) : (
+              <Link
+                href="/library/books"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Your Books
+              </Link>
+            )}
+            {props.currentPage === currentPage.yourmovies ? (
+              <Link
+                href="/library/movies"
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+              >
+                Your Movies
+              </Link>
+            ) : (
+              <Link
+                href="/library/movies"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Your Movies
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
-

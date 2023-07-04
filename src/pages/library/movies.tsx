@@ -46,7 +46,7 @@ const LibraryMovies: NextPage = () => {
   }
 
   return (
-    <Layout currentPage={currentPage.library}>
+    <Layout currentPage={currentPage.yourmovies}>
       <div className="flex flex-col items-center p-2">
         <h1 className="text-2xl font-bold">
           <span className="font-mono">{sessionData.user.username}</span>&apos;s
