@@ -5,15 +5,15 @@ import { useState } from "react";
 import { requireAuth } from "../../common/requireAuth";
 import { trpc } from "../../common/trpc";
 import { prisma } from "../../server/prisma";
-import Layout from "../../components.tsx/Layout";
-import StarRating from "../../components.tsx/StarRating";
+import Layout from "../../components.tsx/layout";
+import { RatingInput } from "../../components.tsx/rating";
 import Image from "next/image";
-import Reviews from "../../components.tsx/Reviews";
-import WriteAReview from "../../components.tsx/WriteAReview";
+import { Review, WriteAReviewWizard } from "../../components.tsx/review";
+import { currentPage } from "~/common/types";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
-  // check if the the url parameter are a book in the database
-  const Movie = await prisma.movie.findFirst({
+  // check if the url parameter is a movie in the database
+  const movie = await prisma.movie.findFirst({
     where: {
       movie_url: String(ctx.params?.movieurl),
     },
@@ -25,7 +25,7 @@ export const getServerSideProps = requireAuth(async (ctx) => {
       name: true,
     },
   });
-  if (!Movie) {
+  if (!movie) {
     return {
       redirect: {
         destination: "/404",
@@ -36,27 +36,26 @@ export const getServerSideProps = requireAuth(async (ctx) => {
 
   return {
     props: {
-      synopsis: Movie.synopsis,
-      name: Movie.name,
-      author: Movie.director,
-      image_url: Movie.image_url,
+      synopsis: movie.synopsis,
+      name: movie.name,
+      director: movie.director,
+      image_url: movie.image_url,
     },
-  }; //TODO: Add reviews here
+  };
 });
 
-type movieProps = {
+type MovieProps = {
   synopsis: string;
   name: string;
   image_url: string;
   director: string;
 };
 
-const Movie: NextPage<movieProps> = (props: movieProps) => {
+const Movie: NextPage<MovieProps> = (props: MovieProps) => {
   const session = useSession();
   const { movieurl, ...tags } = useRouter().query;
   const movie_url = String(movieurl);
 
-  //setting the state of the button according to user's
   const [ButtonState, setButtonState] = useState({
     text: "Loading...",
     disabled: true,
@@ -71,17 +70,16 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     disabled: true,
   });
 
-  //Initial set up for stateful components
   const { data, refetch } = trpc.fetchSingleMovieDataByUrl.useQuery({
     movie_url,
   });
 
   const reviews_data_formatted = data?.result?.Users.map(
     (user: {
-      Rating: any;
-      Review: any;
-      user: { username: any };
-      assignedAt: any;
+      Rating: number;
+      Review: string;
+      user: { username: string };
+      assignedAt: string;
     }) => {
       return {
         rating: user.Rating,
@@ -92,11 +90,10 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     }
   );
 
-  const fetch_result = trpc.fetchMovieFromLibrary.useQuery(
+  trpc.fetchMovieFromLibrary.useQuery(
     { movie_url, data: session.data },
     {
-      onSuccess: async (newData) => {
-        // Having a cache that isn't being used you get a performance boost
+      onSuccess: (newData) => {
         if (newData.exists) {
           setButtonState({
             text: "Remove from Library",
@@ -124,13 +121,12 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     }
   );
 
-  const mutationAddtoLib = trpc.addMovieToLibrary.useMutation();
-  const mutationremoveFromLib = trpc.removeMovieFromLibrary.useMutation();
+  const mutationAddToLib = trpc.addMovieToLibrary.useMutation();
+  const mutationRemoveFromLib = trpc.removeMovieFromLibrary.useMutation();
   const mutationAddRating = trpc.addMovieRating.useMutation();
   const mutationAddReview = trpc.addMovieReview.useMutation();
 
-  //disables rating
-  const handleLibraryOnClick = async () => {
+  const handleLibraryOnClick = () => {
     setButtonState({
       text: ButtonState.text,
       disabled: true,
@@ -140,10 +136,10 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
     setReviewState({ review: ReviewState.review, disabled: true });
 
     if (ButtonState.shouldAdd) {
-      mutationAddtoLib.mutate(
+      mutationAddToLib.mutate(
         { movie_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: () => {
             setButtonState({
               text: "Remove from Library",
               disabled: false,
@@ -151,15 +147,16 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: RatingState.rating, disabled: false });
             setReviewState({ review: ReviewState.review, disabled: false });
-            refetch();
+
+            refetch().catch((err) => console.log("Error in refetching: ", err));
           },
         }
       );
     } else {
-      mutationremoveFromLib.mutate(
+      mutationRemoveFromLib.mutate(
         { movie_url },
         {
-          onSuccess: async (newData) => {
+          onSuccess: () => {
             setButtonState({
               text: "Add to Library",
               disabled: false,
@@ -167,123 +164,118 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             });
             setRatingState({ rating: NaN, disabled: true });
             setReviewState({ review: ReviewState.review, disabled: true });
-            refetch();
+
+            refetch().catch((err) => console.log("Error in refetching: ", err));
           },
         }
       );
     }
   };
 
-  const handleRatingOnClick = async (rating: number) => {
+  const handleRatingOnClick = (rating: number) => {
     setRatingState({ rating, disabled: true });
     mutationAddRating.mutate(
       { movie_url, rating },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setRatingState({ rating: newData.rating, disabled: false });
-          refetch();
         },
       }
     );
   };
 
-  const handleReviewOnSubmit = async (review: string) => {
+  const handleReviewOnSubmit = (review: string) => {
     setReviewState({ review, disabled: true });
     mutationAddReview.mutate(
       { movie_url, review },
       {
-        onSuccess: async (newData) => {
+        onSuccess: (newData) => {
           setReviewState({ review: newData.review, disabled: false });
-          refetch();
         },
       }
     );
   };
 
   return (
-    <Layout>
-      <div>
-        <div className="p-3 mb-2 bg-primary text-white">
-          <h1>Single Movies Page</h1>Here is where you can all the information
-          about a single movie and rate them
+    <Layout currentPage={currentPage.movies}>
+      <div className="mb-2 bg-blue-500 p-3 text-white">
+        <h1 className="text-3xl font-bold">Single Books Page</h1>
+        <p>
+          Here is where you can find all the information about a single book and
+          rate them.
+        </p>
+      </div>
+      <div className="mx-auto max-w-4xl rounded-lg bg-gray-100 p-4 shadow-xl">
+        <div className="mb-3 flex items-center justify-center">
+          <h5 className="text-2xl font-bold">
+            {props.name} by {props.director}
+          </h5>
         </div>
-
-        <div className="card mb-3 mt-2 col m-1 shadow rounded ">
-          <div className="row">
-            <div className="col mt-2 mb-1">
-              <Image
-                src={"/images/movies/" + props.image_url + ".jpg"}
-                className="img-fluid rounded"
-                width={255}
-                height={500}
-                alt="..."
-              ></Image>
+        <div className="flex border py-2">
+          <div className="w-1/3">
+            <div className="flex justify-center">
+              <div>
+                <div className="relative h-72 w-48 overflow-hidden rounded-lg shadow-xl">
+                  <Image
+                    src={`/images/movies/${props.image_url}.jpg`}
+                    className="rounded-lg"
+                    alt="Book cover"
+                    fill={true}
+                  />
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="mt-2 rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 focus:outline-none"
+                    onClick={handleLibraryOnClick}
+                    disabled={ButtonState.disabled}
+                  >
+                    {ButtonState.text}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="col-md-11">
-              <div className="card-body">
-                <h5 className="card-title">{props.name}</h5>
-                <div className="author">by {props.director}</div>
-                <p className="card-text">{props.synopsis}</p>
-              </div>
-              <div className="mb-3">
-                <StarRating
-                  rating={RatingState.rating}
-                  disabled={RatingState.disabled}
-                  onClick={handleRatingOnClick}
-                />
-              </div>
-              {
-                <button
-                  className="btn btn-primary mb-3"
-                  onClick={() => handleLibraryOnClick()}
-                  disabled={ButtonState.disabled}
-                >
-                  {" "}
-                  {ButtonState.text}
-                </button>
-              }
-
-              <div className="error-message">
-                {(mutationAddtoLib.error || mutationremoveFromLib.error) && (
-                  <p>
-                    Something went wrong! {mutationAddtoLib.error?.message} or{" "}
-                    {mutationremoveFromLib.error?.message}
-                  </p>
-                )}
-              </div>
+            <div className="mt-2">
+              {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
+                <p className="text-red-500">
+                  Something went wrong! {mutationAddToLib.error?.message} or{" "}
+                  {mutationRemoveFromLib.error?.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="w-2/3 pl-5">
+            <div className="overflow-y-auto">
+              <p className="text-sm text-gray-700">{props.synopsis}</p>
             </div>
           </div>
         </div>
-        <div>
-          <h3>Write a review</h3>
-          <WriteAReview
+
+        <div className="my-1 rounded-lg border p-3 shadow-xl">
+          <div className="flex items-center">
+            <h5 className="mt-1 text-2xl font-bold">Write a review</h5>
+            <div className="w-4"></div>
+            <RatingInput
+              rating={RatingState.rating}
+              disabled={RatingState.disabled}
+              onClick={handleRatingOnClick}
+            />
+          </div>
+          <WriteAReviewWizard
             review={ReviewState.review}
             onSubmit={handleReviewOnSubmit}
             disabled={ReviewState.disabled}
           />
 
-          <h3> Reviews </h3>
-          {reviews_data_formatted?.map(
-            (
-              review: {
-                name: string;
-                review: string;
-                date: Date | null;
-                rating: number | null;
-              },
-              i
-            ) => {
-              return (
-                <Reviews
-                  key={i}
-                  by={review.name}
-                  review={review.review}
-                  date={review.date}
-                  rating={review.rating}
-                />
-              );
-            }
-          )}
+          <h3 className="mb-2 text-2xl font-bold">Reviews</h3>
+          {reviews_data_formatted?.map((review, i) => (
+            <Review
+              key={i}
+              by={review.name}
+              review={review.review}
+              date={review.date}
+              rating={review.rating}
+            />
+          ))}
         </div>
       </div>
     </Layout>

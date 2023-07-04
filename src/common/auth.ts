@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { verify } from "argon2";
 
@@ -26,8 +26,11 @@ export const nextAuthOptions: NextAuthOptions = {
           if (!resultUser) return null;
 
           const isValidPassword = await verify(resultUser.password, password);
+          
           if (!isValidPassword) return null;
-          return { id: resultUser.id, email, username: resultUser.username };
+
+          return { id: resultUser.id.toString(), email, username: resultUser.username };
+        
         } catch {
           return null;
         }
@@ -35,7 +38,7 @@ export const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: ({ token, user }) => {
       if (user) {
         token.userId = user.id;
         token.email = user.email;
@@ -44,7 +47,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
       return token;
     },
-    session: async ({ session, token }) => {
+    session: ({ session, token }) => {
       if (token) {
         session.user.userId = token.userId;
         session.user.email = token.email;
@@ -59,7 +62,7 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/",
-    newUser: "/sign-up",
+    newUser: "/signup",
   },
   secret: "super-secret",
 };

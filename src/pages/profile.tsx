@@ -1,19 +1,20 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-
 import { requireAuth } from "../common/requireAuth";
-import Layout from "../components.tsx/Layout";
+import Layout from "../components.tsx/layout";
+import { currentPage } from "~/common/types";
 
-export const getServerSideProps = requireAuth(async (ctx) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps = requireAuth(async (_ctx) => {
   return { props: {} };
 });
 
-// The page that you only see if the authentication is successful, we could revamp this page to only should non-sensistive information still the login occurs if we used
+// The page that you only see if the authentication is successful, we could revamp this page to only should non-sensitive information still the login occurs if we used
 const Dashboard: NextPage = () => {
   const { data } = useSession();
 
   return (
-    <Layout>
+    <Layout currentPage={currentPage.none}>
       <div>
         <div>
           <h1 className="text-center">You are logged in!</h1>
