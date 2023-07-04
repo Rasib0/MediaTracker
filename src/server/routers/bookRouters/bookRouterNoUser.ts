@@ -86,6 +86,9 @@ export const bookRouterNoUser = router({
                   username: true
                 }
               }
+            },
+            orderBy: {
+              assignedAt: 'desc'
             }
           }
         }

@@ -191,7 +191,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         <p>
           Here is where you can find all the information about a single book and
           rate them.
-        </p>{" "}
+        </p>
       </div>
 
       <div>
@@ -202,7 +202,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
           </h2>
         </div>
         <div className="flex justify-center overflow-clip">
-          <div className="flex flex-col justify-center gap-1 p-2">
+          <div className="flex flex-col justify-center gap-2 p-2">
             <Image
               src={`/images/books/${props.image_url}.jpg`}
               className="w-32 rounded-lg  sm:h-72 sm:w-48"
@@ -236,14 +236,14 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
         <div className="my-1 rounded-lg border p-3 shadow-xl">
           <div className="flex items-center">
-            <h5 className="mt-1 text-2xl font-bold">Rate:&nbsp;</h5>
+            <h5 className="mt-1 text-2xl font-bold tracking-wide">Rate:&nbsp;</h5>
             <RatingInput
               rating={RatingState}
               disabled={disabled || buttonShouldAdd}
               onClick={handleRatingOnClick}
             />
           </div>
-          <h3 className="mt-1 text-2xl font-semibold">Leave a Review:&nbsp;</h3>
+          <h3 className="mt-3 mb-1 text-2xl font-semibold tracking-wide">Leave a Review:&nbsp;</h3>
 
           <WriteAReviewWizard
             review={ReviewState}
@@ -251,7 +251,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             disabled={disabled || buttonShouldAdd}
           />
 
-          <h3 className="mb-2 text-2xl font-semibold">Reviews</h3>
+          <h3 className="mt-3 mb-1 text-2xl font-semibold tracking-wide">Reviews:</h3>
           <div className="mb-6">
             {mutationAddReview.isLoading ||
             mutationAddRating.isLoading ||
