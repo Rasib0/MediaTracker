@@ -30,6 +30,8 @@ model User {
   updatedAt DateTime @updatedAt
   Books   UserJoinBook[] 
   Movies  UserJoinMovie[]
+
+  @@index([username, email], name: "username_email")
 }
 
 model Book {
@@ -41,6 +43,8 @@ model Book {
   book_url String @unique
   Users UserJoinBook[]
   Tags TagJoinBook[]
+
+  @@index([name, author], name: "name_author")
 }
 
 model Movie {
@@ -53,6 +57,7 @@ model Movie {
   Users UserJoinMovie[]
   Tags TagJoinMovie[]
 
+  @@index([name, director], name: "name_director")
 }
 
 model UserJoinMovie {
@@ -65,6 +70,7 @@ model UserJoinMovie {
   movie Movie @relation(fields: [movieId], references: [id])
   movieId Int
   @@id([userId, movieId])
+  @@index([assignedAt, userId, movieId], name: "assignedAt_userId_movieId")
 }
 
 
@@ -80,6 +86,7 @@ model UserJoinBook {
   bookId Int
 
   @@id([userId, bookId])
+  @@index([assignedAt, userId, bookId], name: "assignedAt_userId_bookId")
 }
 
 model Tag {

@@ -10,6 +10,7 @@ import Image from "next/image";
 import { RatingInput } from "~/components.tsx/rating";
 import { Review, WriteAReviewWizard } from "../../components.tsx/review";
 import { currentPage } from "~/common/types";
+import { LoadingSpinner } from "~/components.tsx/loading";
 
 export const getServerSideProps = requireAuth(async (ctx) => {
   // check if the the url parameter are a book in the database
@@ -57,24 +58,18 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   const book_url = String(bookurl);
 
   //setting the state of the button according to user's
-  const [ButtonState, setButtonState] = useState({
-    text: "Loading...",
-    disabled: true,
-    shouldAdd: true,
-  });
-  const [RatingState, setRatingState] = useState({
-    rating: NaN,
-    disabled: true,
-  });
-  const [ReviewState, setReviewState] = useState({
-    review: "Loading...",
-    disabled: true,
-  });
+  const [disabled, setDisabled] = useState(true);
+
+  // TODO: use memo for text later
+  const [buttonShouldAdd, setButtonShouldAdd] = useState(true);
+  const [RatingState, setRatingState] = useState(NaN);
+  const [ReviewState, setReviewState] = useState("Loading...");
 
   //Initial set up for stateful components
-  const { data, refetch } = trpc.fetchSingleBookDataByUrl.useQuery({
-    book_url,
-  });
+  const { data, refetch, isFetching, isLoading } =
+    trpc.fetchSingleBookDataByUrl.useQuery({
+      book_url,
+    });
 
   const reviews_data_formatted = data?.result?.Users.map(
     (user: {
@@ -98,59 +93,37 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
       onSuccess: (newData) => {
         // Having a cache that isn't being used you get a performance boost
         if (newData.exists) {
-          setButtonState({
-            text: "Remove from Library",
-            disabled: false,
-            shouldAdd: false,
-          });
-          setRatingState({
-            rating: Number(newData.result?.Rating),
-            disabled: false,
-          });
-          setReviewState({
-            review: String(newData.result?.Review),
-            disabled: false,
-          });
+          setButtonShouldAdd(false);
+          setRatingState(newData.result?.Rating ?? NaN);
+          setReviewState(newData.result?.Review ?? "");
+          setDisabled(false);
         } else {
-          setButtonState({
-            text: "Add to Library",
-            disabled: false,
-            shouldAdd: true,
-          });
-          setRatingState({ rating: NaN, disabled: true });
-          setReviewState({ review: "Add to Library first.", disabled: true });
+          setButtonShouldAdd(true);
+          setRatingState(NaN);
+          setReviewState("Add to Library before writing a review.");
+          setDisabled(false);
         }
       },
     }
   );
 
-  const mutationAddToLib = trpc.addToBookLibrary.useMutation();
+  const mutationAddToLib = trpc.addBookToLibrary.useMutation();
   const mutationRemoveFromLib = trpc.removeBookFromLibrary.useMutation();
   const mutationAddRating = trpc.addBookRating.useMutation();
   const mutationAddReview = trpc.addBookReview.useMutation();
 
   //disables rating
   const handleLibraryOnClick = () => {
-    setButtonState({
-      text: ButtonState.text,
-      disabled: true,
-      shouldAdd: ButtonState.shouldAdd,
-    });
-    setRatingState({ rating: RatingState.rating, disabled: true });
-    setReviewState({ review: ReviewState.review, disabled: true });
+    setDisabled(true);
 
-    if (ButtonState.shouldAdd) {
+    if (buttonShouldAdd) {
       mutationAddToLib.mutate(
         { book_url },
         {
           onSuccess: (newData) => {
-            setButtonState({
-              text: "Remove from Library",
-              disabled: false,
-              shouldAdd: false,
-            });
-            setRatingState({ rating: RatingState.rating, disabled: false });
-            setReviewState({ review: ReviewState.review, disabled: false });
+            setButtonShouldAdd(false);
+            setDisabled(false);
+            //TODO: add setDisabled to .then  after refetch
             //TODO: remove refeches
             refetch().catch((err) => {
               console.log(err);
@@ -163,13 +136,10 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
         { book_url },
         {
           onSuccess: (newData) => {
-            setButtonState({
-              text: "Add to Library",
-              disabled: false,
-              shouldAdd: true,
-            });
-            setRatingState({ rating: NaN, disabled: true });
-            setReviewState({ review: ReviewState.review, disabled: true });
+            setDisabled(false);
+            setButtonShouldAdd(true);
+            setRatingState(NaN);
+            setReviewState("");
             refetch().catch((err) => {
               console.log(err);
             });
@@ -180,12 +150,15 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   };
 
   const handleRatingOnClick = (rating: number) => {
-    setRatingState({ rating, disabled: true });
+    setDisabled(true);
+    setRatingState(rating);
     mutationAddRating.mutate(
       { book_url, rating },
       {
         onSuccess: (newData) => {
-          setRatingState({ rating: newData.rating, disabled: false });
+          setDisabled(false);
+          setRatingState(newData.rating);
+
           refetch().catch((err) => {
             console.log(err);
           });
@@ -195,12 +168,14 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   };
 
   const handleReviewOnSubmit = (review: string) => {
-    setReviewState({ review, disabled: true });
+    setDisabled(true);
+    setReviewState(review);
     mutationAddReview.mutate(
       { book_url, review },
       {
         onSuccess: (newData) => {
-          setReviewState({ review: newData.review, disabled: false });
+          setDisabled(false);
+          setReviewState(newData.review);
           refetch().catch((err) => {
             console.log(err);
           });
@@ -211,84 +186,98 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
 
   return (
     <Layout currentPage={currentPage.books}>
-      <div className="mb-2 bg-blue-500 p-3">
-        <h1 className="text-3xl font-bold">Single Books Page</h1>
+      <div className="flex flex-col items-center p-2">
+        <h1 className="text-2xl font-bold">The Book Page</h1>
         <p>
           Here is where you can find all the information about a single book and
           rate them.
         </p>
       </div>
-      <div className="mx-auto max-w-4xl rounded-lg bg-gray-100 p-4 shadow-xl">
-        <div className="mb-3 flex items-center justify-center">
-          <h5 className="text-2xl font-bold">
+
+      <div>
+        <hr></hr>
+        <div className="flex items-center justify-center">
+          <h2 className="text-2xl font-bold">
             {props.name} by {props.author}
-          </h5>
+          </h2>
         </div>
-        <div className="flex border py-2">
-          <div className="w-1/3">
-            <div className="flex justify-center">
-              <div>
-                <div className="relative h-72 w-48 overflow-hidden rounded-lg shadow-xl">
-                  <Image
-                    src={`/images/books/${props.image_url}.jpg`}
-                    className="rounded-lg"
-                    alt="Book cover"
-                    fill={true}
-                  />
-                </div>
-                <div className="flex justify-center">
-                  <button
-                    className="mt-2 rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 focus:outline-none"
-                    onClick={handleLibraryOnClick}
-                    disabled={ButtonState.disabled}
-                  >
-                    {ButtonState.text}
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="mt-2">
-              {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
-                <p className="text-red-500">
-                  Something went wrong! {mutationAddToLib.error?.message} or{" "}
-                  {mutationRemoveFromLib.error?.message}
-                </p>
+        <div className="flex justify-center overflow-clip">
+          <div className="flex flex-col justify-center gap-2 p-2">
+            <Image
+              src={`/images/books/${props.image_url}.jpg`}
+              className="w-32 rounded-lg  sm:h-72 sm:w-48"
+              alt={`Book cover ${props.name}`}
+              width={208}
+              height={288}
+            />
+            <button
+              className="w-32 rounded-md bg-violet-400 py-2 font-semibold hover:bg-violet-600 disabled:bg-gray-500 dark:text-gray-900 sm:w-48 sm:px-4"
+              onClick={handleLibraryOnClick}
+              disabled={disabled}
+            >
+              {buttonShouldAdd ? (
+                <span>Add to Library</span>
+              ) : (
+                <span>Remove</span>
               )}
-            </div>
+            </button>
+            {/* TODO: swap error with toasts */}
+            {(mutationAddToLib.error || mutationRemoveFromLib.error) && (
+              <p className="mt-2 text-red-500">
+                Something went wrong! {mutationAddToLib.error?.message} or{" "}
+                {mutationRemoveFromLib.error?.message}
+              </p>
+            )}
           </div>
-          <div className="w-2/3 pl-5">
-            <div className="overflow-y-auto">
-              <p className="text-sm text-gray-700">{props.synopsis}</p>
-            </div>
+          <div className="overflow-ellipsis-700 max-h-64 overflow-y-scroll p-4 text-sm sm:max-h-96">
+            {props.synopsis}
           </div>
         </div>
 
         <div className="my-1 rounded-lg border p-3 shadow-xl">
           <div className="flex items-center">
-            <h5 className="mt-1 text-2xl font-bold">Write a review</h5>
-            <div className="w-4"></div>
+            <h5 className="mt-1 text-2xl font-bold tracking-wide">
+              Rate:&nbsp;
+            </h5>
             <RatingInput
-              rating={RatingState.rating}
-              disabled={RatingState.disabled}
+              rating={RatingState}
+              disabled={disabled || buttonShouldAdd}
               onClick={handleRatingOnClick}
             />
           </div>
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Leave a Review:&nbsp;
+          </h3>
+
           <WriteAReviewWizard
-            review={ReviewState.review}
+            review={ReviewState}
             onSubmit={handleReviewOnSubmit}
-            disabled={ReviewState.disabled}
+            disabled={disabled || buttonShouldAdd}
           />
 
-          <h3 className="mb-2 text-2xl font-bold">Reviews</h3>
-          {reviews_data_formatted?.map((review, i) => (
-            <Review
-              key={i}
-              by={review.name}
-              review={review.review}
-              date={review.date}
-              rating={review.rating}
-            />
-          ))}
+          <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
+            Reviews:
+          </h3>
+          <div className="mb-6">
+            {mutationAddReview.isLoading ||
+            mutationAddRating.isLoading ||
+            mutationAddToLib.isLoading ||
+            mutationRemoveFromLib.isLoading ? (
+              <div className="flex justify-center">
+                <LoadingSpinner />
+              </div>
+            ) : (
+              reviews_data_formatted?.map((review, i) => (
+                <Review
+                  key={i}
+                  by={review.name}
+                  review={review.review}
+                  date={new Date(review.date)}
+                  rating={review.rating}
+                />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </Layout>

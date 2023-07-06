@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  @apply dark:bg-gray-900 dark:text-gray-100;
+:root {
+  font-family: 'Poppins', sans-serif;
+  @apply dark:bg-gray-500 dark:text-gray-100;
   @apply box-border;
 }
 
@@ -29,3 +29,15 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-600;
 }
+
+/* 
+:root {
+  */ /* Your default theme */ /*
+  --background: white;
+  --foreground: black;
+}
+
+[data-theme='dark'] {
+  --background: black;
+  --foreground: white;
+} */

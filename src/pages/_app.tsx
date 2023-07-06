@@ -1,22 +1,35 @@
 import "../styles/globals.css";
-import type { AppProps } from "next/app";
+import { ThemeProvider } from "next-themes";
+import { trpc } from "../common/trpc";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { trpc } from "../common/trpc";
+import type { AppProps } from "next/app";
+import Head from "next/head";
 
-interface CustomAppProps extends AppProps {
-  pageProps: {
-    session?: Session;
-  } & AppProps["pageProps"];
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<{
+  session: Session;
+}>) {
+  return (
+    <>
+      <Head>
+        <style>
+          @import
+          url(&apos;https://fonts.googleapis.com/css2?family=Poppins&display=swap&apos;);
+        </style>
+        <title>MediaTracker</title>
+        <meta name="description" content="💬" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <ThemeProvider attribute="class">
+        <SessionProvider session={pageProps.session}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </ThemeProvider>
+    </>
+  );
 }
 
-const CustomApp = ({ Component, pageProps }: CustomAppProps) => {
-  return (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  );
-};
-
-export default trpc.withTRPC(CustomApp);
+export default trpc.withTRPC(MyApp);

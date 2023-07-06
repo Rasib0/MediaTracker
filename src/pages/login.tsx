@@ -128,6 +128,7 @@ const Login: NextPage = () => {
                   type="submit"
                   disabled={isFetching}
                   className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold dark:text-gray-900 hover:bg-violet-600 disabled:dark:bg-gray-500"
+                  className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 disabled:bg-gray-500 dark:text-gray-900"
                 >
                   Sign in
                 </button>
@@ -137,7 +138,7 @@ const Login: NextPage = () => {
                 <Link
                   href="/signup"
                   rel="noopener noreferrer"
-                  className="hover:underline dark:text-violet-400"
+                  className="text-violet-400 hover:underline"
                 >
                   &nbsp;Sign up
                 </Link>

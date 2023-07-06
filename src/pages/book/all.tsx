@@ -108,7 +108,7 @@ const Feed = (props: FeedProps) => {
     return (
       <div className="flex justify-center p-24">
         <p className="font-mono text-lg dark:text-red-200">
-          {`No books found for the keyword: ${props.searchInputRequest}`}
+          {`No books found for the keyword: "${props.searchInputRequest}" 😿`}
         </p>
       </div>
     );

@@ -91,7 +91,7 @@ export const bookRouterUser = router({
     }),
 
 
-  addToBookLibrary: publicProcedure //
+  addBookToLibrary: publicProcedure //
     .input(z.object({
       book_url: string()
     }

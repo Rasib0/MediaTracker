@@ -1,6 +1,10 @@
 import React from "react";
 import { RatingStatic } from "./rating";
 import { useRef } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 type WizardProps = {
   onSubmit: (text: string) => void;
@@ -33,7 +37,7 @@ export const WriteAReviewWizard = (props: WizardProps) => {
         />
         <div className="flex justify-center">
           <button
-            className="rounded-md bg-blue-500 px-4 py-2 font-semibold hover:bg-blue-600 focus:outline-none"
+            className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 dark:text-gray-900 disabled:bg-gray-500"
             type="submit"
             disabled={props.disabled}
           >
@@ -50,7 +54,7 @@ type media = "movies" | "books";
 type Props = {
   by: string;
   review: string;
-  date: string;
+  date: Date;
   rating: number;
 };
 
@@ -58,23 +62,26 @@ export const Review = (props: Props) => {
   return (
     <div className="m-1 rounded-lg border p-4 shadow-md">
       {props.date ? (
-        <div className="mb-2 text-sm text-gray-600">
-          Review by <b>{props.by}</b> on {props.date}
+        <div className="mb-2 text-sm">
+          Review by <b>{props.by}</b>&nbsp;&bull;&nbsp;
+          {dayjs(props.date).fromNow()}
         </div>
       ) : null}
       {props.rating ? (
         <div className="mb-2 flex items-center">
           <RatingStatic rating={props.rating} />
-          <span className="ml-2 text-gray-600">{props.rating}/5</span>
+          <span className="ml-2 font-mono font-semibold">{props.rating}/5</span>
         </div>
       ) : null}
       {props.review ? (
-        <div className="rounded-lg bg-gray-100 p-3">
-          <p className="text-sm text-gray-800">{props.review}</p>
+        <div className="rounded-lgp-3">
+          <p className="text-sm">{props.review}</p>
         </div>
       ) : (
-        <div className="rounded-lg bg-gray-100 p-3">
-          <p className="text-sm text-gray-500">No review available</p>
+        <div className="rounded-lgp-3">
+          <p className="font-mono text-sm">
+            This person left an empty review 😿
+          </p>
         </div>
       )}
     </div>

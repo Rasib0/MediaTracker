@@ -4,6 +4,8 @@ import { currentPage } from "../../common/types";
 import Image from "next/image";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { MdOutlineLightMode, MdOutlineDarkMode } from "react-icons/md";
 
 type Props = {
   currentPage: currentPage;
@@ -14,6 +16,7 @@ export const Navbar = (props: Props) => {
   const [userButtonClicked, setUserButtonClicked] = useState(false);
   const [libButtonClick, setLibButtonClick] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const handleUserButtonClick = () => {
     setUserButtonClicked(!userButtonClicked);
@@ -26,6 +29,14 @@ export const Navbar = (props: Props) => {
   const handleMenuMenu = () => {
     setOpenMenu(!openMenu);
   };
+
+  function handleThemeChange(): void {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  }
 
   return (
     <nav className="bg-gray-800">
@@ -151,6 +162,19 @@ export const Navbar = (props: Props) => {
             <button
               type="button"
               className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              onClick={handleThemeChange}
+            >
+              <span className="sr-only">Switch theme</span>
+
+              {theme === "dark" ? (
+                <MdOutlineLightMode width={24} height={24} />
+              ) : (
+                <MdOutlineDarkMode width={24} height={24} />
+              )}
+            </button>
+            {/* <button
+              type="button"
+              className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               <span className="sr-only">View notifications</span>
               <svg
@@ -167,7 +191,7 @@ export const Navbar = (props: Props) => {
                   d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
                 />
               </svg>
-            </button>
+            </button> */}
             <div className="relative ml-3">
               <div>
                 <button

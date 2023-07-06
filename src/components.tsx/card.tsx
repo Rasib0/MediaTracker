@@ -33,7 +33,7 @@ const Card = (props: CardProps) => {
         {props.show_author && <div>by {props.by}</div>}
       </div>
       {(props.rating || props.date) && (
-        <div className="flex justify-between border border-black from-purple-600 to-purple-700 px-2 py-1 dark:bg-gradient-to-r">
+        <div className="flex justify-between from-purple-600 to-purple-700 px-2 py-1 dark:bg-gradient-to-r">
           {props.rating && <RatingStatic rating={props.rating} />}
           {props.date && (
             <p className="font-thin">Added {dayjs(props.date).fromNow()}</p>
