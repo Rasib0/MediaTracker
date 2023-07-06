@@ -33,7 +33,7 @@ export const WriteAReviewWizard = (props: WizardProps) => {
         />
         <div className="flex justify-center">
           <button
-            className="rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 focus:outline-none"
+            className="rounded-md bg-blue-500 px-4 py-2 font-semibold hover:bg-blue-600 focus:outline-none"
             type="submit"
             disabled={props.disabled}
           >

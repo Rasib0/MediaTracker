@@ -198,7 +198,7 @@ const Movie: NextPage<MovieProps> = (props: MovieProps) => {
 
   return (
     <Layout currentPage={currentPage.movies}>
-      <div className="mb-2 bg-blue-500 p-3 text-white">
+      <div className="mb-2 bg-blue-500 p-3">
         <h1 className="text-3xl font-bold">Single Books Page</h1>
         <p>
           Here is where you can find all the information about a single book and

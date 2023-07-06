@@ -127,7 +127,7 @@ const Login: NextPage = () => {
                 <button
                   type="submit"
                   disabled={isFetching}
-                  className="w-full rounded-md px-8 py-3 font-semibold dark:bg-violet-400 dark:text-gray-900 hover:dark:bg-violet-600 disabled:dark:bg-gray-500"
+                  className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold dark:text-gray-900 hover:bg-violet-600 disabled:dark:bg-gray-500"
                 >
                   Sign in
                 </button>
