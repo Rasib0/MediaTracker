@@ -249,13 +249,11 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             Leave a Review:&nbsp;
           </h3>
 
-          <div className="">
-          <WriteAReviewWizard
-            review={ReviewState}
-            onSubmit={handleReviewOnSubmit}
-            disabled={disabled || buttonShouldAdd}
-          />
-          </div>
+            <WriteAReviewWizard
+              review={ReviewState}
+              onSubmit={handleReviewOnSubmit}
+              disabled={disabled || buttonShouldAdd}
+            />
 
           <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
             Reviews:

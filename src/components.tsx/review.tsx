@@ -29,7 +29,7 @@ export const WriteAReviewWizard = (props: WizardProps) => {
     <div>
       <form onSubmit={onSubmitInner}>
         <textarea
-          className="w-full resize-none rounded-md border p-3 focus:border-blue-500 focus:outline-none focus:ring"
+          className="w-full resize-none rounded-md border p-3 focus:border-blue-500 focus:outline-none focus:ring dark:bg-gray-900 dark:text-gray-100"
           ref={inputRef}
           disabled={props.disabled}
           rows={3}
@@ -37,7 +37,7 @@ export const WriteAReviewWizard = (props: WizardProps) => {
         />
         <div className="flex justify-center">
           <button
-            className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 dark:text-gray-900 disabled:bg-gray-500"
+            className="w-full rounded-md bg-violet-400 px-8 py-3 font-semibold hover:bg-violet-600 disabled:bg-gray-500 dark:text-gray-900"
             type="submit"
             disabled={props.disabled}
           >
