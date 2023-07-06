@@ -185,7 +185,7 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
   };
 
   return (
-    <Layout currentPage={currentPage.books}>
+    <Layout currentPage={currentPage.books} maxWidth="md:max-w-4xl">
       <div className="flex flex-col items-center p-2">
         <h1 className="text-2xl font-bold">The Book Page</h1>
         <p>
@@ -249,11 +249,13 @@ const Book: NextPage<bookProps> = (props: bookProps) => {
             Leave a Review:&nbsp;
           </h3>
 
-          <WriteAReviewWizard
-            review={ReviewState}
-            onSubmit={handleReviewOnSubmit}
-            disabled={disabled || buttonShouldAdd}
-          />
+          <div className="">
+            <WriteAReviewWizard
+              review={ReviewState}
+              onSubmit={handleReviewOnSubmit}
+              disabled={disabled || buttonShouldAdd}
+            />
+          </div>
 
           <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
             Reviews:

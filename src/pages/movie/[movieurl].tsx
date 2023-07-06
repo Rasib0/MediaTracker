@@ -185,7 +185,7 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
   };
 
   return (
-    <Layout currentPage={currentPage.movies}>
+    <Layout currentPage={currentPage.movies} maxWidth="md:max-w-4xl">
       <div className="flex flex-col items-center p-2">
         <h1 className="text-2xl font-bold">The Movie Page</h1>
         <p>
@@ -249,11 +249,13 @@ const Movie: NextPage<movieProps> = (props: movieProps) => {
             Leave a Review:&nbsp;
           </h3>
 
+          <div className="">
           <WriteAReviewWizard
             review={ReviewState}
             onSubmit={handleReviewOnSubmit}
             disabled={disabled || buttonShouldAdd}
           />
+          </div>
 
           <h3 className="mb-1 mt-3 text-2xl font-semibold tracking-wide">
             Reviews:
