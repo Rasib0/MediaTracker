@@ -22,6 +22,7 @@ function MyApp({
         <title>MediaTracker</title>
         <meta name="description" content="💬" />
         <link rel="icon" href="/favicon.ico" />
+        <meta http-equiv="Content-Language" content="en" />
       </Head>
       <ThemeProvider attribute="class">
         <SessionProvider session={pageProps.session}>
