@@ -40,8 +40,8 @@ To get started with the project, follow these steps:
    ```
 
 3. Set up the environment variables:
-   - Create a `.env.local` file in the root directory of the project.
-   - Define the required environment variables in the `.env.local` file, such as database connection details and API keys.
+   - Create a `.env` file in the root directory of the project.
+   - Define the required environment variables in the `.env` file, such as database connection details and API keys.
 
 4. Run the development server:
 
@@ -53,10 +53,6 @@ To get started with the project, follow these steps:
 
 ![Picture 3](picture2.png)
 
-## Contributing
-
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE). Feel free to use and modify the code as per your requirements.
@@ -67,7 +63,3 @@ This project is licensed under the [MIT License](LICENSE). Feel free to use and 
 - [tRPC Documentation](https://trpc.io/docs)
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [Vercel Documentation](https://vercel.com/docs)
-
-## Contact
-
-If you have any questions or need assistance with the project, feel free to contact the project maintainer at [email@example.com](mailto:email@example.com).
